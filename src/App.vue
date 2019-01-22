@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar />
+    <Navbar :key="$route.fullPath"/>
     <div class="container">
       <router-view/>
     </div>
@@ -9,10 +9,19 @@
 
 <script>
 import Navbar from './components/Navbar';
+// import NewUser from './components/NewUser';
+
 export default {
   name: 'app',
   components: {
     Navbar
+    // NewUser
   }
 };
 </script>
+
+<style>
+nav {
+  margin-bottom: 10px;
+}
+</style>

@@ -1,26 +1,27 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Dashboard from '@/components/Dashboard';
-import NewUser from '@/components/NewUser';
-import EditUser from '@/components/EditUser';
 import Login from '@/components/Login';
 import Register from '@/components/Register';
 import firebase from 'firebase';
 
 import ViewAuthor from '@/components/ViewAuthor';
-import ViewPublisher from '@/components/ViewPublisher';
+import ViewSource from '@/components/ViewSource';
+import NewArticle from '@/components/NewArticle';
+import ViewArticle from '@/components/ViewArticle';
 
 Vue.use(Router);
 
 let router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard,
-      meta: {
-        requiresAuth: true
-      }
+      component: Dashboard
+      // meta: {
+      //   requiresAuth: true
+      // }
     },
     {
       path: '/login',
@@ -39,33 +40,33 @@ let router = new Router({
       }
     },
     {
-      path: '/new',
-      name: 'new-user',
-      component: NewUser,
+      path: '/new_article',
+      name: 'new-article',
+      component: NewArticle,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/edit/:user_id',
-      name: 'edit-user',
-      component: EditUser,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/:author_name',
+      path: '/:author',
       name: 'view-author',
-      component: ViewAuthor,
-      meta: {
-        requiresAuth: true
-      }
+      component: ViewAuthor
+      // meta: {
+      //   requiresAuth: true
+      // }
     },
     {
-      path: '/:publisher_name',
-      name: 'view-publisher',
-      component: ViewPublisher,
+      path: '/:sourceName',
+      name: 'view-source',
+      component: ViewSource
+      // meta: {
+      //   requiresAuth: true
+      // }
+    },
+    {
+      path: '/:articleId',
+      name: 'view-article',
+      component: ViewArticle,
       meta: {
         requiresAuth: true
       }

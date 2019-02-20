@@ -1,53 +1,56 @@
 <template>
-    <div id="view-publisher">
+    <div id="view-source">
       <ul class="collection with-header">
         <li class="collection-header">
             <h4>
-                <a :href="publisher_url" target="_blank">{{ publisher_name }}</a>
+                <a :href="getSourceURL(this.$route.params.url)" target="_blank">{{ sourceName }}</a>
             </h4>
         </li>
-        <li v-for="article in articles" v-bind:key="article.id" class="collection-item">
+        <li v-for="article in articles" :key="article.id" class="collection-item">
             <router-link
             class="chip"
-            v-bind:to="{name: 'view-author', params: {author_name: article.author_name}}"
+            :to="{name: 'view-author', params: {author: article.author}}"
             >
                 <i class="fa fa-user"></i>
-                {{ article.author_name }}
+                {{ article.author }}
             </router-link>
-
-            <a :href="article.url" target="_blank">{{ article.title }}</a>
+            <router-link
+              :to="{name: 'view-article', params: {articleId: article.id}}"
+            >
+                {{ article.title }}
+            </router-link>
         </li>
-        </ul>
-      <router-link to="/" class="btn grey">Back</router-link>
-      
+      </ul>
+      <!-- <router-link to="/" class="btn grey">Back</router-link> -->
+      <!-- <a @click="$router.go(-1)" class="btn grey">Back</a> -->
     </div>
 </template>
 
 <script>
 import db from './firebaseInit';
+import getSourceURL from '../mixins/getSourceURL';
+
 export default {
-  name: 'view-publisher',
+  name: 'ViewSource',
   data() {
     return {
       articles: [],
-      publisher_name: null,
-      publisher_url: null
+      sourceName: null,
     };
   },
   created() {
-    this.publisher_name = this.$route.params.publisher_name;
-    this.publisher_url = this.$route.params.publisher_url;
+    this.sourceName = this.$route.params.sourceName;
   },
   beforeRouteEnter(to, from, next) {
     db.collection('articles')
-      .where('publisher_name', '==', to.params.publisher_name)
+      .where('source.name', '==', to.params.sourceName)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           next(vm => {
             const data = {
               id: doc.id,
-              author_name: doc.data().author_name,
+              author: doc.data().author,
               title: doc.data().title,
               url: doc.data().url
             };
@@ -62,13 +65,13 @@ export default {
   methods: {
     fetchData() {
       db.collection('articles')
-        .where('publisher_name', '==', this.$route.params.publisher_name)
+        .where('source.name', '==', this.$route.params.sourceName)
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
             const data = {
               id: doc.id,
-              author_name: doc.data().author_name,
+              author: doc.data().author,
               title: doc.data().title,
               url: doc.data().url
             };
@@ -76,6 +79,7 @@ export default {
           });
         });
     }
-  }
+  },
+  mixins: [getSourceURL]
 };
 </script>

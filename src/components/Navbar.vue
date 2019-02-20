@@ -9,7 +9,7 @@
             <li v-if="isLoggedIn"><router-link to="/">Dashboard</router-link></li>
             <li v-if="!isLoggedIn"><router-link to="/login">Login</router-link></li>
             <li v-if="!isLoggedIn"><router-link to="/register">Register</router-link></li>
-            <li v-if="isLoggedIn"><button v-on:click="logout" class="btn black">Logout</button></li>
+            <li v-if="isLoggedIn"><button @click="logout" class="btn black">Logout</button></li>
              
           </ul>
           <!-- <ul class="side-nav" id="mobile-demo">
@@ -28,7 +28,7 @@
 <script>
 import firebase from 'firebase';
 export default {
-  name: 'navbar',
+  name: 'Navbar',
   data() {
     return {
       isLoggedIn: false,
@@ -59,9 +59,9 @@ export default {
   padding-right: 10px;
 }
 .img-responsive {
-    height: auto;
-    width: auto;
-    padding-top: 15px;
-    max-height: 50px;
+  height: auto;
+  width: auto;
+  padding-top: 15px;
+  max-height: 50px;
 }
 </style>

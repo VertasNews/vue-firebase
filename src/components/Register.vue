@@ -16,7 +16,7 @@
               <input type="password" id="password" v-model="password">
               <label for="password">Password</label>
             </div>
-            <button v-on:click="register" class="btn btn-large btn-extended grey lighten-4 black-text">Register</button>
+            <button @click="register" class="btn btn-large btn-extended grey lighten-4 black-text">Register</button>
           </form>
         </div>
       </div>
@@ -28,7 +28,7 @@
 <script>
 import firebase from 'firebase';
 export default {
-  name: 'register',
+  name: 'Register',
   data: function() {
     return {
       email: '',

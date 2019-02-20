@@ -9,13 +9,11 @@
 
 <script>
 import Navbar from './components/Navbar';
-// import NewUser from './components/NewUser';
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     Navbar
-    // NewUser
   }
 };
 </script>

@@ -47,7 +47,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          this.$router.go({ path: this.$router.path });
+          this.$router.push('/');
         });
     }
   }

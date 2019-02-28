@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
-    <Navbar :key="$route.fullPath"/>
+  <v-app>
+    <Navbar :key="$route.fullPath" />
     <div class="container">
-      <router-view/>
+      <router-view />
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style>
-nav {
+/* nav {
   margin-bottom: 10px;
-}
+} */
 </style>

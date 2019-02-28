@@ -7,33 +7,33 @@
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <span class="title">
           <router-link
-            :to="{name: 'view-article', params: {articleId: article.id}}"
+            :to="{ name: 'view-article', params: { articleId: article.id } }"
           >
-              {{ article.title }}
+            {{ article.title }}
           </router-link>
         </span>
         <p>
-        <router-link
-          class="chip"
-          :to="{name: 'view-source', 
-            params: {sourceName: article.sourceName, 
-            url: article.url}}"
-        >
-            {{ article.sourceName }}
-        </router-link>
+          <span class="badge new" data-badge-caption="/ 10">
+            count: {{ article.scoreCount }}, average: {{ article.averageScore }}
+          </span>
 
-         <router-link
-          class="chip"
-          :to="{name: 'view-author', params: {author: article.author}}"
-        >
+          <router-link
+            class="chip"
+            :to="{
+              name: 'view-source',
+              params: { sourceName: article.sourceName, url: article.url }
+            }"
+          >
+            {{ article.sourceName }}
+          </router-link>
+
+          <router-link
+            class="chip"
+            :to="{ name: 'view-author', params: { author: article.author } }"
+          >
             <i class="fa fa-user"></i>
             {{ article.author }}
-        </router-link>
-
-        <span class="badge new" data-badge-caption="/ 10">
-          count: {{ article.scoreCount }}, 
-          average: {{ article.averageScore }}
-        </span>
+          </router-link>
         </p>
       </li>
     </ul>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import db from './firebaseInit';
+import db from '../fb';
 
 export default {
   name: 'Dashboard',

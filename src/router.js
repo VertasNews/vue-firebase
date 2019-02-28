@@ -5,10 +5,10 @@ import Login from '@/components/Login';
 import Register from '@/components/Register';
 import firebase from 'firebase';
 
-import ViewAuthor from '@/components/ViewAuthor';
-import ViewSource from '@/components/ViewSource';
+import ViewAuthor from '@/views/ViewAuthor';
+import ViewSource from '@/views/ViewSource';
 import NewArticle from '@/components/NewArticle';
-import ViewArticle from '@/components/ViewArticle';
+import ViewArticle from '@/views/ViewArticle';
 
 Vue.use(Router);
 

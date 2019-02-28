@@ -1,47 +1,49 @@
 <template>
-    <div id="view-article">
-        <div class="row">
-            <div class="col s12">
-            <div class="card">
-                <div class="card-content">
-                <span class="card-title">{{ title }}</span>
-                <span class="badge new" data-badge-caption="/ 10">
-                  count: {{ scoreCount }}, average: {{ averageScore }}
-                </span>
-                <star-rating @rating-selected="addRating(articleId, $event, currentUserScore)"
-                  :rating="currentUserScore" 
-                  :round-start-rating="false" 
-                  :max-rating="10" 
-                  :star-size="20">
-                </star-rating>
-                <a :href="url" target="_blank"> {{ url }} </a>
-                </div>
-                <div class="card-action">
-                    <router-link
-                        class="chip blue-text"
-                        :to="{name: 'view-source', 
-                            params: {sourceName: sourceName, 
-                            url: url}}"
-                        >
-                            {{ sourceName }}
-                    </router-link>
-                    <router-link
-                      class="chip blue-text"
-                      :to="{name: 'view-author', 
-                        params: {author: author}}"
-                      >
-                      <i class="fa fa-user"></i>
-                      {{ author }}
-                    </router-link>
-                </div>
-            </div>
-            </div>
+  <div id="view-article">
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">{{ title }}</span>
+            <span class="badge new" data-badge-caption="/ 10">
+              count: {{ scoreCount }}, average: {{ averageScore }}
+            </span>
+            <star-rating
+              @rating-selected="addRating(articleId, $event, currentUserScore)"
+              :rating="currentUserScore"
+              :round-start-rating="false"
+              :max-rating="10"
+              :star-size="20"
+            >
+            </star-rating>
+            <a :href="url" target="_blank"> {{ url }} </a>
+          </div>
+          <div class="card-action">
+            <router-link
+              class="chip blue-text"
+              :to="{
+                name: 'view-source',
+                params: { sourceName: sourceName, url: url }
+              }"
+            >
+              {{ sourceName }}
+            </router-link>
+            <router-link
+              class="chip blue-text"
+              :to="{ name: 'view-author', params: { author: author } }"
+            >
+              <i class="fa fa-user"></i>
+              {{ author }}
+            </router-link>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import db from './firebaseInit';
+import db from '../fb';
 import firebase from 'firebase';
 
 export default {
@@ -62,7 +64,7 @@ export default {
   created() {
     this.articleId = this.$route.params.articleId;
     db.collection('scores')
-      .where('user_id', '==', firebase.auth().currentUser.uid)
+      .where('userId', '==', firebase.auth().currentUser.uid)
       .where('articleId', '==', this.articleId)
       .get()
       .then(querySnapshot => {
@@ -139,8 +141,8 @@ export default {
             if (doc.data().scoreCount && doc.data().averageScore) {
               var oldRatingTotal =
                 doc.data().averageScore * doc.data().scoreCount;
-              var newAvgRating = 
-              (oldRatingTotal - old_rating + rating) / doc.data().scoreCount;
+              var newAvgRating =
+                (oldRatingTotal - old_rating + rating) / doc.data().scoreCount;
 
               transaction.update(articleRef, {
                 averageScore: newAvgRating
@@ -151,7 +153,7 @@ export default {
       } else {
         db.collection('scores').add({
           articleId: this.articleId,
-          user_id: user.uid,
+          userId: user.uid,
           value: rating
         });
 

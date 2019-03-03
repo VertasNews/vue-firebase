@@ -36,6 +36,7 @@
 
 <script>
 import db from '../fb';
+import getSourceUrl from '../mixins/getSourceUrl';
 
 export default {
   name: 'NewArticle',
@@ -59,10 +60,48 @@ export default {
           title: this.title,
           url: this.url
         })
-        // eslint-disable-next-line
-        .then(docRef => this.$router.push('/'))
         .catch(error => console.log(error));
+
+      var authorRef = db.collection('authors').doc(this.author);
+      var sourceRef = db.collection('sources').doc(this.sourceName);
+
+      authorRef
+        .get()
+        .then(doc => {
+          if (!doc.exists) {
+            authorRef.set({
+              sources: [this.sourceName]
+            });
+          } else {
+            var sources = doc.data().sources;
+            if (!sources.includes(this.sourceName)) {
+              sources.push(this.sourceName);
+              authorRef.update({
+                sources: sources
+              });
+            }
+          }
+        })
+        .catch(function(error) {
+          console.log('Error getting document:', error);
+        });
+
+      sourceRef
+        .get()
+        .then(doc => {
+          if (!doc.exists) {
+            var sourceUrl = this.getSourceUrl(this.url);
+            sourceRef.set({
+              sourceUrl: sourceUrl
+            });
+          }
+          this.$router.push('/');
+        })
+        .catch(function(error) {
+          console.log('Error getting document:', error);
+        });
     }
-  }
+  },
+  mixins: [getSourceUrl]
 };
 </script>

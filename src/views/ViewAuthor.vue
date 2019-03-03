@@ -2,14 +2,20 @@
   <div id="view-author">
     <ul class="collection with-header">
       <li class="collection-header">
-        <h4>{{ author }}</h4>
+        <h4>
+          {{ author }}
+          <span class="badge new" data-badge-caption="/ 10">
+            count: {{ ratingCount }}, average: {{ averageRating }}
+          </span>
+        </h4>
       </li>
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <router-link
+          v-if="author"
           class="chip"
           :to="{
             name: 'view-source',
-            params: { sourceName: article.sourceName, url: article.url }
+            params: { sourceName: article.sourceName }
           }"
         >
           {{ article.sourceName }}
@@ -35,11 +41,25 @@ export default {
   data() {
     return {
       articles: [],
-      author: null
+      author: null,
+      averageRating: null,
+      ratingCount: null
     };
   },
   created() {
     this.author = this.$route.params.author;
+    db.collection('authors')
+      .doc(this.author)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          this.averageRating = doc.data().averageRating;
+          this.ratingCount = doc.data().ratingCount;
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No such what!');
+        }
+      });
   },
   beforeRouteEnter(to, from, next) {
     db.collection('articles')

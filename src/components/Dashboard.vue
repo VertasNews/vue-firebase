@@ -14,14 +14,15 @@
         </span>
         <p>
           <span class="badge new" data-badge-caption="/ 10">
-            count: {{ article.scoreCount }}, average: {{ article.averageScore }}
+            count: {{ article.ratingCount }}, average:
+            {{ article.averageRating }}
           </span>
 
           <router-link
             class="chip"
             :to="{
               name: 'view-source',
-              params: { sourceName: article.sourceName, url: article.url }
+              params: { sourceName: article.sourceName }
             }"
           >
             {{ article.sourceName }}
@@ -61,8 +62,8 @@ export default {
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          if (doc.data().averageScore) {
-            var avgScoreRounded = doc.data().averageScore.toFixed(2);
+          if (doc.data().averageRating) {
+            var avgRatingRounded = doc.data().averageRating.toFixed(2);
           }
           const data = {
             id: doc.id,
@@ -70,8 +71,8 @@ export default {
             sourceName: doc.data().source.name,
             title: doc.data().title,
             url: doc.data().url,
-            averageScore: avgScoreRounded,
-            scoreCount: doc.data().scoreCount
+            averageRating: avgRatingRounded,
+            ratingCount: doc.data().ratingCount
           };
           this.articles.push(data);
         });

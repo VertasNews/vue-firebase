@@ -6,29 +6,29 @@
           <div class="card-content">
             <span class="card-title">{{ title }}</span>
             <span class="badge new" data-badge-caption="/ 10">
-              count: {{ scoreCount }}, average: {{ averageScore }}
+              count: {{ ratingCount }}, average: {{ averageRating }}
             </span>
-            <star-rating
-              @rating-selected="addRating(articleId, $event, currentUserScore)"
-              :rating="currentUserScore"
-              :round-start-rating="false"
-              :max-rating="10"
-              :star-size="20"
+            <v-rating
+              v-model="currentUserRating"
+              :length="10"
+              @click.native="submitRating"
             >
-            </star-rating>
+            </v-rating>
             <a :href="url" target="_blank"> {{ url }} </a>
           </div>
           <div class="card-action">
             <router-link
+              v-if="sourceName"
               class="chip blue-text"
               :to="{
                 name: 'view-source',
-                params: { sourceName: sourceName, url: url }
+                params: { sourceName: sourceName }
               }"
             >
               {{ sourceName }}
             </router-link>
             <router-link
+              v-if="author"
               class="chip blue-text"
               :to="{ name: 'view-author', params: { author: author } }"
             >
@@ -55,23 +55,25 @@ export default {
       url: null,
       author: null,
       sourceName: null,
-      averageScore: null,
-      scoreCount: null,
-      currentUserScore: null,
-      curUserScoreId: null
+      averageRating: null,
+      ratingCount: null,
+      currentUserRating: null,
+      currentUserRatingId: null,
+      oldRating: null
     };
   },
   created() {
     this.articleId = this.$route.params.articleId;
-    db.collection('scores')
+    db.collection('ratings')
       .where('userId', '==', firebase.auth().currentUser.uid)
       .where('articleId', '==', this.articleId)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           if (doc.exists) {
-            this.currentUserScore = doc.data().value;
-            this.curUserScoreId = doc.id;
+            this.currentUserRating = doc.data().value;
+            this.oldRating = doc.data().value;
+            this.currentUserRatingId = doc.id;
           } else {
             // doc.data() will be undefined in this case
             console.log('No such what!');
@@ -90,8 +92,9 @@ export default {
             vm.sourceName = doc.data().source.name;
             vm.title = doc.data().title;
             vm.url = doc.data().url;
-            vm.averageScore = doc.data().averageScore.toFixed(2);
-            vm.scoreCount = doc.data().scoreCount;
+            if (doc.data().averageRating)
+              vm.averageRating = doc.data().averageRating.toFixed(2);
+            vm.ratingCount = doc.data().ratingCount;
           } else {
             // doc.data() will be undefined in this case
             console.log('No such document!');
@@ -113,73 +116,85 @@ export default {
             this.sourceName = doc.data().source.name;
             this.title = doc.data().title;
             this.url = doc.data().url;
-            this.averageScore = doc.data().averageScore;
-            this.scoreCount = doc.data().scoreCount;
+            this.averageRating = doc.data().averageRating;
+            this.ratingCount = doc.data().ratingCount;
           } else {
             console.log('No such document!');
           }
         });
     },
-    addRating(articleId, rating, old_rating) {
-      var articleRef = db.collection('articles').doc(articleId);
-      var user = firebase.auth().currentUser;
-
-      console.log(this.curUserScoreId);
-      if (this.curUserScoreId) {
-        db.collection('scores')
-          .doc(this.curUserScoreId)
-          .update({
-            value: rating
-          });
-
+    addRating(reference, rating, oldRating) {
+      // User already rated the article
+      if (this.currentUserRatingId) {
         return db.runTransaction(transaction => {
-          return transaction.get(articleRef).then(doc => {
+          return transaction.get(reference).then(doc => {
             if (!doc.exists) {
               throw 'Document does not exist!';
             }
 
-            if (doc.data().scoreCount && doc.data().averageScore) {
-              var oldRatingTotal =
-                doc.data().averageScore * doc.data().scoreCount;
-              var newAvgRating =
-                (oldRatingTotal - old_rating + rating) / doc.data().scoreCount;
+            var oldRatingTotal =
+              doc.data().averageRating * doc.data().ratingCount;
+            var newAvgRating =
+              (oldRatingTotal - oldRating + rating) / doc.data().ratingCount;
 
-              transaction.update(articleRef, {
-                averageScore: newAvgRating
-              });
-            }
+            transaction.update(reference, {
+              averageRating: newAvgRating
+            });
           });
         });
       } else {
-        db.collection('scores').add({
-          articleId: this.articleId,
-          userId: user.uid,
-          value: rating
-        });
-
+        // User rate news for the first time
         return db.runTransaction(transaction => {
-          return transaction.get(articleRef).then(doc => {
+          return transaction.get(reference).then(doc => {
             if (!doc.exists) {
               throw 'Document does not exist!';
             }
 
-            if (doc.data().scoreCount && doc.data().averageScore) {
-              var newNumRatings = doc.data().scoreCount + 1;
+            if (doc.data().ratingCount && doc.data().averageRating) {
+              var newNumRatings = doc.data().ratingCount + 1;
               var oldRatingTotal =
-                doc.data().averageScore * doc.data().scoreCount;
+                doc.data().averageRating * doc.data().ratingCount;
               var newAvgRating = (oldRatingTotal + rating) / newNumRatings;
 
-              transaction.update(articleRef, {
-                scoreCount: newNumRatings,
-                averageScore: newAvgRating
+              transaction.update(reference, {
+                ratingCount: newNumRatings,
+                averageRating: newAvgRating
               });
             } else {
-              transaction.update(articleRef, {
-                scoreCount: 1,
-                averageScore: rating
+              transaction.update(reference, {
+                ratingCount: 1,
+                averageRating: rating
               });
             }
           });
+        });
+      }
+    },
+    submitRating() {
+      var rating = this.currentUserRating;
+      var oldRating = this.oldRating;
+      this.oldRating = rating;
+
+      var articleRef = db.collection('articles').doc(this.articleId);
+      var authorRef = db.collection('authors').doc(this.author);
+      var sourceRef = db.collection('sources').doc(this.sourceName);
+      var user = firebase.auth().currentUser;
+
+      this.addRating(articleRef, rating, oldRating);
+      this.addRating(authorRef, rating, oldRating);
+      this.addRating(sourceRef, rating, oldRating);
+
+      if (this.currentUserRatingId) {
+        db.collection('ratings')
+          .doc(this.currentUserRatingId)
+          .update({
+            value: rating
+          });
+      } else {
+        db.collection('ratings').add({
+          articleId: this.articleId,
+          userId: user.uid,
+          value: rating
         });
       }
     }

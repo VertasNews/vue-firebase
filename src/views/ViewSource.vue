@@ -3,13 +3,15 @@
     <ul class="collection with-header">
       <li class="collection-header">
         <h4>
-          <a :href="getSourceURL(this.$route.params.url)" target="_blank">{{
-            sourceName
-          }}</a>
+          <a :href="sourceUrl" target="_blank">{{ sourceName }}</a>
+          <span class="badge new" data-badge-caption="/ 10">
+            count: {{ ratingCount }}, average: {{ averageRating }}
+          </span>
         </h4>
       </li>
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <router-link
+          v-if="sourceName"
           class="chip"
           :to="{ name: 'view-author', params: { author: article.author } }"
         >
@@ -30,18 +32,33 @@
 
 <script>
 import db from '../fb';
-import getSourceURL from '../mixins/getSourceURL';
 
 export default {
   name: 'ViewSource',
   data() {
     return {
       articles: [],
-      sourceName: null
+      sourceName: null,
+      sourceUrl: null,
+      averageRating: null,
+      ratingCount: null
     };
   },
   created() {
     this.sourceName = this.$route.params.sourceName;
+    db.collection('sources')
+      .doc(this.sourceName)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          this.averageRating = doc.data().averageRating;
+          this.ratingCount = doc.data().ratingCount;
+          this.sourceUrl = doc.data().sourceUrl;
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No such what!');
+        }
+      });
   },
   beforeRouteEnter(to, from, next) {
     db.collection('articles')
@@ -81,7 +98,6 @@ export default {
           });
         });
     }
-  },
-  mixins: [getSourceURL]
+  }
 };
 </script>

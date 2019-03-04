@@ -36,7 +36,7 @@
 
 <script>
 import db from '../fb';
-import getSourceUrl from '../mixins/getSourceUrl';
+import getSourceMainUrl from '../mixins/getSourceMainUrl';
 
 export default {
   name: 'NewArticle',
@@ -90,7 +90,7 @@ export default {
         .get()
         .then(doc => {
           if (!doc.exists) {
-            var sourceUrl = this.getSourceUrl(this.url);
+            var sourceUrl = this.getSourceMainUrl(this.url);
             sourceRef.set({
               sourceUrl: sourceUrl
             });
@@ -102,6 +102,6 @@ export default {
         });
     }
   },
-  mixins: [getSourceUrl]
+  mixins: [getSourceMainUrl]
 };
 </script>

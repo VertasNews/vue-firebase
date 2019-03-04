@@ -1,6 +1,6 @@
 export default {
   methods: {
-    getSourceUrl(url) {
+    getSourceMainUrl(url) {
       return 'https://' + url.split('/')[2];
     }
   }

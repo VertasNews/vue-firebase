@@ -11,21 +11,30 @@
       </li>
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <router-link
-          v-if="author"
-          class="chip"
-          :to="{
-            name: 'view-source',
-            params: { sourceName: article.sourceName }
-          }"
-        >
-          {{ article.sourceName }}
-        </router-link>
-
-        <router-link
           :to="{ name: 'view-article', params: { articleId: article.id } }"
         >
           {{ article.title }}
         </router-link>
+        <p>
+          <span
+            class="badge new"
+            data-badge-caption="/ 10"
+            v-if="article.averageRating"
+          >
+            count: {{ article.ratingCount }}, average:
+            {{ article.averageRating }}
+          </span>
+          <router-link
+            v-if="author"
+            class="chip"
+            :to="{
+              name: 'view-source',
+              params: { sourceName: article.sourceName }
+            }"
+          >
+            {{ article.sourceName }}
+          </router-link>
+        </p>
       </li>
     </ul>
     <!-- <router-link to="/" class="btn grey">Back</router-link> -->
@@ -53,7 +62,8 @@ export default {
       .get()
       .then(doc => {
         if (doc.exists) {
-          this.averageRating = doc.data().averageRating;
+          if (doc.data().averageRating)
+            this.averageRating = doc.data().averageRating.toFixed(2);
           this.ratingCount = doc.data().ratingCount;
         } else {
           // doc.data() will be undefined in this case
@@ -68,11 +78,16 @@ export default {
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           next(vm => {
+            if (doc.data().averageRating) {
+              var avgRatingRounded = doc.data().averageRating.toFixed(2);
+            }
             const data = {
               id: doc.id,
               sourceName: doc.data().source.name,
               title: doc.data().title,
-              url: doc.data().url
+              url: doc.data().url,
+              averageRating: avgRatingRounded,
+              ratingCount: doc.data().ratingCount
             };
             vm.articles.push(data);
           });
@@ -89,11 +104,16 @@ export default {
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
+            if (doc.data().averageRating) {
+              var avgRatingRounded = doc.data().averageRating.toFixed(2);
+            }
             const data = {
               id: doc.id,
               sourceName: doc.data().source.name,
               title: doc.data().title,
-              url: doc.data().url
+              url: doc.data().url,
+              averageRating: avgRatingRounded,
+              ratingCount: doc.data().ratingCount
             };
             this.articles.push(data);
           });

@@ -13,7 +13,11 @@
           </router-link>
         </span>
         <p>
-          <span class="badge new" data-badge-caption="/ 10">
+          <span
+            class="badge new"
+            data-badge-caption="/ 10"
+            v-if="article.averageRating"
+          >
             count: {{ article.ratingCount }}, average:
             {{ article.averageRating }}
           </span>

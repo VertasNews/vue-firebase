@@ -39,6 +39,7 @@
         </div>
       </div>
     </div>
+    <router-link to="/" class="btn grey">Home</router-link>
   </div>
 </template>
 

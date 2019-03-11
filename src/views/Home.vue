@@ -1,8 +1,8 @@
 <template>
-  <div id="dashboard">
+  <div id="home">
     <ul class="collection with-header">
       <li class="collection-header">
-        <h4>Articles</h4>
+        <h4>Home</h4>
       </li>
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <span class="title">
@@ -55,7 +55,7 @@
 import db from '../fb';
 
 export default {
-  name: 'Dashboard',
+  name: 'Home',
   data() {
     return {
       articles: []

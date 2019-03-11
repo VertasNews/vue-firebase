@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Dashboard from '@/components/Dashboard';
-import Login from '@/components/Login';
-import Register from '@/components/Register';
 import firebase from 'firebase';
 
+import Home from '@/views/Home';
+import Login from '@/views/Login';
+import Register from '@/views/Register';
 import ViewAuthor from '@/views/ViewAuthor';
 import ViewSource from '@/views/ViewSource';
-import NewArticle from '@/components/NewArticle';
+import NewArticle from '@/views/NewArticle';
 import ViewArticle from '@/views/ViewArticle';
 
 Vue.use(Router);
@@ -17,11 +17,8 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      name: 'dashboard',
-      component: Dashboard
-      // meta: {
-      //   requiresAuth: true
-      // }
+      name: 'home',
+      component: Home
     },
     {
       path: '/login',
@@ -51,17 +48,11 @@ let router = new Router({
       path: '/:author',
       name: 'view-author',
       component: ViewAuthor
-      // meta: {
-      //   requiresAuth: true
-      // }
     },
     {
       path: '/:sourceName',
       name: 'view-source',
       component: ViewSource
-      // meta: {
-      //   requiresAuth: true
-      // }
     },
     {
       path: '/:articleId',

@@ -35,7 +35,7 @@
         </p>
       </li>
     </ul>
-    <!-- <router-link to="/" class="btn grey">Back</router-link> -->
+    <router-link to="/" class="btn grey">Home</router-link>
     <!-- <a @click="$router.go(-1)" class="btn grey">Back</a> -->
   </div>
 </template>

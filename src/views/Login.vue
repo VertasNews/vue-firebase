@@ -22,6 +22,9 @@
                 ></v-btn
               >
               <v-btn color="white" @click="login">Login</v-btn>
+              <p>New to Vertas?
+                <router-link to="/register" class="black--text font-weight-medium">Register</router-link>
+              </p>              
             </form>
           </div>
         </div>

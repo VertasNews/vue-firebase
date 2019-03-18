@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/737174b8-cdce-4c1a-bdcb-77a3bd64686b/deploy-status)](https://app.netlify.com/sites/vertas/deploys)
 # vue-firebase
 
 ## Project setup

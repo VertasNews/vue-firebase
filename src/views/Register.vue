@@ -22,8 +22,11 @@
                 ></v-btn
               >
               <v-btn color="white" @click="register">Register</v-btn>
-              <p>Already a member?
-                <router-link to="/login" class="blue--text font-weight-medium">Login</router-link>
+              <p>
+                Already a member?
+                <router-link to="/login" class="blue--text font-weight-medium"
+                  >Login</router-link
+                >
               </p>
             </form>
           </div>

@@ -6,9 +6,22 @@ import store from './store';
 import firebase from 'firebase';
 import '@/fb';
 import Vuetify from 'vuetify';
+import VueAnalytics from 'vue-analytics';
 
 Vue.config.productionTip = false;
+
 Vue.use(Vuetify);
+
+const isProd = process.env.NODE_ENV === 'production';
+
+Vue.use(VueAnalytics, {
+  id: 'UA-128196672-3',
+  router,
+  debug: {
+    enabled: !isProd,
+    sendHitTask: isProd
+  }
+});
 
 let app;
 // eslint-disable-next-line

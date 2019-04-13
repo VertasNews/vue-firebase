@@ -4,8 +4,8 @@
       <li class="collection-header">
         <h4>
           {{ author }}
-          <span class="badge new" data-badge-caption="/ 10">
-            count: {{ ratingCount }}, average: {{ averageRating }}
+          <span class="badge new" data-badge-caption="%" v-if="averageRating">
+            Accuracy rating: {{ averageRating }}
           </span>
         </h4>
       </li>
@@ -18,11 +18,10 @@
         <p>
           <span
             class="badge new"
-            data-badge-caption="/ 10"
+            data-badge-caption="%"
             v-if="article.averageRating"
           >
-            count: {{ article.ratingCount }}, average:
-            {{ article.averageRating }}
+            Accuracy rating: {{ article.averageRating }}
           </span>
           <router-link
             v-if="author"
@@ -63,11 +62,11 @@ export default {
       .then(doc => {
         if (doc.exists) {
           if (doc.data().averageRating)
-            this.averageRating = doc.data().averageRating.toFixed(2);
+            this.averageRating = Math.trunc(doc.data().averageRating * 10);
           this.ratingCount = doc.data().ratingCount;
         } else {
           // doc.data() will be undefined in this case
-          console.log('No such what!');
+          console.log('No such author!');
         }
       });
   },
@@ -79,7 +78,7 @@ export default {
         querySnapshot.forEach(doc => {
           next(vm => {
             if (doc.data().averageRating) {
-              var avgRatingRounded = doc.data().averageRating.toFixed(2);
+              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
             const data = {
               id: doc.id,
@@ -105,7 +104,7 @@ export default {
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
             if (doc.data().averageRating) {
-              var avgRatingRounded = doc.data().averageRating.toFixed(2);
+              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
             const data = {
               id: doc.id,

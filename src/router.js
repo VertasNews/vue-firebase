@@ -45,17 +45,17 @@ let router = new Router({
       }
     },
     {
-      path: '/:author',
+      path: '/author/:author',
       name: 'view-author',
       component: ViewAuthor
     },
     {
-      path: '/:sourceName',
+      path: '/source/:sourceName',
       name: 'view-source',
       component: ViewSource
     },
     {
-      path: '/:articleId',
+      path: '/article/:articleId',
       name: 'view-article',
       component: ViewArticle,
       meta: {

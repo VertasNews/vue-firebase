@@ -12,6 +12,8 @@ Vue.config.productionTip = false;
 
 Vue.use(Vuetify);
 
+Vue.use(require('vue-moment'));
+
 const isProd = process.env.NODE_ENV === 'production';
 
 Vue.use(VueAnalytics, {

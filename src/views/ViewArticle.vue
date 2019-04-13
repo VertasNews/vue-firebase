@@ -4,17 +4,36 @@
       <div class="col s12">
         <div class="card">
           <div class="card-content">
-            <span class="card-title">{{ title }}</span>
-            <span class="badge new" data-badge-caption="/ 10">
-              count: {{ ratingCount }}, average: {{ averageRating }}
+            <v-img v-if="urlToImage" height="350px" :src="urlToImage"></v-img>
+            <h5>
+              <a :href="url" target="_blank">{{ title }}</a>
+            </h5>
+            <span>{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
+            <span class="badge new" data-badge-caption="%" v-if="averageRating">
+              Accuracy rating: {{ averageRating }}
             </span>
-            <v-rating
-              v-model="currentUserRating"
-              :length="10"
-              @click.native="submitRating"
-            >
-            </v-rating>
-            <a :href="url" target="_blank"> {{ url }} </a>
+            <v-card-actions>
+              Rate this article accuracy
+              <v-rating
+                v-model="userRating"
+                :length="10"
+                @click.native="submitRating"
+              >
+              </v-rating>
+              {{ userRating }}0%
+            </v-card-actions>
+            <!-- <v-slider
+              v-model="biasRating"
+              :tick-labels="ticksLabels"
+              :max="8"
+              step="2"
+              always-dirty
+              ticks="always"
+              tick-size="2"
+              track-color="green"
+              color="green"
+            ></v-slider> -->
+            <a :href="url" target="_blank">{{ content }}</a>
           </div>
           <div class="card-action">
             <router-link
@@ -56,11 +75,17 @@ export default {
       url: null,
       author: null,
       sourceName: null,
+      description: null,
+      content: null,
+      urlToImage: null,
+      publishedAt: null,
       averageRating: null,
       ratingCount: null,
-      currentUserRating: null,
-      currentUserRatingId: null,
-      oldRating: null
+      userRating: null,
+      userRatingId: null,
+      oldRating: null,
+      biasRating: 4,
+      ticksLabels: ['Left', 'Semi-left', 'Centrist', 'Semi-right', 'Right']
     };
   },
   created() {
@@ -72,12 +97,12 @@ export default {
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           if (doc.exists) {
-            this.currentUserRating = doc.data().value;
+            this.userRating = doc.data().value;
             this.oldRating = doc.data().value;
-            this.currentUserRatingId = doc.id;
+            this.userRatingId = doc.id;
           } else {
             // doc.data() will be undefined in this case
-            console.log('No such what!');
+            console.log('No rating found!');
           }
         });
       });
@@ -93,8 +118,12 @@ export default {
             vm.sourceName = doc.data().source.name;
             vm.title = doc.data().title;
             vm.url = doc.data().url;
+            vm.description = doc.data().description;
+            vm.content = doc.data().content;
+            vm.urlToImage = doc.data().urlToImage;
+            vm.publishedAt = doc.data().publishedAt;
             if (doc.data().averageRating)
-              vm.averageRating = doc.data().averageRating.toFixed(2);
+              vm.averageRating = Math.trunc(doc.data().averageRating * 10);
             vm.ratingCount = doc.data().ratingCount;
           } else {
             // doc.data() will be undefined in this case
@@ -117,16 +146,21 @@ export default {
             this.sourceName = doc.data().source.name;
             this.title = doc.data().title;
             this.url = doc.data().url;
-            this.averageRating = doc.data().averageRating;
+            this.description = doc.data().description;
+            this.content = doc.data().content;
+            this.urlToImage = doc.data().urlToImage;
+            this.publishedAt = doc.data().publishedAt;
+            if (doc.data().averageRating)
+              this.averageRating = Math.trunc(doc.data().averageRating * 10);
             this.ratingCount = doc.data().ratingCount;
           } else {
             console.log('No such document!');
           }
         });
     },
-    addRating(reference, rating, oldRating) {
+    addRatingToFirebase(reference, rating, oldRating) {
       // User already rated the article
-      if (this.currentUserRatingId) {
+      if (this.userRatingId) {
         return db.runTransaction(transaction => {
           return transaction.get(reference).then(doc => {
             if (!doc.exists) {
@@ -172,7 +206,7 @@ export default {
       }
     },
     submitRating() {
-      var rating = this.currentUserRating;
+      var rating = this.userRating;
       var oldRating = this.oldRating;
       this.oldRating = rating;
 
@@ -181,13 +215,13 @@ export default {
       var sourceRef = db.collection('sources').doc(this.sourceName);
       var user = firebase.auth().currentUser;
 
-      this.addRating(articleRef, rating, oldRating);
-      this.addRating(authorRef, rating, oldRating);
-      this.addRating(sourceRef, rating, oldRating);
+      this.addRatingToFirebase(articleRef, rating, oldRating);
+      this.addRatingToFirebase(authorRef, rating, oldRating);
+      this.addRatingToFirebase(sourceRef, rating, oldRating);
 
-      if (this.currentUserRatingId) {
+      if (this.userRatingId) {
         db.collection('ratings')
-          .doc(this.currentUserRatingId)
+          .doc(this.userRatingId)
           .update({
             value: rating
           });

@@ -29,7 +29,7 @@
             :to="{ name: 'view-author', params: { author: article.author } }"
           >
             <i class="fa fa-user"></i>
-            {{ article.author }}
+            {{ article.author.replace(/,/g, '/') }}
           </router-link>
         </p>
       </li>

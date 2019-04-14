@@ -3,7 +3,14 @@
     <ul class="collection with-header">
       <li class="collection-header">
         <h4>
-          {{ author }}
+          <div v-if="author.includes('http')">
+            <a :href="author.replace(/,/g, '/')" target="_blank">{{
+              author.replace(/,/g, '/')
+            }}</a>
+          </div>
+          <div v-else>
+            {{ author.replace(/,/g, '/') }}
+          </div>
           <span class="badge new" data-badge-caption="%" v-if="averageRating">
             Accuracy rating: {{ averageRating }}
           </span>
@@ -24,7 +31,7 @@
             Accuracy rating: {{ article.averageRating }}
           </span>
           <router-link
-            v-if="author"
+            v-if="article.sourceName"
             class="chip"
             :to="{
               name: 'view-source',

@@ -8,28 +8,24 @@
               author.replace(/,/g, '/')
             }}</a>
           </div>
-          <div v-else>
-            {{ author.replace(/,/g, '/') }}
-          </div>
-          <span class="badge new" data-badge-caption="%" v-if="averageRating">
-            Accuracy rating: {{ averageRating }}
-          </span>
+          <div v-else>{{ author.replace(/,/g, '/') }}</div>
+          <span class="badge new" data-badge-caption="%" v-if="averageRating"
+            >Accuracy rating: {{ averageRating }}</span
+          >
         </h4>
       </li>
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <router-link
           :to="{ name: 'view-article', params: { articleId: article.id } }"
+          >{{ article.title }}</router-link
         >
-          {{ article.title }}
-        </router-link>
         <p>
           <span
             class="badge new"
             data-badge-caption="%"
             v-if="article.averageRating"
+            >Accuracy rating: {{ article.averageRating }}</span
           >
-            Accuracy rating: {{ article.averageRating }}
-          </span>
           <router-link
             v-if="article.sourceName"
             class="chip"
@@ -37,14 +33,12 @@
               name: 'view-source',
               params: { sourceName: article.sourceName }
             }"
+            >{{ article.sourceName }}</router-link
           >
-            {{ article.sourceName }}
-          </router-link>
         </p>
       </li>
     </ul>
     <router-link to="/" class="btn grey">Home</router-link>
-    <!-- <a @click="$router.go(-1)" class="btn grey">Back</a> -->
   </div>
 </template>
 

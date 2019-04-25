@@ -1,5 +1,31 @@
 <template>
   <div id="view-article">
+    <!-- <v-layout>
+      <v-flex>
+        <v-card>
+          <v-img v-if="urlToImage" :src="urlToImage"></v-img>
+          <v-card-title>
+            <h5>
+              <a :href="url" target="_blank">{{ title }}</a>
+            </h5>
+            <span>{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
+            <span class="badge new" data-badge-caption="%" v-if="averageRating">
+              Accuracy rating: {{ averageRating }}
+            </span>
+          </v-card-title>
+          <v-card-actions>
+            Rate this article accuracy
+            <v-rating
+              v-model="userRating"
+              :length="10"
+              @click.native="submitRating"
+            >
+            </v-rating>
+            {{ userRating }}0%
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout> -->
     <div class="row">
       <div class="col s12">
         <div class="card">
@@ -35,7 +61,7 @@
             ></v-slider> -->
             <a :href="url" target="_blank">{{ content }}</a>
           </div>
-          <div class="card-action">
+          <v-card-actions>
             <router-link
               v-if="sourceName"
               class="chip blue-text"
@@ -52,9 +78,9 @@
               :to="{ name: 'view-author', params: { author: author } }"
             >
               <i class="fa fa-user"></i>
-              {{ author }}
+              {{ author.replace(/,/g, '/') }}
             </router-link>
-          </div>
+          </v-card-actions>
         </div>
       </div>
     </div>

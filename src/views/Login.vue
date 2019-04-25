@@ -45,8 +45,8 @@ export default {
   name: 'Login',
   data: function() {
     return {
-      email: '',
-      password: ''
+      email: 'demo@gg.com',
+      password: 'demovertas'
     };
   },
   methods: {

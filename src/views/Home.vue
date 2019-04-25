@@ -3,7 +3,7 @@
     <!-- <LowestRated /> -->
     <ul class="collection with-header">
       <li class="collection-header">
-        <h4>Top U.S. Headlines, updated everyday</h4>
+        <h4>Top U.S. Headlines</h4>
       </li>
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <span class="title">
@@ -26,9 +26,8 @@
             class="badge new"
             data-badge-caption="%"
             v-if="article.averageRating"
+            >Accuracy rating: {{ article.averageRating }}</span
           >
-            Accuracy rating: {{ article.averageRating }}
-          </span>
 
           <router-link
             v-if="article.sourceName"
@@ -37,9 +36,8 @@
               name: 'view-source',
               params: { sourceName: article.sourceName }
             }"
+            >{{ article.sourceName }}</router-link
           >
-            {{ article.sourceName }}
-          </router-link>
 
           <router-link
             v-if="article.author"
@@ -53,11 +51,11 @@
       </li>
     </ul>
 
-    <div class="fixed-action-btn">
+    <v-btn color="blue" dark small absolute bottom left fab>
       <router-link to="/new_article" class="btn-floating btn-large blue">
-        <i class="fa fa-plus"></i>
+        <v-icon>add</v-icon>
       </router-link>
-    </div>
+    </v-btn>
   </div>
 </template>
 

@@ -9,9 +9,19 @@
             alt="Vertas News"
           />
         </router-link>
+        <v-btn flat>
+          <router-link to="/about">
+            About us
+          </router-link>
+        </v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
       <v-toolbar-items>
+        <v-btn v-if="isLoggedIn" flat>
+          <router-link to="/new_article">
+            Add article
+          </router-link>
+        </v-btn>
         <v-btn v-if="isLoggedIn" flat
           ><span class="email">{{ currentUser }}</span></v-btn
         >

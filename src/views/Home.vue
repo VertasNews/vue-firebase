@@ -51,11 +51,13 @@
       </li>
     </ul>
 
-    <v-btn color="blue" dark small absolute bottom left fab>
-      <router-link to="/new_article" class="btn-floating btn-large blue">
-        <v-icon>add</v-icon>
-      </router-link>
-    </v-btn>
+    <div
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="busy"
+      infinite-scroll-distance="10"
+    >
+      ...
+    </div>
   </div>
 </template>
 
@@ -70,34 +72,94 @@ export default {
   // },
   data() {
     return {
-      articles: []
+      articles: [],
+      lastVisible: null,
+      next: null,
+      busy: false
     };
   },
   created() {
-    db.collection('articles')
+    var first = db
+      .collection('articles')
       .orderBy('publishedAt', 'desc')
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          if (doc.data().averageRating) {
-            var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
-          }
-          const data = {
-            id: doc.id,
-            author: doc.data().author,
-            sourceName: doc.data().source.name,
-            title: doc.data().title,
-            url: doc.data().url,
-            urlToImage: doc.data().urlToImage,
-            description: doc.data().description,
-            content: doc.data().content,
-            publishedAt: doc.data().publishedAt,
-            averageRating: avgRatingRounded,
-            ratingCount: doc.data().ratingCount
-          };
-          this.articles.push(data);
-        });
+      .limit(10);
+
+    first.get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        if (doc.data().averageRating) {
+          var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
+        }
+        const data = {
+          id: doc.id,
+          author: doc.data().author,
+          sourceName: doc.data().source.name,
+          title: doc.data().title,
+          url: doc.data().url,
+          urlToImage: doc.data().urlToImage,
+          description: doc.data().description,
+          content: doc.data().content,
+          publishedAt: doc.data().publishedAt,
+          averageRating: avgRatingRounded,
+          ratingCount: doc.data().ratingCount
+        };
+        this.articles.push(data);
       });
+
+      this.lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      console.log('last', this.lastVisible);
+
+      // Construct a new query starting at this document,
+      this.next = db
+        .collection('articles')
+        .orderBy('publishedAt', 'desc')
+        .startAfter(this.lastVisible)
+        .limit(10);
+    });
+
+    console.log('articles', this.articles);
+  },
+  methods: {
+    loadMore: function() {
+      this.busy = true;
+
+      setTimeout(() => {
+        this.next.get().then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            if (doc.data().averageRating) {
+              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
+            }
+            const data = {
+              id: doc.id,
+              author: doc.data().author,
+              sourceName: doc.data().source.name,
+              title: doc.data().title,
+              url: doc.data().url,
+              urlToImage: doc.data().urlToImage,
+              description: doc.data().description,
+              content: doc.data().content,
+              publishedAt: doc.data().publishedAt,
+              averageRating: avgRatingRounded,
+              ratingCount: doc.data().ratingCount
+            };
+            this.articles.push(data);
+          });
+
+          this.lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+          if (!this.lastVisible) {
+            this.busy = true;
+            return;
+          }
+
+          // Construct a new query starting at this document,
+          this.next = db
+            .collection('articles')
+            .orderBy('publishedAt', 'desc')
+            .startAfter(this.lastVisible)
+            .limit(10);
+        });
+        this.busy = false;
+      }, 1000);
+    }
   }
 };
 </script>

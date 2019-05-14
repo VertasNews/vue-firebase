@@ -9,6 +9,7 @@ import ViewAuthor from '@/views/ViewAuthor';
 import ViewSource from '@/views/ViewSource';
 import NewArticle from '@/views/NewArticle';
 import ViewArticle from '@/views/ViewArticle';
+import About from '@/views/About';
 
 Vue.use(Router);
 
@@ -61,6 +62,11 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     }
   ]
 });

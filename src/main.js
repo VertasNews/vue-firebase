@@ -7,13 +7,13 @@ import firebase from 'firebase';
 import '@/fb';
 import Vuetify from 'vuetify';
 import VueAnalytics from 'vue-analytics';
+import infiniteScroll from 'vue-infinite-scroll';
 
-Vue.config.productionTip = false;
-
+Vue.use(infiniteScroll);
 Vue.use(Vuetify);
-
 Vue.use(require('vue-moment'));
 
+Vue.config.productionTip = false;
 const isProd = process.env.NODE_ENV === 'production';
 
 Vue.use(VueAnalytics, {

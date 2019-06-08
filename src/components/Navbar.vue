@@ -16,7 +16,8 @@
         </v-btn>
       </v-toolbar-items>
       <v-spacer></v-spacer>
-      <v-toolbar-items>
+      <v-toolbar-items class="hidden-xs-and-down">
+        <Popup v-if="isLoggedIn && popup" />
         <v-btn v-if="isLoggedIn" flat>
           <router-link to="/new_article">
             Add article
@@ -33,26 +34,69 @@
         >
         <v-btn v-if="isLoggedIn" flat @click.native="logout">Logout</v-btn>
       </v-toolbar-items>
+      <v-menu class="hidden-sm-and-up">
+        <v-toolbar-side-icon slot="activator"></v-toolbar-side-icon>
+        <v-list>
+          <v-list-tile v-if="isLoggedIn">
+            <router-link to="/new_article">
+              Add article
+            </router-link>
+          </v-list-tile>
+          <v-list-tile v-if="isLoggedIn">
+            <span class="email">{{ currentUser }}</span>
+          </v-list-tile>
+          <v-list-tile v-if="!isLoggedIn">
+            <router-link to="/login">
+              Login
+            </router-link>
+          </v-list-tile>
+          <v-list-tile v-if="!isLoggedIn">
+            <router-link to="/register">
+              Register
+            </router-link>
+          </v-list-tile>
+          <v-list-tile v-if="isLoggedIn">
+            <v-btn @click.native="logout">Logout</v-btn>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-toolbar>
   </nav>
 </template>
 
 <script>
+import db from '../fb';
 import firebase from 'firebase';
+import Popup from './Popup';
 
 export default {
   name: 'Navbar',
+  components: { Popup },
   data() {
     return {
       isLoggedIn: false,
-      currentUser: false
+      currentUser: null,
+      popup: false
     };
   },
   created() {
-    if (firebase.auth().currentUser) {
+    var user = firebase.auth().currentUser;
+    if (user) {
       this.isLoggedIn = true;
-      this.currentUser = firebase.auth().currentUser.email;
+      this.currentUser = user.email;
     }
+
+    db.collection('applied')
+      .doc(user.uid)
+      .get()
+      .then(doc => {
+        if (!doc.exists) {
+          this.popup = true;
+        }
+      })
+      .catch(function(error) {
+        console.log('Error getting document:', error);
+      });
   },
   methods: {
     logout: function() {

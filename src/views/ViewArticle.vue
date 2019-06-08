@@ -39,7 +39,7 @@
               Accuracy rating: {{ averageRating }}
             </span>
             <v-card-actions>
-              Rate this article accuracy
+              Accuracy:
               <v-rating
                 v-model="userRating"
                 :length="10"
@@ -237,13 +237,18 @@ export default {
       this.oldRating = rating;
 
       var articleRef = db.collection('articles').doc(this.articleId);
-      var authorRef = db.collection('authors').doc(this.author);
-      var sourceRef = db.collection('sources').doc(this.sourceName);
       var user = firebase.auth().currentUser;
 
       this.addRatingToFirebase(articleRef, rating, oldRating);
-      this.addRatingToFirebase(authorRef, rating, oldRating);
-      this.addRatingToFirebase(sourceRef, rating, oldRating);
+
+      if (this.author) {
+        var authorRef = db.collection('authors').doc(this.author);
+        this.addRatingToFirebase(authorRef, rating, oldRating);
+      }
+      if (this.sourceName) {
+        var sourceRef = db.collection('sources').doc(this.sourceName);
+        this.addRatingToFirebase(sourceRef, rating, oldRating);
+      }
 
       if (this.userRatingId) {
         db.collection('ratings')

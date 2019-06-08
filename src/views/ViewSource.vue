@@ -3,7 +3,12 @@
     <ul class="collection with-header">
       <li class="collection-header">
         <h4>
-          <a :href="sourceUrl" target="_blank">{{ sourceName }}</a>
+          <a :href="sourceUrl" target="_blank">
+            <v-avatar size="32px">
+              <img class="img-circle mb-1" :src="getImgUrl(sourceId)" />
+            </v-avatar>
+            {{ sourceName }}
+          </a>
           <span class="badge new" data-badge-caption="%" v-if="averageRating">
             Accuracy rating: {{ averageRating }}
           </span>
@@ -48,6 +53,7 @@ export default {
       articles: [],
       sourceName: null,
       sourceUrl: null,
+      sourceId: null,
       averageRating: null,
       ratingCount: null
     };
@@ -63,6 +69,7 @@ export default {
             this.averageRating = Math.trunc(doc.data().averageRating * 10);
           this.ratingCount = doc.data().ratingCount;
           this.sourceUrl = doc.data().sourceUrl;
+          this.sourceId = doc.data().id;
         } else {
           // doc.data() will be undefined in this case
           console.log('No such what!');
@@ -116,6 +123,9 @@ export default {
             this.articles.push(data);
           });
         });
+    },
+    getImgUrl(pic) {
+      return require('../assets/images/' + pic + '.png');
     }
   }
 };

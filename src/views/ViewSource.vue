@@ -4,7 +4,7 @@
       <li class="collection-header">
         <h4>
           <a :href="sourceUrl" target="_blank">
-            <v-avatar size="32px">
+            <v-avatar size="32px" v-if="sourceId">
               <img class="img-circle mb-1" :src="getImgUrl(sourceId)" />
             </v-avatar>
             {{ sourceName }}
@@ -125,7 +125,8 @@ export default {
         });
     },
     getImgUrl(pic) {
-      return require('../assets/images/' + pic + '.png');
+      if (pic) return require('../assets/images/' + pic + '.png');
+      else return null;
     }
   }
 };

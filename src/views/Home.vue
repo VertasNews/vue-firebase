@@ -1,52 +1,105 @@
 <template>
   <div id="home">
+    <div style="position: absolute; top: 63px; left: 23%;">
+    <div id="instruction-header">
+      
+      <button id="add-article">
+        <router-link to="/new_article" id="add-article-router" >
+        
+        <img
+            src="../assets/plus_sign_demo.png"
+            style="height: 25px; position: relative; top: 5px; "
+          />
+          
+           
+          
+         Add Article </router-link>  </button> 
+         <div id="header-icon">
+          <span class = "green-circle"></span>
+          <span class="trl green-text right-margin "> TRUTH </span>
+           <span class = "red-circle"></span>
+           <span class = "trl red-text right-margin"> RIGHT </span>
+           <span class = "blue-circle"></span>
+           <span class = "trl blue-text"> LEFT </span>
+           </div>
+
+            
+          
+    </div> 
+    </div>
+   
     <!-- <LowestRated /> -->
-    <ul class="collection with-header">
-      <li class="collection-header">
-        <h4>Top U.S. Headlines</h4>
-      </li>
+    <ul id="articles">
       <li v-for="article in articles" :key="article.id" class="collection-item">
-        <span class="title">
+        <span>
           <router-link
             :to="{ name: 'view-article', params: { articleId: article.id } }"
           >
-            <v-img
+            <img
               v-if="article.urlToImage"
-              height="350px"
+              class ="article-img"
               :src="article.urlToImage"
-            ></v-img>
-            <br />
-            {{ article.title }}
+              
+            >
+           
+            <span class = "article-title"> {{ article.title }} </span>
+           <!-- <span class="article-time">{{ article.publishedAt | moment('MMMM D') }}</span> -->
           </router-link>
         </span>
-        <span>{{ article.publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
-        <p>{{ article.description }}</p>
-        <p>
-          <span
-            class="badge new"
-            data-badge-caption="%"
-            v-if="article.averageRating"
-            >Accuracy rating: {{ article.averageRating }}</span
-          >
-
-          <router-link
+        
+        <div>
+            <router-link
             v-if="article.sourceName"
-            class="chip"
+           
             :to="{
               name: 'view-source',
               params: { sourceName: article.sourceName }
             }"
-            >{{ article.sourceName }}</router-link
-          >
-
+            > <span class="article-source">{{ article.sourceName }}  </span></router-link>
+          
+        
           <router-link
             v-if="article.author"
-            class="chip"
+            
             :to="{ name: 'view-author', params: { author: article.author } }"
           >
-            <i class="fa fa-user"></i>
-            {{ article.author.replace(/,/g, '/') }}
+            <span class="article-author">{{ article.author.replace(/,/g, '/') }} </span>
           </router-link>
+        </div>
+         <p class="article-description" > {{ article.description }}</p>
+        
+          <p>
+          <span class = "green-circle"></span>
+          <span class = "green-rating"
+            
+            
+            v-if="!article.averageRating"
+            > NA </span
+          >
+          <span class = "green-rating"
+           
+            v-if="article.averageRating"
+            > {{ article.averageRating }}% </span
+          >
+          <span class ="red-circle"></span>
+          <span class = "red-rating"
+            
+            data-badge-caption="%"
+            
+            > NA </span
+          >
+          <router-link
+            :to="{ name: 'view-article', params: { articleId: article.id } }"
+          >
+           <span class="rate"> <img
+            src="../assets/rating.png" style="height: 18px; opacity: 0.81; position: relative; top: 4px;"
+          /> RATE </span>
+          </router-link>
+          <span class="read"> <a :href="article.url" target="_blank"> <img
+            src="../assets/read-book-icon-12.jpg" style="height: 18px; opacity: 0.81; position: relative; top: 4px; "> READ </a> </span>
+         
+         
+
         </p>
       </li>
     </ul>
@@ -75,7 +128,8 @@ export default {
       articles: [],
       lastVisible: null,
       next: null,
-      busy: false
+      busy: false,
+      url: null
     };
   },
   created() {
@@ -162,4 +216,157 @@ export default {
     }
   }
 };
+
 </script>
+<style scoped>
+.article-img {
+  float: left;
+  width: 250px;
+  height: 150px;
+  margin-right: 10px;
+}
+li p {
+  margin-bottom: 10px;
+}
+.article-title {
+  color: black;
+  font-weight: bold;
+  margin-bottom: 0px;
+  font-size: 16px;
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.article-source {
+  font-weight: bold;
+  color: #0CD7E8;
+  font-size: 11px;
+  margin-right: 10px;
+}
+li {
+  position: relative;
+  width: 40%;
+  left: 23%;
+  min-height: 150px;
+  font-family: Helvetica,Arial,sans-serif;
+}
+.article-author {
+  font-size: 11px;
+  font-weight: bold;
+  color: black;
+  opacity: 0.61;
+}
+.article-description {
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 12px;
+}
+.article-time {
+  font-size: 11px;
+  color: black;
+  opacity: 0.61;
+}
+.green-circle {
+  height: 22px;
+  width: 22px;
+  background-color: #438007;
+  border-radius: 50%;
+  display: inline-block;
+}
+.red-circle {
+  height: 22px;
+  width: 22px;
+  background-color:#B20000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.blue-circle {
+  height: 22px;
+  width: 22px;
+  background-color: #075B80;
+  border-radius: 50%;
+  display: inline-block;
+}
+.green-rating {
+  color: #438007;
+  position: relative;
+  bottom: 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.red-rating {
+  color: #B20000;
+  position: relative;
+  bottom: 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.read ,.rate{
+  float: right;
+  color: black;
+  font-weight: bold;
+  opacity: 0.51;
+}
+.read:hover, .rate:hover {
+  opacity: 1;
+}
+.rate {
+  margin-left: 10px;
+}
+a {
+  color: black;
+}
+#add-article {
+  position: relative;
+  top: 35px;
+  width: 130px;
+  height: 36px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #B7B1B1;
+  font-family: Helvetica,Arial,sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 0;
+  margin-bottom: 10px;
+}
+#add-article-router {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+#instruction-header {
+  position: fixed;
+  height: 90px;
+  width: 40%;
+  padding: 10px 0px 10px 0px;
+  z-index: 1;
+  background: white;
+}
+#header-icon {
+  text-align: right;
+}
+.trl {
+  font-family: Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  position: relative;
+  bottom: 5px;
+}
+.red-text {
+  color: #B20000;
+}
+.green-text {
+  color: #438007;
+
+}
+.blue-text {
+ color:  #075B80;
+}
+.right-margin {
+  margin-right: 20px;
+}
+
+
+</style>

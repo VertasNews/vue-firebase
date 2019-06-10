@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Navbar :key="$route.fullPath" />
-    <div class="container">
+    <div class="contain">
       <router-view />
     </div>
   </v-app>
@@ -17,3 +17,10 @@ export default {
   }
 };
 </script>
+<style>
+.contain {
+  background: white;
+  margin: 0;
+  padding-top: 100px; 
+}
+</style>

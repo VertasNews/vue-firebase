@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="login">
     <div class="container">
       <div class="row">
         <div class="col s12 m8 offset-m2">
@@ -23,6 +23,16 @@
               >
               <v-btn color="white" @click="login">Login</v-btn>
               <p>
+                <br />or Login with <br />
+                <button @click="socialLogin('g')">
+                  Google <i class="fab fa-google"></i>
+                </button>
+                <br />
+                <button @click="socialLogin('f')">
+                  Facebook <i class="fab fa-facebook"></i>
+                </button>
+              </p>
+              <p>
                 New to Vertas?
                 <router-link
                   to="/register"
@@ -45,8 +55,8 @@ export default {
   name: 'Login',
   data: function() {
     return {
-      email: 'demo@gg.com',
-      password: 'demovertas'
+      email: null,
+      password: null
     };
   },
   methods: {
@@ -63,6 +73,29 @@ export default {
           }
         );
       e.preventDefault();
+    },
+    socialLogin: function(key) {
+      var provider;
+      switch (key) {
+        case 'g':
+          provider = new firebase.auth.GoogleAuthProvider();
+          break;
+        case 'f':
+          provider = new firebase.auth.FacebookAuthProvider();
+          break;
+        default:
+          break;
+      }
+
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(result => {
+          this.$router.push('/');
+        })
+        .catch(err => {
+          alert('Oops. ' + err.message);
+        });
     }
   }
 };

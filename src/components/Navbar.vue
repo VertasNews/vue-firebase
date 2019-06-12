@@ -24,12 +24,12 @@
        
        
     
-      </v-toolbar-items>
+      </v-toolbar-items> 
       <v-spacer> </v-spacer>
 <div id="loginsignup">
-     
+        <Popup v-if="isLoggedIn && popup" />
         <button class="navbutton" v-if="!isLoggedIn"
-          > <router-link to="/login"><span>Log In</span></router-link></button
+          > <router-link to="/login"><span>Log In</span></router-link></button>
         >
         <button class="navbutton" v-if="!isLoggedIn"
           > <router-link to="/register"><span> Sign Up</span></router-link></button    
@@ -65,14 +65,7 @@
            
            
           <v-divider></v-divider>
-
-
-          
-           
-         
           <v-btn flat color="#438007" block id="logout" @click.native="logout">Log Out</v-btn> 
-            
-        
       </v-card>
     </v-menu>
        </div>
@@ -86,21 +79,38 @@
 </template>
 
 <script>
+import db from '../fb';
 import firebase from 'firebase';
+import Popup from './Popup';
 
 export default {
   name: 'Navbar',
+  components: { Popup },
   data() {
     return {
       isLoggedIn: false,
-      currentUser: false
+      currentUser: null,
+      popup: false
     };
   },
   created() {
-    if (firebase.auth().currentUser) {
+    var user = firebase.auth().currentUser;
+    if (user) {
       this.isLoggedIn = true;
-      this.currentUser = firebase.auth().currentUser.email;
+      this.currentUser = user.email;
     }
+
+    db.collection('applied')
+      .doc(user.uid)
+      .get()
+      .then(doc => {
+        if (!doc.exists) {
+          this.popup = true;
+        }
+      })
+      .catch(function(error) {
+        console.log('Error getting document:', error);
+      });
   },
   methods: {
     logout: function() {

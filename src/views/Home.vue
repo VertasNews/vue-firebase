@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <div style="position: absolute; top: 63px; left: 23%;">
+    <div style="position: absolute; top: 60px; left: 23%;">
     <div id="instruction-header">
       
       <button id="add-article">
@@ -27,7 +27,7 @@
           
     </div> 
     </div>
-   
+    
     <!-- <LowestRated /> -->
     <ul id="articles">
       <li v-for="article in articles" :key="article.id" class="collection-item">
@@ -44,7 +44,7 @@
            
             <span class = "article-title"> {{ article.title }} </span>
            <!-- <span class="article-time">{{ article.publishedAt | moment('MMMM D') }}</span> -->
-          </router-link>
+         </router-link>
         </span>
         
         <div>
@@ -103,6 +103,19 @@
         </p>
       </li>
     </ul>
+    <div style=" position: absolute;
+    right: 36%;
+  top: 160px;"> 
+      <div id="ranking-table">   
+      <div class="ranking-bar"> </div>
+      <div class="ranking-bar"> </div>
+      <div class="ranking-bar"> </div>
+      <div class="ranking-bar"> </div>
+      <div class="ranking-bar"> </div>
+      <div class="ranking-bar"> </div>
+       
+    </div>
+    </div>
 
     <div
       v-infinite-scroll="loadMore"
@@ -110,19 +123,19 @@
       infinite-scroll-distance="10"
     >
       ...
-    </div>
+    </div> -
   </div>
 </template>
 
 <script>
 import db from '../fb';
-// import LowestRated from '../components/LowestRated';
+ import LowestRated from '../components/LowestRated';
 
 export default {
   name: 'Home',
-  // components: {
-  //   LowestRated
-  // },
+   components: {
+    LowestRated
+   },
   data() {
     return {
       articles: [],
@@ -367,6 +380,21 @@ a {
 .right-margin {
   margin-right: 20px;
 }
-
+#ranking-table {
+  position: fixed;
+  border-radius: 20px;
+  width: 250px;
+  height: 300px;
+  border: 1px solid black;
+  padding: 10px 10px 10px 20px;
+}
+.ranking-bar {
+  border-radius: 50px;
+  width: 200px;
+  height: 16px;
+  background-color: #438007;
+  display: inline-block;
+  margin-top: 10px;
+}
 
 </style>

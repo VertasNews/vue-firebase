@@ -30,6 +30,12 @@
     
     <!-- <LowestRated /> -->
     <ul id="articles">
+    <LowestRated />
+    <AccuracyRanking />
+    <ul class="collection with-header">
+      <li class="collection-header">
+        <h4>Top U.S. Headlines</h4>
+      </li>
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <span>
           <router-link
@@ -129,13 +135,15 @@
 
 <script>
 import db from '../fb';
- import LowestRated from '../components/LowestRated';
+import LowestRated from '../components/LowestRated';
+import AccuracyRanking from '../components/AccuracyRanking';
 
 export default {
   name: 'Home',
-   components: {
+  components: {
+    AccuracyRanking,
     LowestRated
-   },
+  },
   data() {
     return {
       articles: [],

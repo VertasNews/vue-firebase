@@ -6,7 +6,7 @@ admin.initializeApp();
 
 exports.newsapi = functions.https.onRequest((request, response) => {
   const url =
-    'https://newsapi.org/v2/top-headlines?country=us&pageSize=100&apiKey=583dc1c927234dae9e0a79b2b9556dce';
+    'https://newsapi.org/v2/top-headlines?country=us&apiKey=583dc1c927234dae9e0a79b2b9556dce';
 
   const getData = async url => {
     try {

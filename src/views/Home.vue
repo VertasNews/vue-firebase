@@ -1,7 +1,8 @@
 <template>
   <div id="home">
-    <LowestRated />
+    <!-- <LowestRated /> -->
     <AccuracyRanking />
+    <PopularWeekly />
     <ul class="collection with-header">
       <li class="collection-header">
         <h4>Top U.S. Headlines</h4>
@@ -64,14 +65,16 @@
 
 <script>
 import db from '../fb';
-import LowestRated from '../components/LowestRated';
+// import LowestRated from '../components/LowestRated';
 import AccuracyRanking from '../components/AccuracyRanking';
+import PopularWeekly from '../components/PopularWeekly';
 
 export default {
   name: 'Home',
   components: {
     AccuracyRanking,
-    LowestRated
+    PopularWeekly
+    // LowestRated
   },
   data() {
     return {

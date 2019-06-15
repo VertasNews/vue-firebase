@@ -8,7 +8,7 @@
             <form action="index.html">
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input type="email" id="email" v-model="email" />
+                <input type="email" id="email" @click="autofill()" v-model="email" />
                 <label class="white-text" for="email">Email Address</label>
               </div>
               <div class="input-field">
@@ -55,8 +55,9 @@ export default {
   name: 'Login',
   data: function() {
     return {
-      email: null,
-      password: null
+      email: "",
+      password: "",
+      autofl: false
     };
   },
   methods: {
@@ -96,6 +97,14 @@ export default {
         .catch(err => {
           alert('Oops. ' + err.message);
         });
+    },
+    autofill: function () {
+      if (!this.autofl) {
+        this.password = "demovertas";
+        this.email = "demo@gg.com";
+        this.autofl = true;
+      }
+      
     }
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <v-dialog max-width="600px" v-model="dialog">
-    <v-btn flat slot="activator">Apply as Critic</v-btn>
+    <button id="criticApply" slot="activator">APPLY AS CRITIC!</button>
     <v-card>
       <v-card-title>
         <h5>Verify your critic status with your work email</h5>
@@ -61,3 +61,22 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#criticApply {
+  font-family: Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  position: relative;
+  right: 30px;
+  top: 12px;
+
+}
+#criticApply:hover {
+  color: #438007;
+}  
+#criticApply:focus:active {
+  background-color: transparent;
+}    
+
+</style>

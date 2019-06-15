@@ -1,41 +1,40 @@
 <template>
   <div id="home">
-    <div style="position: absolute; top: 60px; left: 23%;">
-    <div id="instruction-header">
+    <div style="position: sticky; top: 60px; z-index: 1; margin-bottom: 10px;">
+      <div id="header">
       
-      <button id="add-article">
-        <router-link to="/new_article" id="add-article-router" >
+        <button id="add-article">
+          <router-link to="/new_article" id="add-article-router" >
         
-        <img
+          <img
             src="../assets/plus_sign_demo.png"
             style="height: 25px; position: relative; top: 5px; "
           />
           
            
           
-         Add Article </router-link>  </button> 
-         <div id="header-icon">
+         Add Article </router-link>  
+        </button> 
+        <div id="header-icon">
           <span class = "green-circle"></span>
           <span class="trl green-text right-margin "> TRUTH </span>
-           <span class = "red-circle"></span>
-           <span class = "trl red-text right-margin"> RIGHT </span>
-           <span class = "blue-circle"></span>
-           <span class = "trl blue-text"> LEFT </span>
-           </div>
+          <span class = "red-circle"></span>
+          <span class = "trl red-text right-margin"> RIGHT </span>
+          <span class = "blue-circle"></span>
+          <span class = "trl blue-text"> LEFT </span>
+        </div>
 
             
           
-    </div> 
+      </div> 
     </div>
-    
-    <!-- <LowestRated /> -->
+    <div style=" position: sticky; top: 150px;"
+    > 
+      <AccuracyRanking />
+    </div>
+   <!-- <LowestRated /> -->
     <ul id="articles">
-    <LowestRated />
-    <AccuracyRanking />
-    <ul class="collection with-header">
-      <li class="collection-header">
-        <h4>Top U.S. Headlines</h4>
-      </li>
+     
       <li v-for="article in articles" :key="article.id" class="collection-item">
         <span>
           <router-link
@@ -109,27 +108,15 @@
         </p>
       </li>
     </ul>
-    <div style=" position: absolute;
-    right: 36%;
-  top: 160px;"> 
-      <div id="ranking-table">   
-      <div class="ranking-bar"> </div>
-      <div class="ranking-bar"> </div>
-      <div class="ranking-bar"> </div>
-      <div class="ranking-bar"> </div>
-      <div class="ranking-bar"> </div>
-      <div class="ranking-bar"> </div>
-       
-    </div>
-    </div>
+    
 
     <div
       v-infinite-scroll="loadMore"
       infinite-scroll-disabled="busy"
       infinite-scroll-distance="10"
     >
-      ...
-    </div> -
+      
+    </div> 
   </div>
 </template>
 
@@ -149,8 +136,7 @@ export default {
       articles: [],
       lastVisible: null,
       next: null,
-      busy: false,
-      url: null
+      busy: false
     };
   },
   created() {
@@ -191,7 +177,7 @@ export default {
         .limit(10);
     });
 
-    console.log('articles', this.articles);
+     window.addEventListener('scroll', this.addSticky);
   },
   methods: {
     loadMore: function() {
@@ -291,7 +277,7 @@ li {
 .green-circle {
   height: 22px;
   width: 22px;
-  background-color: #438007;
+  background-color: #4CAF50;
   border-radius: 50%;
   display: inline-block;
 }
@@ -357,12 +343,12 @@ a {
   width: 100%;
   height: 100%;
 }
-#instruction-header {
-  position: fixed;
+#header {
+  position: relative;
+  left: 441px;
   height: 90px;
   width: 40%;
   padding: 10px 0px 10px 0px;
-  z-index: 1;
   background: white;
 }
 #header-icon {
@@ -379,7 +365,7 @@ a {
   color: #B20000;
 }
 .green-text {
-  color: #438007;
+  color: #4CAF50;
 
 }
 .blue-text {
@@ -388,21 +374,10 @@ a {
 .right-margin {
   margin-right: 20px;
 }
-#ranking-table {
+.sticky {
+  top: 50px;
   position: fixed;
-  border-radius: 20px;
-  width: 250px;
-  height: 300px;
-  border: 1px solid black;
-  padding: 10px 10px 10px 20px;
 }
-.ranking-bar {
-  border-radius: 50px;
-  width: 200px;
-  height: 16px;
-  background-color: #438007;
-  display: inline-block;
-  margin-top: 10px;
-}
+
 
 </style>

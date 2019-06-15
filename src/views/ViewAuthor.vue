@@ -1,5 +1,5 @@
 <template>
-  <div id="view-author">
+  <div id="view-author" class="container">
     <ul class="collection with-header">
       <li class="collection-header">
         <h4>

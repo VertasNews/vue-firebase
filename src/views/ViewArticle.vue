@@ -1,5 +1,5 @@
 <template>
-  <div id="view-article">
+  <div id="view-article" class="container">
     <!-- <v-layout>
       <v-flex>
         <v-card>
@@ -26,16 +26,36 @@
         </v-card>
       </v-flex>
     </v-layout> -->
-    <div class="row">
-      <div class="col s12">
-        <div class="card">
-          <div class="card-content">
-            <v-img v-if="urlToImage" height="350px" :src="urlToImage"></v-img>
-            <h5>
-              <a :href="url" target="_blank">{{ title }}</a>
-            </h5>
-            <span>{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
-            <span class="badge new" data-badge-caption="%" v-if="averageRating">
+    <div class="card">
+      <div class="card-content row collection">
+            <div class="col s1">
+            <v-img  v-if="urlToImage" height="200px" :src="src/assets/plus_sign_demo.png"></v-img> 
+            </div>
+            <div class="col s8">
+              <div class="title-name"> <a :href="url" target="_blank">{{ title }}</a> </div>
+              <div ><router-link
+              v-if="sourceName"
+              :to="{
+                name: 'view-source',
+                params: { sourceName: sourceName }
+              }"
+            >
+             <span class ="source-name"> {{ sourceName }} </span>
+            </router-link> </div>
+            <div class="authorntime">
+            <router-link
+              v-if="author"
+              :to="{ name: 'view-author', params: { author: author } }"
+            >
+             <span class = "author-name"> {{ author.replace(/,/g, '/') }} </span>
+            </router-link>
+            <span class = "source-time">{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
+             </div>
+             <div> <a :href="url" target="_blank">{{ content }} </a> </div>
+             
+            </div>
+         
+         <!--   <span class="badge new" data-badge-caption="%" v-if="averageRating">
               Accuracy rating: {{ averageRating }}
             </span>
             <v-card-actions>
@@ -48,7 +68,7 @@
               </v-rating>
               {{ userRating }}0%
             </v-card-actions>
-            <!-- <v-slider
+             <v-slider
               v-model="biasRating"
               :tick-labels="ticksLabels"
               :max="8"
@@ -59,38 +79,55 @@
               track-color="green"
               color="green"
             ></v-slider> -->
-            <a :href="url" target="_blank">{{ content }}</a>
-          </div>
-          <v-card-actions>
-            <router-link
-              v-if="sourceName"
-              class="chip blue-text"
-              :to="{
-                name: 'view-source',
-                params: { sourceName: sourceName }
-              }"
-            >
-              {{ sourceName }}
-            </router-link>
-            <router-link
-              v-if="author"
-              class="chip blue-text"
-              :to="{ name: 'view-author', params: { author: author } }"
-            >
-              <i class="fa fa-user"></i>
-              {{ author.replace(/,/g, '/') }}
-            </router-link>
-          </v-card-actions>
+      
+        
+      
+      </div>
+        
+    </div>
+    <div class = "card"> 
+      <div class = "card-content">
+        <div class="row">
+        <div class=" col s12 rating-header"> 
+          <div class = "col 1 borderRight"> Article </div>
+          <div class= "col 1 borderRight"> News Outlet </div>
+          <div class = "col 1"> Author </div>
+
         </div>
+       
+        <div class="col s3 text-xs-center borderRight">
+          <div class="col s12 score-title"> Critics Score  </div> 
+          <div class="col s6 accuracy-rate"> NA  </div> 
+          <div class="col s6 bias-rate"> NA </div>
+          <div class="col s6"> no of ratings </div> 
+          <div class="col s6"> no of rating </div>
+          </div>
+        <div class= "col s3 text-xs-center borderRight">
+          <div class="col s12 score-title"> Users Score  </div> 
+          <div v-if="averageRating" class="col s6 accuracy-rate"> {{averageRating}}% </div> 
+          <div v-if="!averageRating" class="col s6 accuracy-rate"> NA </div> 
+          <div class="col s6 bias-rate"> NA </div>
+          <div class="col s6"> {{ratingCount}} rating(s) </div> 
+          <div class="col s6"> no of rating </div>
+           </div>
+        <div class="col s6 text-xs-center">
+          <div class="rating-instruction"> Please provide us with an objective rating of the article's accuracy and biases </div>
+          <div> <v-btn large round color = "success"> Rate Now </v-btn> </div>
+           </div>
+  
+        </div>
+
       </div>
     </div>
     <router-link to="/" class="btn grey">Home</router-link>
   </div>
+
 </template>
 
 <script>
 import db from '../fb';
 import firebase from 'firebase';
+
 
 export default {
   name: 'ViewArticle',
@@ -267,3 +304,51 @@ export default {
   }
 };
 </script>
+<style scoped>
+
+.source-name {
+  font-weight: bold;
+  color: #0CD7E8;
+  font-size: 12px;
+}
+.author-name {
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0.61;
+}
+.source-time {
+  font-size: 12px;
+  opacity: 0.61;
+}
+.authorntime {
+  margin-bottom: 10px;
+}
+.score-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+.accuracy-rate {
+  font-size: 60px;
+  font-weight: bold;
+  color: #438007;
+}
+.bias-rate {
+  font-size: 60px;
+  font-weight: bold;
+  color: #B20000;
+}
+.borderRight {
+  border-right: 1px solid black;
+}
+.rating-instruction {
+  height: 60px;
+  font-size: 16px;
+}
+.rating-header {
+  height: 50px;
+}
+.card .card-content {
+  padding: 20px 0px 20px 20px;
+}
+
+</style>

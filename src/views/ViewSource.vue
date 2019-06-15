@@ -1,8 +1,8 @@
 <template>
-  <div id="view-source">
-    <ul class="collection with-header">
-      <li class="collection-header">
-        <h4>
+  <div id="view-source" class ="container">
+    <ul>
+      <li class ="row">
+        
           <a :href="sourceUrl" target="_blank">
             <v-avatar size="32px" v-if="sourceId">
               <img class="img-circle mb-1" :src="getImgUrl(sourceId)" />
@@ -12,31 +12,55 @@
           <span class="badge new" data-badge-caption="%" v-if="averageRating">
             Accuracy rating: {{ averageRating }}
           </span>
-        </h4>
+      
       </li>
-      <li v-for="article in articles" :key="article.id" class="collection-item">
-        <router-link
-          :to="{ name: 'view-article', params: { articleId: article.id } }"
-        >
-          {{ article.title }}
-        </router-link>
-        <p>
-          <span
-            class="badge new"
-            data-badge-caption="%"
-            v-if="article.averageRating"
-          >
-            Accuracy rating: {{ article.averageRating }}
-          </span>
+      <li v-for="article in articles" :key="article.id" class="row">
+        
+        <div class = "col s9 title-name">
+          <div class = "col s1">
+          <img
+            src="../assets/final_logo.jpg"
+            style="height: 60px;"
+          />
+          </div>
+          <div class = "col s11">
+            <div>
           <router-link
-            v-if="article.author"
-            class="chip"
-            :to="{ name: 'view-author', params: { author: article.author } }"
-          >
-            <i class="fa fa-user"></i>
-            {{ article.author.replace(/,/g, '/') }}
+          :to="{ name: 'view-article', params: { articleId: article.id } }"
+           >
+          {{ article.title }}
           </router-link>
-        </p>
+            </div>
+            <div>
+           <router-link
+            v-if="article.author"
+            :to="{ name: 'view-author', params: { author: article.author } }"
+          > <span class ="author-name">
+            - {{ article.author.replace(/,/g, '/') }} </span>
+          </router-link>
+            </div>
+          </div>
+        </div>
+        
+        <div
+            class="col s3"
+        >
+          <div class ="col s6">
+            <span class = "green-circle"> </span>
+
+            <span class = "rating green--text" v-if="article.averageRating"> {{ article.averageRating }}% </span>
+
+            <span class="rating green--text" v-if="!article.averageRating"> NA </span>
+          </div>
+          <div class ="col s6">
+            <span class = "red-circle"> </span>
+            <span class ="rating red--text"> NA </span>
+          </div>
+        </div>
+          
+          
+         
+          
       </li>
     </ul>
     <router-link to="/" class="btn grey">Home</router-link>
@@ -55,7 +79,8 @@ export default {
       sourceUrl: null,
       sourceId: null,
       averageRating: null,
-      ratingCount: null
+      ratingCount: null,
+      urlToImage: null
     };
   },
   created() {
@@ -92,7 +117,8 @@ export default {
               title: doc.data().title,
               url: doc.data().url,
               averageRating: avgRatingRounded,
-              ratingCount: doc.data().ratingCount
+              ratingCount: doc.data().ratingCount,
+              urlToImage: doc.data().urlToImage,
             };
             vm.articles.push(data);
           });
@@ -118,7 +144,8 @@ export default {
               title: doc.data().title,
               url: doc.data().url,
               averageRating: avgRatingRounded,
-              ratingCount: doc.data().ratingCount
+              ratingCount: doc.data().ratingCount,
+              urlToImage: doc.data().urlToImage
             };
             this.articles.push(data);
           });
@@ -131,3 +158,42 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+a {
+  color: black;
+}
+.title-name {
+  font-weight: bold;
+  font-size: 20px;
+}
+.green-circle {
+  position: relative;
+  top: 5px;
+  height: 22px;
+  width: 22px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  display: inline-block;
+}
+.red-circle {
+  position: relative;
+  top: 5px;
+  height: 22px;
+  width: 22px;
+  background-color:#B20000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.rating {
+  position: relative;
+  bottom: 0px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.author-name {
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0.61;
+}
+</style>

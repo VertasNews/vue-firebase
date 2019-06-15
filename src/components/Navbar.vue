@@ -26,11 +26,11 @@
     
       </v-toolbar-items> 
       <v-spacer> </v-spacer>
-<div id="loginsignup">
-        <Popup v-if="isLoggedIn && popup" />
+      <div id="loginsignup">
+        <Popup id="popup" v-if="isLoggedIn && popup" />
         <button class="navbutton" v-if="!isLoggedIn"
           > <router-link to="/login"><span>Log In</span></router-link></button>
-        >
+        
         <button class="navbutton" v-if="!isLoggedIn"
           > <router-link to="/register"><span> Sign Up</span></router-link></button    
         >
@@ -136,7 +136,7 @@ export default {
   max-height: 80px;
 }
 .v-toolbar input {
-  width: 500px;
+  width: 400px;
   border: 1px solid white;
   background-color: white;
   margin-top: 10px;
@@ -229,13 +229,10 @@ nav input:focus {
 div > div.v-list__tile {
   padding: 0px;
 }
-
-
-
-
-
-
-.v-btn:hover :active {
-  color: green;
+#popup {
+ 
 }
+
+
+
 </style>

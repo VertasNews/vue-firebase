@@ -1,16 +1,17 @@
 <template>
-  <v-layout>
+  <div class="container">
     <v-card>
-      <v-card-text>
+      <v-card-text class= "text-xs-center">
+        <div>
         We are a group of passionate students who want to fight against the fake
-        news epidemic. Thank you for visiting our site!
-      </v-card-text>
-      <v-card-actions>
+        news epidemic. Thank you for visiting our site!</div>
+      <div>
         You're using our demo web app
         <a href="https://vertasnews.com">
           , click here to visit our landing page</a
         >
-      </v-card-actions>
+        </div>
+      </v-card-text>
     </v-card>
-  </v-layout>
+  </div>
 </template>

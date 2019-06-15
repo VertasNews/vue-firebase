@@ -31,6 +31,24 @@
             >Accuracy rating: {{ article.averageRating }}</span
           >
 
+          <span
+            class="badge new blue"
+            data-badge-caption=""
+            v-if="article.left"
+          >
+            {{ article.averageBiasRating }}% Left
+          </span>
+          <span
+            class="badge new red"
+            data-badge-caption=""
+            v-if="article.right"
+          >
+            {{ article.averageBiasRating }}% Right
+          </span>
+          <span class="badge" data-badge-caption="" v-if="article.neutral">
+            Neutral, no bias
+          </span>
+
           <router-link
             v-if="article.sourceName"
             class="chip"
@@ -95,6 +113,18 @@ export default {
         if (doc.data().averageRating) {
           var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
         }
+        var averageBiasRating = doc.data().averageBiasRating;
+        if (averageBiasRating < 4) {
+          averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
+          var left = true;
+        } else if (averageBiasRating > 4) {
+          averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
+          var right = true;
+        } else if (averageBiasRating == 4) {
+          averageBiasRating = 4;
+          var neutral = true;
+        }
+
         const data = {
           id: doc.id,
           author: doc.data().author,
@@ -106,7 +136,12 @@ export default {
           content: doc.data().content,
           publishedAt: doc.data().publishedAt,
           averageRating: avgRatingRounded,
-          ratingCount: doc.data().ratingCount
+          ratingCount: doc.data().ratingCount,
+          averageBiasRating: averageBiasRating,
+          biasRatingCount: doc.data().biasRatingCount,
+          left: left,
+          neutral: neutral,
+          right: right
         };
         this.articles.push(data);
       });
@@ -131,6 +166,19 @@ export default {
             if (doc.data().averageRating) {
               var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
+
+            var averageBiasRating = doc.data().averageBiasRating;
+            if (averageBiasRating < 4) {
+              averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
+              var left = true;
+            } else if (averageBiasRating > 4) {
+              averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
+              var right = true;
+            } else if (averageBiasRating == 4) {
+              averageBiasRating = 4;
+              var neutral = true;
+            }
+
             const data = {
               id: doc.id,
               author: doc.data().author,
@@ -142,7 +190,12 @@ export default {
               content: doc.data().content,
               publishedAt: doc.data().publishedAt,
               averageRating: avgRatingRounded,
-              ratingCount: doc.data().ratingCount
+              ratingCount: doc.data().ratingCount,
+              averageBiasRating: averageBiasRating,
+              biasRatingCount: doc.data().biasRatingCount,
+              left: left,
+              neutral: neutral,
+              right: right
             };
             this.articles.push(data);
           });

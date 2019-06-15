@@ -1,31 +1,5 @@
 <template>
   <div id="view-article">
-    <!-- <v-layout>
-      <v-flex>
-        <v-card>
-          <v-img v-if="urlToImage" :src="urlToImage"></v-img>
-          <v-card-title>
-            <h5>
-              <a :href="url" target="_blank">{{ title }}</a>
-            </h5>
-            <span>{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
-            <span class="badge new" data-badge-caption="%" v-if="averageRating">
-              Accuracy rating: {{ averageRating }}
-            </span>
-          </v-card-title>
-          <v-card-actions>
-            Rate this article accuracy
-            <v-rating
-              v-model="userRating"
-              :length="10"
-              @click.native="submitRating"
-            >
-            </v-rating>
-            {{ userRating }}0%
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-    </v-layout> -->
     <div class="row">
       <div class="col s12">
         <div class="card">
@@ -38,27 +12,38 @@
             <span class="badge new" data-badge-caption="%" v-if="averageRating">
               Accuracy rating: {{ averageRating }}
             </span>
+            <span class="badge new blue" data-badge-caption="" v-if="left">
+              {{ averageBiasRating }}% Left
+            </span>
+            <span class="badge new red" data-badge-caption="" v-if="right">
+              {{ averageBiasRating }}% Right
+            </span>
+            <span class="badge" data-badge-caption="" v-if="neutral">
+              Neutral, no bias
+            </span>
             <v-card-actions>
               Accuracy:
               <v-rating
                 v-model="userRating"
                 :length="10"
+                background-color="green lighten-3"
+                color="green"
                 @click.native="submitRating"
               >
               </v-rating>
               {{ userRating }}0%
             </v-card-actions>
-            <!-- <v-slider
+            <v-slider
               v-model="biasRating"
-              :tick-labels="ticksLabels"
-              :max="8"
-              step="2"
+              :tick-labels="tickLabels"
+              :max="7"
+              :min="1"
+              step="1"
               always-dirty
-              ticks="always"
-              tick-size="2"
-              track-color="green"
-              color="green"
-            ></v-slider> -->
+              :track-color="color"
+              :color="color"
+              @click.native="submitBiasRating"
+            ></v-slider>
             <a :href="url" target="_blank">{{ content }}</a>
           </div>
           <v-card-actions>
@@ -111,7 +96,22 @@ export default {
       userRatingId: null,
       oldRating: null,
       biasRating: 4,
-      ticksLabels: ['Left', 'Semi-left', 'Centrist', 'Semi-right', 'Right']
+      biasRatingId: null,
+      averageBiasRating: null,
+      biasRatingCount: null,
+      oldBiasRating: null,
+      tickLabels: [
+        'Left-3',
+        'Left-2',
+        'Left-1',
+        'Neutral',
+        'Right-1',
+        'Right-2',
+        'Right-3'
+      ],
+      left: false,
+      neutral: false,
+      right: false
     };
   },
   created() {
@@ -132,6 +132,33 @@ export default {
           }
         });
       });
+    db.collection('biasRatings')
+      .where('userId', '==', firebase.auth().currentUser.uid)
+      .where('articleId', '==', this.articleId)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          if (doc.exists) {
+            this.biasRating = doc.data().value;
+            this.oldBiasRating = doc.data().value;
+            this.biasRatingId = doc.id;
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No rating found!');
+          }
+        });
+      });
+  },
+  computed: {
+    color() {
+      if (this.biasRating == 1) return 'blue';
+      if (this.biasRating == 2) return 'blue lighten-2';
+      if (this.biasRating == 3) return 'blue lighten-3';
+      if (this.biasRating == 5) return 'red lighten-3';
+      if (this.biasRating == 6) return 'red lighten-2';
+      if (this.biasRating == 7) return 'red ';
+      return 'green lighten-2';
+    }
   },
   beforeRouteEnter(to, from, next) {
     db.collection('articles')
@@ -151,6 +178,21 @@ export default {
             if (doc.data().averageRating)
               vm.averageRating = Math.trunc(doc.data().averageRating * 10);
             vm.ratingCount = doc.data().ratingCount;
+            if (doc.data().averageBiasRating < 4) {
+              vm.averageBiasRating = Math.trunc(
+                (4 - doc.data().averageBiasRating) / 0.03
+              );
+              vm.left = true;
+            } else if (doc.data().averageBiasRating > 4) {
+              vm.averageBiasRating = Math.trunc(
+                (doc.data().averageBiasRating - 4) / 0.03
+              );
+              vm.right = true;
+            } else if (doc.data().averageBiasRating == 4) {
+              vm.averageBiasRating = 4;
+              vm.neutral = true;
+            }
+            vm.biasRatingCount = doc.data().biasRatingCount;
           } else {
             // doc.data() will be undefined in this case
             console.log('No such document!');
@@ -179,10 +221,58 @@ export default {
             if (doc.data().averageRating)
               this.averageRating = Math.trunc(doc.data().averageRating * 10);
             this.ratingCount = doc.data().ratingCount;
+            if (doc.data().averageBiasRating < 4) {
+              this.averageBiasRating = Math.trunc(
+                (4 - doc.data().averageBiasRating) / 0.03
+              );
+              this.left = true;
+            } else if (doc.data().averageBiasRating > 4) {
+              this.averageBiasRating = Math.trunc(
+                (doc.data().averageBiasRating - 4) / 0.03
+              );
+              this.right = true;
+            } else if (doc.data().averageBiasRating == 4) {
+              this.averageBiasRating = 4;
+              this.neutral = true;
+            }
+            this.biasRatingCount = doc.data().biasRatingCount;
           } else {
             console.log('No such document!');
           }
         });
+    },
+    submitRating() {
+      var rating = this.userRating;
+      var oldRating = this.oldRating;
+      this.oldRating = rating;
+
+      var articleRef = db.collection('articles').doc(this.articleId);
+      var user = firebase.auth().currentUser;
+
+      this.addRatingToFirebase(articleRef, rating, oldRating);
+
+      if (this.author) {
+        var authorRef = db.collection('authors').doc(this.author);
+        this.addRatingToFirebase(authorRef, rating, oldRating);
+      }
+      if (this.sourceName) {
+        var sourceRef = db.collection('sources').doc(this.sourceName);
+        this.addRatingToFirebase(sourceRef, rating, oldRating);
+      }
+
+      if (this.userRatingId) {
+        db.collection('ratings')
+          .doc(this.userRatingId)
+          .update({
+            value: rating
+          });
+      } else {
+        db.collection('ratings').add({
+          articleId: this.articleId,
+          userId: user.uid,
+          value: rating
+        });
+      }
     },
     addRatingToFirebase(reference, rating, oldRating) {
       // User already rated the article
@@ -231,36 +321,84 @@ export default {
         });
       }
     },
-    submitRating() {
-      var rating = this.userRating;
-      var oldRating = this.oldRating;
-      this.oldRating = rating;
+    submitBiasRating() {
+      var rating = this.biasRating;
+      var oldRating = this.oldBiasRating;
+      this.oldBiasRating = rating;
 
       var articleRef = db.collection('articles').doc(this.articleId);
       var user = firebase.auth().currentUser;
 
-      this.addRatingToFirebase(articleRef, rating, oldRating);
+      this.addBiasRatingToFirebase(articleRef, rating, oldRating);
 
       if (this.author) {
         var authorRef = db.collection('authors').doc(this.author);
-        this.addRatingToFirebase(authorRef, rating, oldRating);
+        this.addBiasRatingToFirebase(authorRef, rating, oldRating);
       }
       if (this.sourceName) {
         var sourceRef = db.collection('sources').doc(this.sourceName);
-        this.addRatingToFirebase(sourceRef, rating, oldRating);
+        this.addBiasRatingToFirebase(sourceRef, rating, oldRating);
       }
 
-      if (this.userRatingId) {
-        db.collection('ratings')
-          .doc(this.userRatingId)
+      if (this.biasRatingId) {
+        db.collection('biasRatings')
+          .doc(this.biasRatingId)
           .update({
             value: rating
           });
       } else {
-        db.collection('ratings').add({
+        db.collection('biasRatings').add({
           articleId: this.articleId,
           userId: user.uid,
           value: rating
+        });
+      }
+    },
+    addBiasRatingToFirebase(reference, rating, oldRating) {
+      // User already rated the article
+      if (this.biasRatingId) {
+        return db.runTransaction(transaction => {
+          return transaction.get(reference).then(doc => {
+            if (!doc.exists) {
+              throw 'Document does not exist!';
+            }
+
+            var oldRatingTotal =
+              doc.data().averageBiasRating * doc.data().biasRatingCount;
+            var newAvgRating =
+              (oldRatingTotal - oldRating + rating) /
+              doc.data().biasRatingCount;
+
+            transaction.update(reference, {
+              averageBiasRating: newAvgRating
+            });
+          });
+        });
+      } else {
+        // User rate news for the first time
+        return db.runTransaction(transaction => {
+          return transaction.get(reference).then(doc => {
+            if (!doc.exists) {
+              throw 'Document does not exist!';
+            }
+
+            if (doc.data().biasRatingCount && doc.data().averageBiasRating) {
+              var newNumRatings = doc.data().biasRatingCount + 1;
+              var oldRatingTotal =
+                doc.data().averageBiasRating * doc.data().biasRatingCount;
+              var newAvgRating = (oldRatingTotal + rating) / newNumRatings;
+
+              transaction.update(reference, {
+                biasRatingCount: newNumRatings,
+                averageBiasRating: newAvgRating
+              });
+            } else {
+              transaction.update(reference, {
+                biasRatingCount: 1,
+                averageBiasRating: rating
+              });
+            }
+          });
         });
       }
     }

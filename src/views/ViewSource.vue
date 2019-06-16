@@ -1,19 +1,51 @@
 <template>
   <div id="view-source" class ="container">
-    <ul>
-      <li class ="row">
-        
+    
+      <div class ="row">
+         <div style="font-size: 40px;" class = "col s12">
           <a :href="sourceUrl" target="_blank">
-            <v-avatar size="32px" v-if="sourceId">
+            <v-avatar size="64px" v-if="sourceId">
               <img class="img-circle mb-1" :src="getImgUrl(sourceId)" />
             </v-avatar>
             {{ sourceName }}
           </a>
-          <span class="badge new" data-badge-caption="%" v-if="averageRating">
-            Accuracy rating: {{ averageRating }}
-          </span>
+          
+          </div>
+
+         
+           <div class ="col s3">
+             
+            <span class = "big-green-circle"> </span>
+
+            <span class = "big-rating green--text" v-if="averageRating"> {{averageRating }}% </span>
+
+            <span class="big-rating green--text" v-if="!averageRating"> NA </span>
+          
+          
+            <span class = "big-red-circle"> </span>
+            <span class ="big-rating red--text"> NA </span>
+          </div>
+        <!--  <div
+            class="col s4"
+        >
+          <div class ="col s6">
+            <span class = "big-green-circle"> </span>
+
+            <span class = "big-rating green--text" v-if="averageRating"> {{averageRating }}% </span>
+
+            <span class="big-rating green--text" v-if="!averageRating"> NA </span>
+          </div>
+          <div class ="col s6">
+            <span class = "big-red-circle"> </span>
+            <span class ="big-rating red--text"> NA </span>
+          </div>
+        </div> -->
+
+      </div>
       
-      </li>
+      
+      <div style="margin-bottom: 30px" class = "divider"> </div>
+      <ul class = "row">
       <li v-for="article in articles" :key="article.id" class="row">
         
         <div class = "col s9 title-name">
@@ -195,5 +227,34 @@ a {
   font-size: 12px;
   font-weight: bold;
   opacity: 0.61;
+}
+
+
+
+.big-rating {
+  font-size: 36px;
+  font-weight: bold;
+}
+.big-green-circle {
+  position: relative;
+  top: 5px;
+  height: 33px;
+  width: 33px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  display: inline-block;
+}
+.big-red-circle {
+  position: relative;
+  top: 5px;
+  height: 33px;
+  width: 33px;
+  background-color:#B20000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.container {
+  width: 58%;
+
 }
 </style>

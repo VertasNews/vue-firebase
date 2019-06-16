@@ -1,5 +1,7 @@
 <template>
   <div id="home">
+    <!--<PopularWeekly /> -->
+    
     <div style="position: sticky; top: 60px; z-index: 1; margin-bottom: 10px;">
       <div id="header">
       
@@ -36,6 +38,24 @@
     <ul id="articles">
      
       <li v-for="article in articles" :key="article.id" class="collection-item">
+     <!--    <span
+            class="badge new blue"
+            data-badge-caption=""
+            v-if="article.left"
+          >
+            {{ article.averageBiasRating }}% Left
+          </span>
+          <span
+            class="badge new red"
+            data-badge-caption=""
+            v-if="article.right"
+          >
+            {{ article.averageBiasRating }}% Right
+          </span>
+          <span class="badge" data-badge-caption="" v-if="article.neutral">
+            Neutral, no bias
+          </span>
+-->
         <span>
           <router-link
             :to="{ name: 'view-article', params: { articleId: article.id } }"
@@ -122,14 +142,16 @@
 
 <script>
 import db from '../fb';
-import LowestRated from '../components/LowestRated';
+// import LowestRated from '../components/LowestRated';
 import AccuracyRanking from '../components/AccuracyRanking';
+import PopularWeekly from '../components/PopularWeekly';
 
 export default {
   name: 'Home',
   components: {
     AccuracyRanking,
-    LowestRated
+    PopularWeekly
+    // LowestRated
   },
   data() {
     return {
@@ -150,6 +172,18 @@ export default {
         if (doc.data().averageRating) {
           var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
         }
+        var averageBiasRating = doc.data().averageBiasRating;
+        if (averageBiasRating < 4) {
+          averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
+          var left = true;
+        } else if (averageBiasRating > 4) {
+          averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
+          var right = true;
+        } else if (averageBiasRating == 4) {
+          averageBiasRating = 4;
+          var neutral = true;
+        }
+
         const data = {
           id: doc.id,
           author: doc.data().author,
@@ -161,7 +195,12 @@ export default {
           content: doc.data().content,
           publishedAt: doc.data().publishedAt,
           averageRating: avgRatingRounded,
-          ratingCount: doc.data().ratingCount
+          ratingCount: doc.data().ratingCount,
+          averageBiasRating: averageBiasRating,
+          biasRatingCount: doc.data().biasRatingCount,
+          left: left,
+          neutral: neutral,
+          right: right
         };
         this.articles.push(data);
       });
@@ -189,6 +228,19 @@ export default {
             if (doc.data().averageRating) {
               var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
+
+            var averageBiasRating = doc.data().averageBiasRating;
+            if (averageBiasRating < 4) {
+              averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
+              var left = true;
+            } else if (averageBiasRating > 4) {
+              averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
+              var right = true;
+            } else if (averageBiasRating == 4) {
+              averageBiasRating = 4;
+              var neutral = true;
+            }
+
             const data = {
               id: doc.id,
               author: doc.data().author,
@@ -200,7 +252,12 @@ export default {
               content: doc.data().content,
               publishedAt: doc.data().publishedAt,
               averageRating: avgRatingRounded,
-              ratingCount: doc.data().ratingCount
+              ratingCount: doc.data().ratingCount,
+              averageBiasRating: averageBiasRating,
+              biasRatingCount: doc.data().biasRatingCount,
+              left: left,
+              neutral: neutral,
+              right: right
             };
             this.articles.push(data);
           });

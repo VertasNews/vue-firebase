@@ -14,7 +14,11 @@ exports.newsapi = functions.https.onRequest((request, response) => {
       const data = response.data;
       if (data.status === 'ok') {
         data.articles.forEach(element => {
-          if (element.urlToImage) {
+          if (
+            element.urlToImage &&
+            !element.source.name.includes('Youtube') &&
+            !element.source.name.includes('Facebook')
+          ) {
             if (element.author) {
               element.author = element.author.replace(/\//g, ',');
               var authorRef = admin
@@ -66,11 +70,29 @@ exports.newsapi = functions.https.onRequest((request, response) => {
                   console.log('Error getting document:', error);
                 });
             }
+            let now = new Date(element.publishedAt);
+            let onejan = new Date(now.getFullYear(), 0, 1);
+            var week = Math.ceil(
+              ((now - onejan) / 86400000 + onejan.getDay() + 1) / 7
+            );
 
             admin
               .firestore()
               .collection('articles')
-              .add(element);
+              .add({
+                author: element.author,
+                source: {
+                  id: element.source.id,
+                  name: element.source.name
+                },
+                title: element.title,
+                url: element.url,
+                urlToImage: element.urlToImage,
+                description: element.description,
+                content: element.content,
+                publishedAt: element.publishedAt,
+                week: week
+              });
           }
         });
       }

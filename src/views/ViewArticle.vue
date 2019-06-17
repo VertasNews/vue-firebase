@@ -154,13 +154,15 @@ export default {
       publishedAt: null,
       averageRating: null,
       ratingCount: null,
-      userRating: null,
-      userRatingId: null,
-      oldRating: null,
-      biasRating: 4,
-      biasRatingId: null,
       averageBiasRating: null,
       biasRatingCount: null,
+      userId: null,
+      ratingId: null,
+      hasRating: false,
+      hasBiasRating: false,
+      userRating: null,
+      oldRating: null,
+      biasRating: null,
       oldBiasRating: null,
       tickLabels: [
         'Left-3',
@@ -178,37 +180,35 @@ export default {
   },
   created() {
     this.articleId = this.$route.params.articleId;
+    this.userId = firebase.auth().currentUser.uid;
+    this.ratingId = this.articleId + this.userId;
+
     db.collection('ratings')
-      .where('userId', '==', firebase.auth().currentUser.uid)
-      .where('articleId', '==', this.articleId)
+      .doc(this.ratingId)
       .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          if (doc.exists) {
-            this.userRating = doc.data().value;
-            this.oldRating = doc.data().value;
-            this.userRatingId = doc.id;
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No rating found!');
-          }
-        });
+      .then(doc => {
+        if (doc.exists) {
+          this.userRating = doc.data().value;
+          this.oldRating = doc.data().value;
+          this.hasRating = true;
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No rating found!');
+        }
       });
+
     db.collection('biasRatings')
-      .where('userId', '==', firebase.auth().currentUser.uid)
-      .where('articleId', '==', this.articleId)
+      .doc(this.ratingId)
       .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          if (doc.exists) {
-            this.biasRating = doc.data().value;
-            this.oldBiasRating = doc.data().value;
-            this.biasRatingId = doc.id;
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No rating found!');
-          }
-        });
+      .then(doc => {
+        if (doc.exists) {
+          this.biasRating = doc.data().value;
+          this.oldBiasRating = doc.data().value;
+          this.hasBiasRating = true;
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No bias rating found!');
+        }
       });
   },
   computed: {
@@ -216,10 +216,11 @@ export default {
       if (this.biasRating == 1) return 'blue';
       if (this.biasRating == 2) return 'blue lighten-2';
       if (this.biasRating == 3) return 'blue lighten-3';
+      if (this.biasRating == 4) return 'green lighten-2';
       if (this.biasRating == 5) return 'red lighten-3';
       if (this.biasRating == 6) return 'red lighten-2';
       if (this.biasRating == 7) return 'red ';
-      return 'green lighten-2';
+      return 'grey';
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -309,8 +310,6 @@ export default {
       this.oldRating = rating;
 
       var articleRef = db.collection('articles').doc(this.articleId);
-      var user = firebase.auth().currentUser;
-
       this.addRatingToFirebase(articleRef, rating, oldRating);
 
       if (this.author) {
@@ -322,23 +321,25 @@ export default {
         this.addRatingToFirebase(sourceRef, rating, oldRating);
       }
 
-      if (this.userRatingId) {
+      if (this.hasRating) {
         db.collection('ratings')
-          .doc(this.userRatingId)
+          .doc(this.ratingId)
           .update({
             value: rating
           });
       } else {
-        db.collection('ratings').add({
-          articleId: this.articleId,
-          userId: user.uid,
-          value: rating
-        });
+        db.collection('ratings')
+          .doc(this.ratingId)
+          .set({
+            articleId: this.articleId,
+            userId: this.userId,
+            value: rating
+          });
       }
     },
     addRatingToFirebase(reference, rating, oldRating) {
       // User already rated the article
-      if (this.userRatingId) {
+      if (this.hasRating) {
         return db.runTransaction(transaction => {
           return transaction.get(reference).then(doc => {
             if (!doc.exists) {
@@ -362,6 +363,8 @@ export default {
             if (!doc.exists) {
               throw 'Document does not exist!';
             }
+
+            this.hasRating = true;
 
             if (doc.data().ratingCount && doc.data().averageRating) {
               var newNumRatings = doc.data().ratingCount + 1;
@@ -389,8 +392,6 @@ export default {
       this.oldBiasRating = rating;
 
       var articleRef = db.collection('articles').doc(this.articleId);
-      var user = firebase.auth().currentUser;
-
       this.addBiasRatingToFirebase(articleRef, rating, oldRating);
 
       if (this.author) {
@@ -402,23 +403,25 @@ export default {
         this.addBiasRatingToFirebase(sourceRef, rating, oldRating);
       }
 
-      if (this.biasRatingId) {
+      if (this.hasBiasRating) {
         db.collection('biasRatings')
-          .doc(this.biasRatingId)
+          .doc(this.ratingId)
           .update({
             value: rating
           });
       } else {
-        db.collection('biasRatings').add({
-          articleId: this.articleId,
-          userId: user.uid,
-          value: rating
-        });
+        db.collection('biasRatings')
+          .doc(this.ratingId)
+          .set({
+            articleId: this.articleId,
+            userId: this.userId,
+            value: rating
+          });
       }
     },
     addBiasRatingToFirebase(reference, rating, oldRating) {
       // User already rated the article
-      if (this.biasRatingId) {
+      if (this.hasBiasRating) {
         return db.runTransaction(transaction => {
           return transaction.get(reference).then(doc => {
             if (!doc.exists) {
@@ -443,6 +446,8 @@ export default {
             if (!doc.exists) {
               throw 'Document does not exist!';
             }
+
+            this.hasBiasRating = true;
 
             if (doc.data().biasRatingCount && doc.data().averageBiasRating) {
               var newNumRatings = doc.data().biasRatingCount + 1;

@@ -1,19 +1,18 @@
 <template>
   <div id="view-source" class ="container">
     
-      <div class ="row">
-         <div style="font-size: 40px;" class = "col s12">
+      <div style="" class ="row">
+         <div style="font-size: 50px; margin-bottom: 5px;" class = "col s12">
           <a :href="sourceUrl" target="_blank">
             <v-avatar size="64px" v-if="sourceId">
               <img class="img-circle mb-1" :src="getImgUrl(sourceId)" />
             </v-avatar>
-            {{ sourceName }}
+            {{ sourceName }} 
           </a>
           
+    
           </div>
-
-         
-           <div class ="col s3">
+          <div style="padding-left: 20px;" class ="col s4">
              
             <span class = "big-green-circle"> </span>
 
@@ -24,23 +23,7 @@
           
             <span class = "big-red-circle"> </span>
             <span class ="big-rating red--text"> NA </span>
-          </div>
-        <!--  <div
-            class="col s4"
-        >
-          <div class ="col s6">
-            <span class = "big-green-circle"> </span>
-
-            <span class = "big-rating green--text" v-if="averageRating"> {{averageRating }}% </span>
-
-            <span class="big-rating green--text" v-if="!averageRating"> NA </span>
-          </div>
-          <div class ="col s6">
-            <span class = "big-red-circle"> </span>
-            <span class ="big-rating red--text"> NA </span>
-          </div>
-        </div> -->
-
+          </div> 
       </div>
       
       
@@ -51,7 +34,9 @@
         <div class = "col s9 title-name">
           <div class = "col s1">
           <img
-            src="../assets/final_logo.jpg"
+            :src="article.urlToImage"
+            
+            v-if="article.urlToImage"
             style="height: 60px;"
           />
           </div>
@@ -232,14 +217,14 @@ a {
 
 
 .big-rating {
-  font-size: 36px;
+  font-size: 22px;
   font-weight: bold;
 }
 .big-green-circle {
   position: relative;
   top: 5px;
-  height: 33px;
-  width: 33px;
+  height: 20px;
+  width: 20px;
   background-color: #4CAF50;
   border-radius: 50%;
   display: inline-block;
@@ -247,8 +232,8 @@ a {
 .big-red-circle {
   position: relative;
   top: 5px;
-  height: 33px;
-  width: 33px;
+  height: 20px;
+  width: 20px;
   background-color:#B20000;
   border-radius: 50%;
   display: inline-block;

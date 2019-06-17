@@ -57,44 +57,10 @@
          
          <!--   <span class="badge new" data-badge-caption="%" v-if="averageRating">
               Accuracy rating: {{ averageRating }}
-            </span>
-            <span class="badge new blue" data-badge-caption="" v-if="left">
-              {{ averageBiasRating }}% Left
-            </span>
-            <span class="badge new red" data-badge-caption="" v-if="right">
-              {{ averageBiasRating }}% Right
-            </span>
-            <span class="badge" data-badge-caption="" v-if="neutral">
-              Neutral, no bias
-            </span>
-            <v-card-actions>
-              Accuracy:
-              <v-rating
-                v-model="userRating"
-                :length="10"
-                background-color="green lighten-3"
-                color="green"
-                @click.native="submitRating"
-              >
-              </v-rating>
-              {{ userRating }}0%
-            </v-card-actions>
-             <v-slider
-            <v-slider
-              v-model="biasRating"
-              :tick-labels="tickLabels"
-              :max="7"
-              :min="1"
-              step="1"
-              always-dirty
-              
+            </span> -->
+
+            
       
-         :track-color="color"
-              :color="color"
-              @click.native="submitBiasRating"
-            ></v-slider>
-            <a :href="url" target="_blank">{{ content }}</a>
-      -->
       </div>
         
     </div>
@@ -127,6 +93,42 @@
 
       </div>
     </div>
+    <span class="badge new blue" data-badge-caption="" v-if="left">
+              {{ averageBiasRating }}% Left
+            </span>
+            <span class="badge new red" data-badge-caption="" v-if="right">
+              {{ averageBiasRating }}% Right
+            </span>
+            <span class="badge" data-badge-caption="" v-if="neutral">
+              Neutral, no bias
+            </span>
+            <v-card-actions>
+              Accuracy:
+              <v-rating
+                v-model="userRating"
+                :length="10"
+                background-color="green lighten-3"
+                color="green"
+                @click.native="submitRating"
+              >
+              </v-rating>
+              {{ userRating }}0%
+            </v-card-actions>
+             
+            <v-slider
+              v-model="biasRating"
+              :tick-labels="tickLabels"
+              :max="7"
+              :min="1"
+              step="1"
+              always-dirty
+              
+      
+         :track-color="color"
+              :color="color"
+              @click.native="submitBiasRating"
+            ></v-slider>
+           
     <router-link to="/" class="btn grey">Home</router-link>
   </div>
 

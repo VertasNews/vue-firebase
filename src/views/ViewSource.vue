@@ -79,6 +79,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     db.collection('articles')
       .where('source.name', '==', to.params.sourceName)
+      .orderBy('publishedAt', 'desc')
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -106,6 +107,7 @@ export default {
     fetchData() {
       db.collection('articles')
         .where('source.name', '==', this.$route.params.sourceName)
+        .orderBy('publishedAt', 'desc')
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {

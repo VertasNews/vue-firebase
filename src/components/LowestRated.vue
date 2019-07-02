@@ -1,25 +1,51 @@
 <template>
   <div id="lowest-rated">
-    <v-card>
-      <v-card-title>
-        <h5>
-          LOWEST RATED ARTICLES
-        </h5>
-      </v-card-title>
+    <v-card color="grey lighten-2">
+      <div id="lowestRateTitle" class="text-xs-center">
+        LOWEST RATED ARTICLES
+      </div>
       <vueper-slides
         class="no-shadow"
-        :visible-slides="3"
-        :slide-ratio="1 / 7"
+        :visible-slides="slideNum"
+        :slide-ratio="1 / 5"
         :dragging-distance="70"
         :slide-multiple="true"
+        fixedHeight="260px"
+        disableArrowsOnEdges
+        :breakpoints="breakpoints"
       >
+        <v-icon id="arrow-left" slot="arrowLeft" color="black" large> fas fa-angle-left</v-icon>
+        <v-icon id="arrow-right" slot="arrowRight" color="black" large> fas fa-angle-right</v-icon>
         <vueper-slide
           v-for="article in articles"
           :key="article.id"
-          :title="article.title"
-          :content="article.averageRating"
-          :style="'background-color: ' + ['#ff5252', '#42b983'][i % 2]"
         >
+          <div slot="slideContent">
+            <div>
+              <router-link
+              :to="{ name: 'view-article', params: { articleId: article.id } }"
+              > 
+                <v-img v-if="article.urlToImage" height="150px" :width="containerWidth + 'px'" :src="article.urlToImage" :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`">
+                  <template v-slot:placeholder>
+                      <v-layout
+                        fill-height
+                        align-center
+                        justify-center
+                        ma-0
+                      >
+                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                      </v-layout>
+                  </template>
+                 </v-img>
+              </router-link> 
+            </div>
+            <router-link :to="{ name: 'view-article', params: { articleId: article.id } }">
+              <div class="text-xs-left article-title fade"> 
+                {{article.title}}
+              </div> 
+            </router-link>
+            <span class="rating"> {{article.averageRating}} </span> 
+          </div>
         </vueper-slide>
       </vueper-slides>
     </v-card>
@@ -39,13 +65,26 @@ export default {
   },
   data() {
     return {
-      articles: []
+      articles: [],
+      containerWidth: null,
+      windowWidth: null,
+      breakpoints: {
+        2050: {
+          arrows: true,
+          bullets: false
+        },
+        500: {
+          arrows: false,
+          bullets: true
+        }
+      }
     };
   },
   created() {
     db.collection('articles')
+      .where("averageRating",">", 0)
       .orderBy('averageRating')
-      .limit(10)
+      .limit(8)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -59,11 +98,141 @@ export default {
             title: doc.data().title,
             url: doc.data().url,
             averageRating: avgRatingRounded,
-            ratingCount: doc.data().ratingCount
+            ratingCount: doc.data().ratingCount,
+            urlToImage: doc.data().urlToImage
           };
           this.articles.push(data);
         });
       });
+    this.windowWidth = window.innerWidth
+    if (this.windowWidth >= 1650)
+      this.containerWidth = 0.18 * this.windowWidth
+    else if (this.windowWidth >= 1250) 
+      this.containerWidth = 0.18 * this.windowWidth
+    else if (this.windowWidth >= 1000)
+      this.containerWidth = 0.22 * this.windowWidth
+    else if (this.windowWidth >= 700)
+      this.containerWidth = 0.3 * this.windowWidth
+    else if (this.windowWidth >= 500)
+      this.containerWidth = 0.45 * this.windowWidth
+    else if (this.windowWidth < 500)
+      this.containerWidth = 0.9 * this.windowWidth    
+  },
+  mounted() {
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+      if (this.windowWidth >= 1650)
+        this.containerWidth = 0.18 * this.windowWidth
+      else if (this.windowWidth >= 1250) 
+        this.containerWidth = 0.18 * this.windowWidth
+      else if (this.windowWidth >= 1000)
+        this.containerWidth = 0.22 * this.windowWidth
+      else if (this.windowWidth >= 700)
+        this.containerWidth = 0.3 * this.windowWidth
+      else if (this.windowWidth >= 500)
+        this.containerWidth = 0.45 * this.windowWidth
+      else if (this.windowWidth < 500)
+        this.containerWidth = 0.9 * this.windowWidth   
+    })
+  },
+  computed: {
+    slideNum () {
+      if (this.windowWidth >= 1650) return 5;
+      else if (this.windowWidth >= 1250) return 5;
+      else if (this.windowWidth >= 1000) return 4;
+      else if (this.windowWidth >= 700) return 3;
+      else if (this.windowWidth >= 500) return 2;
+      else if (this.windowWidth < 500) return 1;
+    }
+  },
+  methods: {
   }
 };
 </script>
+<style>
+.vueperslides__arrow:focus {
+  background-color: transparent;
+}
+.vueperslides__bullet {
+  width: 13px;
+  height: 13px;
+  background-color: white;
+}
+.vueperslides__bullet:focus {
+  background-color: #4CAF50;
+}
+.vueperslides__bullets {
+  height: 43px;
+}
+.vueperslides__bullet--active {
+  border-width: 2px;
+  background-color: #4CAF50;
+}
+</style>
+<style scoped>
+a {
+  color: black;
+}
+div {
+  font-family: Helvetica,Arial,sans-serif;
+}
+#lowestRateTitle {
+  font-size: 25px;
+  padding-top: 5px;
+}
+.rating {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  font-weight: 800;
+  color: white;
+  font-size: 20px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+}
+.article-title {
+  overflow: hidden;
+  position: relative; 
+  font-weight: bold;
+}
+.fade {
+  position: relative;
+  height: 40px/* exactly three lines */
+}
+.fade:after {
+  content: "";
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10%;
+  height: 20px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0),#E0E0E0 50%);
+}
+#arrow-left {
+  position: relative;
+  left: 35px; 
+  bottom: 156px;
+  background-color: transparent;
+}
+#arrow-right {
+  position: relative;
+  right: 35px; 
+  bottom: 156px;
+}
+@media screen and (max-width: 500px) {
+#arrow-left {
+  left: -10px; 
+}
+#arrow-right {
+  right: 0px; 
+}
+}
+@media screen and (max-width: 380px) {
+#lowestRateTitle {
+  font-size: 22px;
+}
+}
+</style>

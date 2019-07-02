@@ -1,92 +1,80 @@
 <template>
-  <div id="view-source" class ="container">
-    
-      <div style="" class ="row">
-         <div style="font-size: 50px; margin-bottom: 5px;" class = "col s12">
+  <div id="view-source" :style="{marginLeft: marginL + 'px', width: containerWidth + 'px'}">
+      <div>
+        <div class="source-title">
           <a :href="sourceUrl" target="_blank">
-            <v-avatar size="64px" v-if="sourceId">
-              <img class="img-circle mb-1" :src="getImgUrl(sourceId)" />
-            </v-avatar>
+            <img v-if="sourceId" class="source-image" :src="getImgUrl(sourceId)" />
             {{ sourceName }} 
           </a>
-          
-    
-          </div>
-          <div style="padding-left: 20px;" class ="col s4">
-             
-            <span class = "big-green-circle"> </span>
-
-            <span class = "big-rating green--text" v-if="averageRating"> {{averageRating }}% </span>
-
-            <span class="big-rating green--text" v-if="!averageRating"> NA </span>
-          
-          
-            <span class = "big-red-circle"> </span>
-            <span class ="big-rating red--text"> NA </span>
-          </div> 
+        </div>
+        <div class="source-rating">
+          <span class="big-green-circle"> </span>
+          <span class="big-rating green--text" v-if="averageRating"> {{averageRating }}% </span>
+          <span class="big-rating green--text" v-else> NA </span>
+          <span class="big-red-circle"> </span>
+          <span class="big-rating red--text "> NA </span>
+        </div> 
       </div>
-      
-      
-      <div style="margin-bottom: 30px" class = "divider"> </div>
-      <ul class = "row">
-      <li v-for="article in articles" :key="article.id" class="row">
-        
-        <div class = "col s9 title-name">
-          <div class = "col s1">
-          <img
-            :src="article.urlToImage"
-            
-            v-if="article.urlToImage"
-            style="height: 60px;"
-          />
-          </div>
-          <div class = "col s11">
-            <div>
-          <router-link
-          :to="{ name: 'view-article', params: { articleId: article.id } }"
-           >
-          {{ article.title }}
-          </router-link>
+      <div class="divider"> </div> 
+      <ul class="row">
+        <li v-for="article in articles" :key="article.id" class="row">
+          <div class="col m9">
+            <div class="article-image col m3 l2">
+              <router-link :to="{ name: 'view-article', params: { articleId: article.id } }">
+                <v-img v-if="article.urlToImage" height="105px" :src="article.urlToImage"></v-img>
+              </router-link>
             </div>
-            <div>
-           <router-link
-            v-if="article.author"
-            :to="{ name: 'view-author', params: { author: article.author } }"
-          > <span class ="author-name">
-            - {{ article.author.replace(/,/g, '/') }} </span>
-          </router-link>
+            <div class="col m9 l10">
+              <div class="title-name">
+                <router-link :to="{ name: 'view-article', params: { articleId: article.id } }">
+                  {{ article.title }}
+                </router-link>
+              </div>
+              <div>
+                <router-link v-if="article.author" :to="{ name: 'view-author', params: { author: article.author } }"> 
+                  <span class="author-name">
+                    by {{ article.author.replace(/,/g, '/') }} 
+                  </span>
+                </router-link>
+                <span class="source-time">
+                  &ensp;{{ article.publishedAt | moment('MMMM Do') }} 
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div
-            class="col s3"
-        >
-          <div class ="col s6">
-            <span class = "green-circle"> </span>
-
-            <span class = "rating green--text" v-if="article.averageRating"> {{ article.averageRating }}% </span>
-
-            <span class="rating green--text" v-if="!article.averageRating"> NA </span>
+          <div class="col s12 m3">
+            <div v-if="!isMobile()" class="col m6">
+              <span class="green-circle"> </span>
+              <span class="rating green--text" v-if="article.averageRating"> 
+                {{ article.averageRating }}% 
+              </span>
+              <span class="rating green--text" v-else> NA </span>
+            </div>
+            <div v-if="!isMobile()" class="col m6">
+              <span class="red-circle"> </span>
+              <span class="rating red-rating"> NA </span>
+            </div>
+            <div v-if="isMobile()" class="col s12">
+              <span class="green-circle"> </span>
+              <span class="rating green--text" v-if="article.averageRating"> {{ article.averageRating }}% </span>
+              <span class="rating green--text" v-else> NA </span>
+              <span class="red-circle"> </span>
+              <span class="rating red-rating"> NA </span>
+            </div>
           </div>
-          <div class ="col s6">
-            <span class = "red-circle"> </span>
-            <span class ="rating red--text"> NA </span>
+        </li>
+        <li> 
+          <div id="return-home" class="col s12">
+            <router-link to="/"> 
+              <v-btn outline flat color="green" depressed> Home </v-btn>
+            </router-link>
           </div>
-        </div>
-          
-          
-         
-          
-      </li>
-    </ul>
-    <router-link to="/" class="btn grey">Home</router-link>
+        </li>
+      </ul>
   </div>
 </template>
-
 <script>
 import db from '../fb';
-
 export default {
   name: 'ViewSource',
   data() {
@@ -97,11 +85,36 @@ export default {
       sourceId: null,
       averageRating: null,
       ratingCount: null,
-      urlToImage: null
+      urlToImage: null,
+      marginL: null,
+      containerWidth: null,
+      windowWidth: null
     };
   },
+  mounted() {
+    window.addEventListener('resize', () => {
+        if (this.isDesktop())
+          this.containerWidth = 1050
+        else if (this.isLap())
+          this.containerWidth = 900
+        else if (this.isTablet())
+          this.containerWidth = 700
+        else 
+          this.containerWidth = this.windowWidth
+        this.marginL = (this.windowWidth - this.containerWidth  ) / 2
+    })
+  },
   created() {
-    this.sourceName = this.$route.params.sourceName;
+    if (this.isDesktop())
+      this.containerWidth = 1050
+    else if (this.isLap())
+      this.containerWidth = 900
+    else if (this.isTablet())
+      this.containerWidth = 700
+    else 
+      this.containerWidth = this.windowWidth
+    this.marginL = (window.innerWidth - this.containerWidth) / 2
+    this.sourceName = this.$route.params.sourceName
     db.collection('sources')
       .doc(this.sourceName)
       .get()
@@ -134,8 +147,9 @@ export default {
               title: doc.data().title,
               url: doc.data().url,
               averageRating: avgRatingRounded,
+              publishedAt: doc.data().publishedAt,
               ratingCount: doc.data().ratingCount,
-              urlToImage: doc.data().urlToImage,
+              urlToImage: doc.data().urlToImage
             };
             vm.articles.push(data);
           });
@@ -161,6 +175,7 @@ export default {
               title: doc.data().title,
               url: doc.data().url,
               averageRating: avgRatingRounded,
+              publishedAt: doc.data().publishedAt,
               ratingCount: doc.data().ratingCount,
               urlToImage: doc.data().urlToImage
             };
@@ -169,16 +184,52 @@ export default {
         });
     },
     getImgUrl(pic) {
-      if (pic) return require('../assets/images/' + pic + '.png');
-      else return null;
+      if (pic) 
+        return require('../assets/images/' + pic + '.png')
+      else return null
+    },
+    isLap (){
+      return ( this.windowWidth <= 1100 && this.windowWidth > 800)
+    },
+    isDesktop (){
+      this.windowWidth = window.innerWidth
+      return ( this.windowWidth > 1100)
+    },
+    isTablet (){
+      return ( this.windowWidth <= 800 && this.windowWidth > 760 )
+    },
+    isMobile (){
+      return ( this.windowWidth <= 760)
     }
   }
 };
 </script>
-
 <style scoped>
 a {
   color: black;
+}
+.v-btn {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.source-image {
+  border: 0.75px solid #B7B1B1; 
+  height: 64px; 
+  border-radius: 50%;
+  position: relative;
+  top: 13px;
+}
+.source-title {
+  font-size: 50px; 
+  margin-bottom: 5px; 
+  font-weight: 300;
+}
+.source-rating {
+  padding-left: 10px; 
+  margin-bottom: 20px;
+}
+div {
+  font-family: Helvetica,Arial,sans-serif;
 }
 .title-name {
   font-weight: bold;
@@ -208,14 +259,21 @@ a {
   font-size: 18px;
   font-weight: bold;
 }
+.red-rating {
+  color: #B20000;
+}
 .author-name {
   font-size: 12px;
   font-weight: bold;
   opacity: 0.61;
 }
-
-
-
+.source-time {
+  font-size: 12px;
+  opacity: 0.71;
+}
+.article-image {
+  margin-top: 3px;
+}
 .big-rating {
   font-size: 22px;
   font-weight: bold;
@@ -223,8 +281,8 @@ a {
 .big-green-circle {
   position: relative;
   top: 5px;
-  height: 20px;
-  width: 20px;
+  height: 25px;
+  width: 25px;
   background-color: #4CAF50;
   border-radius: 50%;
   display: inline-block;
@@ -232,14 +290,92 @@ a {
 .big-red-circle {
   position: relative;
   top: 5px;
-  height: 20px;
-  width: 20px;
+  height: 25px;
+  width: 25px;
   background-color:#B20000;
   border-radius: 50%;
   display: inline-block;
 }
-.container {
-  width: 58%;
-
+.divider {
+  margin-bottom: 30px;
+  height: 2px;
+  margin-left: 10.5px;
+  margin-right: 10.5px;
+}
+#return-home {
+  margin-top: 20px;
+}
+@media screen and (max-width: 800px) {
+.green-circle {
+  position: relative;
+  top: 3px;
+  height: 18px;
+  width: 18px;
+}
+.red-circle {
+  position: relative;
+  top: 3px;
+  height: 18px;
+  width: 18px;
+}
+.rating {
+  font-size: 16px;
+}
+.title-name {
+  font-size: 18px;
+}
+.source-title {
+  font-size: 46px;
+}
+}
+@media screen and (max-width: 760px) {
+.article-image {
+  display: none;
+}
+.rating {
+  margin-right: 5px;
+}
+.source-rating {
+  padding-left: 12px;
+}
+.source-title {
+  padding-left: 6px;
+}
+.divider {
+  margin-left: 12.5px;
+  margin-right: 12.5px;
+}
+}
+@media screen and (max-width: 600px) {
+.source-title {
+  font-size: 42px;
+}
+.source-image {
+  height: 60px;
+}
+.big-green-circle {
+  width: 22px;
+  height: 22px;
+  top: 4px;
+}
+.big-red-circle {
+  width: 22px;
+  height: 22px;
+  top: 4px;
+}
+.big-rating {
+  font-size: 20px;
+}
+.divider {
+  margin-bottom: 25px;
+}
+}
+@media screen and (max-width: 480px) {
+.source-title {
+  font-size: 38px;
+}
+.source-image {
+  height: 58px;
+}
 }
 </style>

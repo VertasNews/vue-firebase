@@ -1,37 +1,11 @@
 <template>
-  <div id="view-article" class="container">
-    <!-- <v-layout>
-      <v-flex>
-        <v-card>
-          <v-img v-if="urlToImage" :src="urlToImage"></v-img>
-          <v-card-title>
-            <h5>
-              <a :href="url" target="_blank">{{ title }}</a>
-            </h5>
-            <span>{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
-            <span class="badge new" data-badge-caption="%" v-if="averageRating">
-              Accuracy rating: {{ averageRating }}
-            </span>
-          </v-card-title>
-          <v-card-actions>
-            Rate this article accuracy
-            <v-rating
-              v-model="userRating"
-              :length="10"
-              @click.native="submitRating"
-            >
-            </v-rating>
-            {{ userRating }}0%
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-    </v-layout> -->
+  <div id="view-article" :style="{marginLeft: marginL + 'px', width: containerWidth + 'px'}">
     <div class="card">
       <div class="card-content row">
-            <div class="col s3">
+            <div class="col s12 m3">
              <v-img v-if="urlToImage" height="250px" :src="urlToImage"></v-img>
             </div>
-            <div class="col s9">
+            <div class="col s12 m9">
               <div class="title-name"> <a :href="url" target="_blank">{{ title }}</a> </div>
               <div ><router-link
               v-if="sourceName"
@@ -51,49 +25,45 @@
             </router-link>
             <span class = "source-time">{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
              </div>
-             <div> <a :href="url" target="_blank">{{ content }} </a> </div>
+             <div class="article-content fade"> <a :href="url" target="_blank">{{ content }} </a> </div>
              
             </div>
-         
-         <!--   <span class="badge new" data-badge-caption="%" v-if="averageRating">
-              Accuracy rating: {{ averageRating }}
-            </span> -->
-
-            
-      
-      </div>
-        
+      </div> 
     </div>
     <div class = "card"> 
       <div class = "card-content">
         <div class="row">
         
        
-        <div class="col s3 text-xs-center borderRight">
+        <div class="col s6 m3 text-xs-center borderRight1">
           <div class="col s12 score-title"> Critics Score  </div> 
           <div class="col s6 accuracy-rate"> NA  </div> 
-          <div class="col s6 bias-rate"> NA </div>
-          <div class="col s6"> no of ratings </div> 
-          <div class="col s6"> no of rating </div>
+          <div class="col s6 bias-rate red--text"> NA </div>
+          <div class="col s6 rating-num">  0 rating(s) </div> 
+          <div class="col s6 rating-num"> 0 rating(s) </div>
           </div>
-        <div class= "col s3 text-xs-center borderRight">
+        <div class= "col s6 m3 text-xs-center borderRight2">
           <div class="col s12 score-title"> Users Score  </div> 
           <div v-if="averageRating" class="col s6 accuracy-rate"> {{averageRating}}% </div> 
-          <div v-if="!averageRating" class="col s6 accuracy-rate"> NA </div> 
-          <div class="col s6 bias-rate"> NA </div>
-          <div class="col s6"> {{ratingCount}} rating(s) </div> 
-          <div class="col s6"> no of rating </div>
+          <div v-else class="col s6 accuracy-rate"> NA </div> 
+          <div v-if="left" class="col s6 bias-rate blue--text"> {{ averageBiasRating }}%  </div>
+          <div v-if="right" class="col s6 bias-rate red--text"> {{ averageBiasRating }}%  </div>
+          <div v-if="neutral" class="col s6 bias-rate grey--text"> 0%</div>
+          <div v-if="!averageBiasRating" class="col s6 bias-rate red--text"> NA </div>
+          <div class="col s6 rating-num"> {{ratingCount}} rating(s) </div> 
+          <div class="col s6 rating-num"> {{biasRatingCount}} rating(s) </div>
            </div>
-        <div class="col s6 text-xs-center">
+        <div class="col s12 m6 text-xs-center">
           <div class="rating-instruction"> Please provide us with an objective rating of the article's accuracy and biases </div>
-          <div> <v-btn large round color = "success"> Rate Now </v-btn> </div>
+          <div> <RatingPopup v-if="popup" />  </div>
+       <!--    -->
            </div>
   
         </div>
 
       </div>
     </div>
-    <span class="badge new blue" data-badge-caption="" v-if="left">
+   <!-- <span class="badge new blue" data-badge-caption="" v-if="left">
               {{ averageBiasRating }}% Left
             </span>
             <span class="badge new red" data-badge-caption="" v-if="right">
@@ -127,9 +97,11 @@
          :track-color="color"
               :color="color"
               @click.native="submitBiasRating"
-            ></v-slider>
+            ></v-slider>  -->
            
-    <router-link to="/" class="btn grey">Home</router-link>
+    <router-link to="/"> 
+            <v-btn id="return-home" outline flat color="green" depressed> Home </v-btn>
+        </router-link>
   </div>
 
 </template>
@@ -137,12 +109,15 @@
 <script>
 import db from '../fb';
 import firebase from 'firebase';
+import RatingPopup from '../components/RatingPopup';
 
 
 export default {
   name: 'ViewArticle',
+  components: { RatingPopup },
   data() {
     return {
+      popup: true,
       articleId: null,
       title: null,
       url: null,
@@ -175,7 +150,10 @@ export default {
       ],
       left: false,
       neutral: false,
-      right: false
+      right: false,
+      windowWidth: null,
+      marginL: null,
+      containerWidth: null
     };
   },
   created() {
@@ -194,6 +172,7 @@ export default {
         } else {
           // doc.data() will be undefined in this case
           console.log('No rating found!');
+         
         }
       });
 
@@ -210,6 +189,28 @@ export default {
           console.log('No bias rating found!');
         }
       });
+    if (this.isDesktop())
+      this.containerWidth = 1050
+    else if (this.isLap())
+      this.containerWidth = 900
+    else if (this.isTablet())
+      this.containerWidth = 700
+    else 
+      this.containerWidth = this.windowWidth
+    this.marginL = (window.innerWidth - this.containerWidth) / 2
+  },
+  mounted() {
+    window.addEventListener('resize', () => {
+        if (this.isDesktop())
+          this.containerWidth = 1050
+        else if (this.isLap())
+          this.containerWidth = 900
+        else if (this.isTablet())
+          this.containerWidth = 700
+        else 
+          this.containerWidth = this.windowWidth
+        this.marginL = (this.windowWidth - this.containerWidth  ) / 2
+    })
   },
   computed: {
     color() {
@@ -238,27 +239,37 @@ export default {
             vm.content = doc.data().content;
             vm.urlToImage = doc.data().urlToImage;
             vm.publishedAt = doc.data().publishedAt;
-            if (doc.data().averageRating)
+            if (doc.data().averageRating) {
               vm.averageRating = Math.trunc(doc.data().averageRating * 10);
             vm.ratingCount = doc.data().ratingCount;
-            if (doc.data().averageBiasRating < 4) {
-              vm.averageBiasRating = Math.trunc(
-                (4 - doc.data().averageBiasRating) / 0.03
-              );
-              vm.left = true;
-            } else if (doc.data().averageBiasRating > 4) {
-              vm.averageBiasRating = Math.trunc(
-                (doc.data().averageBiasRating - 4) / 0.03
-              );
-              vm.right = true;
-            } else if (doc.data().averageBiasRating == 4) {
-              vm.averageBiasRating = 4;
-              vm.neutral = true;
             }
-            vm.biasRatingCount = doc.data().biasRatingCount;
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
+            else {
+              vm.ratingCount = 0;
+              console.log('No rating');
+            }
+            if (!doc.data().averageBiasRating) {
+              vm.biasRatingCount = 0;
+              console.log ('No bias rating')
+            }
+            else {
+              vm.biasRatingCount = doc.data().biasRatingCount;
+              if (doc.data().averageBiasRating < 4) {
+                vm.averageBiasRating = Math.trunc(
+                  (4 - doc.data().averageBiasRating) / 0.03
+                );
+                vm.left = true;
+              } 
+              else if (doc.data().averageBiasRating > 4) {
+                vm.averageBiasRating = Math.trunc(
+                  (doc.data().averageBiasRating - 4) / 0.03
+                );
+                vm.right = true;
+              } 
+              else if (doc.data().averageBiasRating == 4) {
+                vm.averageBiasRating = 4;
+                vm.neutral = true;
+              }
+            }
           }
         });
       });
@@ -281,9 +292,12 @@ export default {
             this.content = doc.data().content;
             this.urlToImage = doc.data().urlToImage;
             this.publishedAt = doc.data().publishedAt;
-            if (doc.data().averageRating)
+            if (doc.data().averageRating) {
               this.averageRating = Math.trunc(doc.data().averageRating * 10);
             this.ratingCount = doc.data().ratingCount;
+            }
+            else 
+              this.ratingCount = 0;
             if (doc.data().averageBiasRating < 4) {
               this.averageBiasRating = Math.trunc(
                 (4 - doc.data().averageBiasRating) / 0.03
@@ -299,176 +313,26 @@ export default {
               this.neutral = true;
             }
             this.biasRatingCount = doc.data().biasRatingCount;
-          } else {
-            console.log('No such document!');
+          } else if (!doc.data().averageBiasRating) {
+            console.log('dkmmemay2');
+            this.biasRatingCount = 0;
           }
         });
     },
-    submitRating() {
-      var rating = this.userRating;
-      var oldRating = this.oldRating;
-      this.oldRating = rating;
-
-      var articleRef = db.collection('articles').doc(this.articleId);
-      this.addRatingToFirebase(articleRef, rating, oldRating);
-
-      if (this.author) {
-        var authorRef = db.collection('authors').doc(this.author);
-        this.addRatingToFirebase(authorRef, rating, oldRating);
-      }
-      if (this.sourceName) {
-        var sourceRef = db.collection('sources').doc(this.sourceName);
-        this.addRatingToFirebase(sourceRef, rating, oldRating);
-      }
-
-      if (this.hasRating) {
-        db.collection('ratings')
-          .doc(this.ratingId)
-          .update({
-            value: rating
-          });
-      } else {
-        db.collection('ratings')
-          .doc(this.ratingId)
-          .set({
-            articleId: this.articleId,
-            userId: this.userId,
-            value: rating
-          });
-      }
+    isLap (){
+      return ( this.windowWidth <= 1100 && this.windowWidth > 800)
     },
-    addRatingToFirebase(reference, rating, oldRating) {
-      // User already rated the article
-      if (this.hasRating) {
-        return db.runTransaction(transaction => {
-          return transaction.get(reference).then(doc => {
-            if (!doc.exists) {
-              throw 'Document does not exist!';
-            }
-
-            var oldRatingTotal =
-              doc.data().averageRating * doc.data().ratingCount;
-            var newAvgRating =
-              (oldRatingTotal - oldRating + rating) / doc.data().ratingCount;
-
-            transaction.update(reference, {
-              averageRating: newAvgRating
-            });
-          });
-        });
-      } else {
-        // User rate news for the first time
-        return db.runTransaction(transaction => {
-          return transaction.get(reference).then(doc => {
-            if (!doc.exists) {
-              throw 'Document does not exist!';
-            }
-
-            this.hasRating = true;
-
-            if (doc.data().ratingCount && doc.data().averageRating) {
-              var newNumRatings = doc.data().ratingCount + 1;
-              var oldRatingTotal =
-                doc.data().averageRating * doc.data().ratingCount;
-              var newAvgRating = (oldRatingTotal + rating) / newNumRatings;
-
-              transaction.update(reference, {
-                ratingCount: newNumRatings,
-                averageRating: newAvgRating
-              });
-            } else {
-              transaction.update(reference, {
-                ratingCount: 1,
-                averageRating: rating
-              });
-            }
-          });
-        });
-      }
+    isDesktop (){
+      this.windowWidth = window.innerWidth
+      return ( this.windowWidth > 1100)
     },
-    submitBiasRating() {
-      var rating = this.biasRating;
-      var oldRating = this.oldBiasRating;
-      this.oldBiasRating = rating;
-
-      var articleRef = db.collection('articles').doc(this.articleId);
-      this.addBiasRatingToFirebase(articleRef, rating, oldRating);
-
-      if (this.author) {
-        var authorRef = db.collection('authors').doc(this.author);
-        this.addBiasRatingToFirebase(authorRef, rating, oldRating);
-      }
-      if (this.sourceName) {
-        var sourceRef = db.collection('sources').doc(this.sourceName);
-        this.addBiasRatingToFirebase(sourceRef, rating, oldRating);
-      }
-
-      if (this.hasBiasRating) {
-        db.collection('biasRatings')
-          .doc(this.ratingId)
-          .update({
-            value: rating
-          });
-      } else {
-        db.collection('biasRatings')
-          .doc(this.ratingId)
-          .set({
-            articleId: this.articleId,
-            userId: this.userId,
-            value: rating
-          });
-      }
+    isTablet (){
+      return ( this.windowWidth <= 800 && this.windowWidth > 760 )
     },
-    addBiasRatingToFirebase(reference, rating, oldRating) {
-      // User already rated the article
-      if (this.hasBiasRating) {
-        return db.runTransaction(transaction => {
-          return transaction.get(reference).then(doc => {
-            if (!doc.exists) {
-              throw 'Document does not exist!';
-            }
-
-            var oldRatingTotal =
-              doc.data().averageBiasRating * doc.data().biasRatingCount;
-            var newAvgRating =
-              (oldRatingTotal - oldRating + rating) /
-              doc.data().biasRatingCount;
-
-            transaction.update(reference, {
-              averageBiasRating: newAvgRating
-            });
-          });
-        });
-      } else {
-        // User rate news for the first time
-        return db.runTransaction(transaction => {
-          return transaction.get(reference).then(doc => {
-            if (!doc.exists) {
-              throw 'Document does not exist!';
-            }
-
-            this.hasBiasRating = true;
-
-            if (doc.data().biasRatingCount && doc.data().averageBiasRating) {
-              var newNumRatings = doc.data().biasRatingCount + 1;
-              var oldRatingTotal =
-                doc.data().averageBiasRating * doc.data().biasRatingCount;
-              var newAvgRating = (oldRatingTotal + rating) / newNumRatings;
-
-              transaction.update(reference, {
-                biasRatingCount: newNumRatings,
-                averageBiasRating: newAvgRating
-              });
-            } else {
-              transaction.update(reference, {
-                biasRatingCount: 1,
-                averageBiasRating: rating
-              });
-            }
-          });
-        });
-      }
+    isMobile (){
+      return ( this.windowWidth <= 760)
     }
+    
   }
 };
 </script>
@@ -476,11 +340,16 @@ export default {
 a {
   color: black;
 }
+div {
+  font-family: Helvetica,Arial,sans-serif;
+}
+.container {
+  width: 1032px;
+}
 .title-name {
   font-weight: bold;
   font-size: 20px;
 }
-
 .source-name {
   font-weight: bold;
   color: #0CD7E8;
@@ -503,16 +372,18 @@ a {
   font-weight: bold;
 }
 .accuracy-rate {
-  font-size: 60px;
+  font-size: 57px;
   font-weight: bold;
-  color: #438007;
+  color: #4CAF50;
 }
 .bias-rate {
-  font-size: 60px;
+  font-size: 57px;
   font-weight: bold;
-  color: #B20000;
 }
-.borderRight {
+.borderRight1 {
+  border-right: 1px solid black;
+}
+.borderRight2 {
   border-right: 1px solid black;
 }
 .rating-instruction {
@@ -525,5 +396,55 @@ a {
 .card .card-content {
   padding: 20px 0px 20px 20px;
 }
-
+#return-home {
+  margin-left: 0;
+}
+.article-content {
+ position: relative;
+ overflow: hidden;
+}
+.fade {
+  position: relative;
+  height: 80px/* exactly three lines */
+}
+.fade:after {
+  content: "";
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10%;
+  height: 20px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0),#ffffff 50%);
+}
+@media screen and (max-width: 800px) {
+.accuracy-rate {
+  font-size: 50px;
+  padding: 0px;
+}
+.bias-rate {
+  font-size: 50px;
+  padding: 0px;
+}
+.rating-num {
+  font-size: 11px;
+}
+}
+@media screen and (max-width: 600px) {
+.borderRight2 {
+  border-right: none;
+}
+.borderRight1 {
+  border-right: none;
+}
+.rating-instruction {
+  
+  border-top: 1px solid black;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+.card .card-content{
+  padding: 20px 0px 20px 0px;
+}
+}
 </style>

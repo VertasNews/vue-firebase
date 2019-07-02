@@ -57,7 +57,7 @@ export default {
             // this.$emit('applied');
           });
       }
-    }
+    },
   }
 };
 </script>
@@ -65,12 +65,9 @@ export default {
 <style scoped>
 #criticApply {
   font-family: Helvetica,Arial,sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
-  position: relative;
-  right: 30px;
-  top: 12px;
-
+  color: black;
 }
 #criticApply:hover {
   color: #438007;
@@ -78,5 +75,14 @@ export default {
 #criticApply:focus:active {
   background-color: transparent;
 }    
+
+@media screen and (max-width: 1100px) {
+#criticApply {
+  font-weight: 400;
+  margin-left: 4px;
+  height: 32px;
+}
+
+}
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="accuracy-ranking">
+  <div id="accuracy-ranking" :style="{right: marginL + 'px'}">
 
     <div id="chart-title"> Outlets Accuracy Rank </div>
      <ul>
@@ -15,14 +15,33 @@
         </v-avatar>
         <span class="source-name" v-if="!getImgUrl(source.id)"> {{source.name}} </span> </router-link
         >
-        <span v-bind:style="{width: source.length + 'px'}" class="ranking-bar"> </span>
+        <span :style="{width: source.length + 'px'}" class="ranking-bar"> </span>
         <span class="rating-num"
           v-if="source.averageRating"
           > {{ source.averageRating }}%</span
         >
       </li>
     </ul>
+    <div id="chart-title"> Popular Weekly</div>
+    <ul>
+      
+      <li v-for="article in articles" :key="article.id" class="row">
+        <div
+          class="green-rating col s2"
+          
+          v-if="article.averageRating"
+          > {{ article.averageRating }}%</div
+        >
+        <div class="article-title col s10 fade">
+        <router-link
+          :to="{ name: 'view-article', params: { articleId: article.id } }"
+          >{{ article.title }}</router-link
+        >
+        </div>
+      </li>
+    </ul>
   </div>
+  
 </template>
 
 <script>
@@ -32,13 +51,17 @@ export default {
   name: 'AccuracyRanking',
   data() {
     return {
-      sources: []
+      sources: [],
+      articles: [],
+      marginL: null,
+      containerWidth: null,
+      windowWidth: null,
     };
   },
   created() {
     db.collection('sources')
       .orderBy('averageRating', 'desc')
-      .limit(10)
+      .limit(6)
       .get()
       .then(querySnapshot => {
         var index = 0;
@@ -59,23 +82,87 @@ export default {
            this.sources.push(data);
         });
       });
+    let now = new Date();
+    let onejan = new Date(now.getFullYear(), 0, 1);
+    var week = Math.ceil(((now - onejan) / 86400000 + onejan.getDay() + 1) / 7);
+
+    db.collection('articles')
+      .where('week', '==', week)
+      .orderBy('ratingCount', 'desc')
+      .limit(5)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          if (doc.data().averageRating) {
+            var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
+          }
+          const data = {
+            id: doc.id,
+            author: doc.data().author,
+            sourceName: doc.data().source.name,
+            title: doc.data().title,
+            url: doc.data().url,
+            urlToImage: doc.data().urlToImage,
+            description: doc.data().description,
+            content: doc.data().content,
+            publishedAt: doc.data().publishedAt,
+            averageRating: avgRatingRounded,
+            ratingCount: doc.data().ratingCount
+          };
+          this.articles.push(data);
+        });
+      });
+     if (this.isDesktop())
+      this.containerWidth = 1050
+    else if (this.isLap())
+      this.containerWidth = 900
+    else if (this.isTablet())
+      this.containerWidth = 700
+    else 
+      this.containerWidth = this.windowWidth
+    this.marginL = (window.innerWidth - this.containerWidth) / 2
   },
   beforeMount () {
     
+  },
+   mounted() {
+    window.addEventListener('resize', () => {
+        if (this.isDesktop())
+          this.containerWidth = 1050
+        else if (this.isLap())
+          this.containerWidth = 900
+        else if (this.isTablet())
+          this.containerWidth = 700
+        else 
+          this.containerWidth = this.windowWidth
+        this.marginL = (this.windowWidth - this.containerWidth  ) / 2
+    })
   },
   methods: {
     getImgUrl(pic) {
       if (pic) return require('../assets/images/' + pic + '.png');
       else return null;
     },
-    changeLength: function () {
-      
+    isLap (){
+      return ( this.windowWidth <= 1100 && this.windowWidth > 800)
+    },
+    isDesktop (){
+      this.windowWidth = window.innerWidth
+      return ( this.windowWidth > 1100)
+    },
+    isTablet (){
+      return ( this.windowWidth <= 800 && this.windowWidth > 760 )
+    },
+    isMobile (){
+      return ( this.windowWidth <= 760)
     }
-
   }
 };
 </script>
 <style scoped>
+a {
+  color: black;
+}
 #chart-title {
   font-family: Helvetica,Arial,sans-serif;
   font-size: 20px;
@@ -92,11 +179,10 @@ export default {
 }
 #accuracy-ranking {
   position: absolute;
-  left: 65%;
   border-radius: 10px;
   width: 250px;
-  height: 300px;
-  border: 1px solid #B7B1B1;
+  height: 600px;
+ /* border: 1px solid #B7B1B1; */
   padding: 10px 10px 10px 10px;
 }
 .v-avatar {
@@ -107,13 +193,44 @@ export default {
   font-family: Helvetica,Arial,sans-serif;
   font-size: 16px;
   font-weight: bold;
-  color: #438007;
+  color: #4CAF50;
 }
 .source-name {
   font-size: 12px;
   display: inline-block;
   width: 42px;
   overflow: hidden;
+}
+#chart-title {
+  font-family: Helvetica,Arial,sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.green-rating {
+  color: #4CAF50;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 3.5px;
+}
+.article-title {
+  font-weight: bold;
+  overflow: hidden;
+/*  position: relative; */
+}
+.fade {
+  position: relative;
+  height: 40px/* exactly three lines */
+}
+.fade:after {
+  content: "";
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10%;
+  height: 20px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0),#ffffff 50%);
 }
 </style>
 

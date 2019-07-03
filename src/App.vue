@@ -21,6 +21,6 @@ export default {
 .contain {
   background: white;
   margin: 0;
-  padding-top: 50px; 
+  padding-top: 50px;
 }
 </style>

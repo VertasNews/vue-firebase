@@ -8,7 +8,12 @@
             <form action="index.html">
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input type="email" id="email" @click="autofill()" v-model="email" />
+                <input
+                  type="email"
+                  id="email"
+                  @click="autofill()"
+                  v-model="email"
+                />
                 <label class="white-text" for="email">Email Address</label>
               </div>
               <div class="input-field">
@@ -55,8 +60,8 @@ export default {
   name: 'Login',
   data: function() {
     return {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       autofl: false
     };
   },
@@ -90,7 +95,7 @@ export default {
 
       firebase
         .auth()
-        .signInWithPopup(provider)
+        .signInWithPopup(provider) // eslint-disable-next-line
         .then(result => {
           this.$router.push('/');
         })
@@ -98,13 +103,12 @@ export default {
           alert('Oops. ' + err.message);
         });
     },
-    autofill: function () {
+    autofill: function() {
       if (!this.autofl) {
-        this.password = "demovertas";
-        this.email = "demo@gg.com";
+        this.password = 'demovertas';
+        this.email = 'demo@gg.com';
         this.autofl = true;
       }
-      
     }
   }
 };

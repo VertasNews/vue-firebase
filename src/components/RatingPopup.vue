@@ -1,7 +1,9 @@
 <template>
-  <v-dialog max-width="600px" v-model="dialog"> 
-    <v-btn class="round-button" large slot="activator" color ="success"> Rate Now </v-btn>
-      <v-alert
+  <v-dialog max-width="600px" v-model="dialog">
+    <v-btn class="round-button" large slot="activator" color="success">
+      Rate Now
+    </v-btn>
+    <v-alert
       :value="alert"
       type="error"
       transition="scale-transition"
@@ -10,53 +12,88 @@
     >
       Please choose a rating before making a vote
     </v-alert>
-      <v-card class="text-xs-center" height="170px" light>
-        <div id="accuracy-page">
-          <div class="rate-title">
-            Accuracy Rate
-          </div>
-          <div>
-            <v-rating
-              v-model="userRating"
-               :length="10"
-               background-color="green lighten-1" 
-               color="green"
-               hover
-               @click.native="changeAccuracyVote"
-              :small="isSmall"
-            >           
-            </v-rating>
-          </div>
-          <div>
-             <v-btn small v-if="accuracyVoteSubmitted" color="success"> Voted &ensp; <v-icon dark> check_circle </v-icon> </v-btn>
-             <v-btn small v-else @click.native="submitRating" color="success" outline> Vote </v-btn>
-             <span v-if="accuracyVoteSubmitted" id="next-icon"> <v-icon @click="switchRight" color="green"> fas fa-forward </v-icon> </span>
-          </div>
-          <div class="message" v-if="accuracyVoteSubmitted"> You can always change your vote! </div>             
+    <v-card class="text-xs-center" height="170px" light>
+      <div id="accuracy-page">
+        <div class="rate-title">
+          Accuracy Rate
         </div>
-        <div id="bias-page" class="slide" :class="slide()">
-          <div class="rate-title">
-            Bias Rate
-          </div>
-          <v-slider class="slider"
-            v-model="biasRating"
-            :tick-labels="tickLabels"
-            :max="7"
-            :min="1"
-            step="1"
-            always-dirty
-            @click.native="changeBiasVote"
-            :track-color="color"
-            :color="color"
-          ></v-slider>
-          <div>
-            <span v-if="biasVoteSubmitted" id="prev-icon"> <v-icon @click="switchLeft" color="green"> fas fa-backward </v-icon>  </span>
-            <v-btn small class="voted-button" v-if="biasVoteSubmitted" color="success"> Voted &ensp; <v-icon dark> check_circle </v-icon> </v-btn>
-            <v-btn small id="vote-button" v-else @click.native="submitBiasRating" color="success" outline> Vote </v-btn>              
-          </div>
-          <div class="message" v-if="biasVoteSubmitted"> You can always change your vote! </div>    
+        <div>
+          <v-rating
+            v-model="userRating"
+            :length="10"
+            background-color="green lighten-1"
+            color="green"
+            hover
+            @click.native="changeAccuracyVote"
+            :small="isSmall"
+          >
+          </v-rating>
         </div>
-      </v-card>
+        <div>
+          <v-btn small v-if="accuracyVoteSubmitted" color="success">
+            Voted &ensp; <v-icon dark> check_circle </v-icon>
+          </v-btn>
+          <v-btn
+            small
+            v-else
+            @click.native="submitRating"
+            color="success"
+            outline
+          >
+            Vote
+          </v-btn>
+          <span v-if="accuracyVoteSubmitted" id="next-icon">
+            <v-icon @click="switchRight" color="green"> fas fa-forward </v-icon>
+          </span>
+        </div>
+        <div class="message" v-if="accuracyVoteSubmitted">
+          You can always change your vote!
+        </div>
+      </div>
+      <div id="bias-page" class="slide" :class="slide()">
+        <div class="rate-title">
+          Bias Rate
+        </div>
+        <v-slider
+          class="slider"
+          v-model="biasRating"
+          :tick-labels="tickLabels"
+          :max="7"
+          :min="1"
+          step="1"
+          always-dirty
+          @click.native="changeBiasVote"
+          :track-color="color"
+          :color="color"
+        ></v-slider>
+        <div>
+          <span v-if="biasVoteSubmitted" id="prev-icon">
+            <v-icon @click="switchLeft" color="green"> fas fa-backward </v-icon>
+          </span>
+          <v-btn
+            small
+            class="voted-button"
+            v-if="biasVoteSubmitted"
+            color="success"
+          >
+            Voted &ensp; <v-icon dark> check_circle </v-icon>
+          </v-btn>
+          <v-btn
+            small
+            id="vote-button"
+            v-else
+            @click.native="submitBiasRating"
+            color="success"
+            outline
+          >
+            Vote
+          </v-btn>
+        </div>
+        <div class="message" v-if="biasVoteSubmitted">
+          You can always change your vote!
+        </div>
+      </div>
+    </v-card>
   </v-dialog>
 </template>
 
@@ -80,15 +117,7 @@ export default {
       oldRating: null,
       biasRating: null,
       oldBiasRating: null,
-      tickLabels: [
-        'Left',
-        '',
-        '',
-        'Neutral',
-        '',
-        '',
-        'Right'
-      ],
+      tickLabels: ['Left', '', '', 'Neutral', '', '', 'Right'],
       left: false,
       neutral: false,
       right: false,
@@ -104,11 +133,12 @@ export default {
     this.userId = firebase.auth().currentUser.uid;
     this.ratingId = this.articleId + this.userId;
     this.windowWidth = window.innerWidth;
-    db.collection('ratings') 
+    db.collection('ratings')
       .doc(this.ratingId)
       .get()
       .then(doc => {
-        if (doc.exists) { //user has voted this before
+        if (doc.exists) {
+          //user has voted this before
           this.userRating = doc.data().value;
           this.oldRating = doc.data().value;
           this.hasRating = true;
@@ -136,19 +166,19 @@ export default {
       .doc(this.articleId)
       .get()
       .then(doc => {
-          if (doc.exists) {
-            this.author = doc.data().author;
-            this.sourceName = doc.data().source.name;
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
-          }
+        if (doc.exists) {
+          this.author = doc.data().author;
+          this.sourceName = doc.data().source.name;
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No such document!');
+        }
       });
   },
   mounted() {
     window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth
-    })
+      this.windowWidth = window.innerWidth;
+    });
   },
   computed: {
     color() {
@@ -161,17 +191,18 @@ export default {
       if (this.biasRating == 7) return 'red ';
       return 'grey';
     },
-    isSmall(){
-     return this.windowWidth < 480
+    isSmall() {
+      return this.windowWidth < 480;
     }
   },
   methods: {
     submitRating() {
       if (this.userRating == null) {
         this.alert = true;
-        setTimeout(() =>{ this.alert = false;}, 3000); 
-      }
-      else {
+        setTimeout(() => {
+          this.alert = false;
+        }, 3000);
+      } else {
         var rating = this.userRating;
         var oldRating = this.oldRating;
         this.oldRating = rating;
@@ -187,7 +218,8 @@ export default {
           var sourceRef = db.collection('sources').doc(this.sourceName);
           this.addRatingToFirebase(sourceRef, rating, oldRating);
         }
-        if (this.hasRating) { // user has voted before
+        if (this.hasRating) {
+          // user has voted before
           db.collection('ratings')
             .doc(this.ratingId)
             .update({
@@ -258,9 +290,10 @@ export default {
     submitBiasRating() {
       if (this.biasRating == null) {
         this.alert = true;
-        setTimeout(() =>{ this.alert = false;}, 3000); 
-      }
-      else {
+        setTimeout(() => {
+          this.alert = false;
+        }, 3000);
+      } else {
         var rating = this.biasRating;
         var oldRating = this.oldBiasRating;
         this.oldBiasRating = rating;
@@ -345,29 +378,28 @@ export default {
         });
       }
     },
-    switchRight (){
+    switchRight() {
       this.switchs = true;
     },
-    switchLeft (){
+    switchLeft() {
       this.switchs = false;
     },
-    slide () {
-      if (this.switchs)
-        return "slides"
+    slide() {
+      if (this.switchs) return 'slides';
     },
     changeAccuracyVote() {
-      this.accuracyVoteSubmitted = false
+      this.accuracyVoteSubmitted = false;
     },
-    changeBiasVote () {
-      this.biasVoteSubmitted = false
-      }//setTimeout(function() {, 1000);
-  } 
+    changeBiasVote() {
+      this.biasVoteSubmitted = false;
+    } //setTimeout(function() {, 1000);
+  }
 };
 </script>
 
 <style scoped>
 div {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 .v-btn {
   margin: 0;
@@ -378,10 +410,9 @@ div {
 .slide {
   position: relative;
   left: 100%;
-  bottom: 150px; 
+  bottom: 150px;
   transition: 1s;
   background: white;
-    
 }
 .slides {
   left: 0;
@@ -395,20 +426,20 @@ div {
 .voted-button {
   height: 30px;
 }
-.rate-title{
-  margin-top: 10px; 
+.rate-title {
+  margin-top: 10px;
   font-size: 18px;
 }
 #accuracy-page {
-  border: 1px solid #4CAF50;
-  margin: 0px 10px 10px 10px; 
-  height: 150px; 
-  position: relative; 
+  border: 1px solid #4caf50;
+  margin: 0px 10px 10px 10px;
+  height: 150px;
+  position: relative;
   top: 10px;
 }
 #bias-page {
-  border: 1px solid #4CAF50; 
-  margin: 0px 10px 10px 10px; 
+  border: 1px solid #4caf50;
+  margin: 0px 10px 10px 10px;
   height: 150px;
 }
 #next-icon {
@@ -417,25 +448,25 @@ div {
   left: 15px;
 }
 .message {
-  font-size: 12px; 
+  font-size: 12px;
   margin-top: 4px;
 }
 #prev-icon {
-  position: relative; 
-  top: 5px; 
+  position: relative;
+  top: 5px;
   right: 15px;
 }
 #vote-button {
-  position: relative; 
+  position: relative;
   top: 7px;
 }
 @media screen and (max-width: 370px) {
-.rate-title{
-  margin-top: 8px; 
-  font-size: 14px;
-}
-.slider {
-  height: auto;
-}
+  .rate-title {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+  .slider {
+    height: auto;
+  }
 }
 </style>

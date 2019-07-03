@@ -9,6 +9,10 @@
         <p>
           Your email address will be encrypted and protected
         </p>
+        <v-alert :value="applied" type="warning">
+          You have already applied. Submit again if you want to apply with
+          another email
+        </v-alert>
         <v-form ref="form">
           <v-textarea
             v-model="workEmail"
@@ -30,6 +34,10 @@ import firebase from 'firebase';
 import db from '../fb';
 
 export default {
+  name: 'ApplyPopup',
+  props: {
+    applied: Boolean
+  },
   data() {
     return {
       workEmail: '',
@@ -57,32 +65,30 @@ export default {
             // this.$emit('applied');
           });
       }
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
 #criticApply {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: bold;
   color: black;
 }
 #criticApply:hover {
   color: #438007;
-}  
+}
 #criticApply:focus:active {
   background-color: transparent;
-}    
+}
 
 @media screen and (max-width: 1100px) {
-#criticApply {
-  font-weight: 400;
-  margin-left: 4px;
-  height: 32px;
+  #criticApply {
+    font-weight: 400;
+    margin-left: 4px;
+    height: 32px;
+  }
 }
-
-}
-
 </style>

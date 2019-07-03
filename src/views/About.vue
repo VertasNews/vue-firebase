@@ -8,7 +8,7 @@
         </div>
         <div>
           You are currently using our web app.
-          <a href="https://vertasbackend.web.app">
+          <a href="https://vertasbackend.web.app" target="_blank">
             Click here to visit our landing page.</a
           >
         </div>

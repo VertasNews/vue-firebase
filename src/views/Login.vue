@@ -59,8 +59,7 @@ export default {
   data: function() {
     return {
       email: '',
-      password: '',
-      autofl: false
+      password: ''
     };
   },
   methods: {
@@ -100,13 +99,6 @@ export default {
         .catch(err => {
           alert('Oops. ' + err.message);
         });
-    },
-    autofill: function() {
-      if (!this.autofl) {
-        this.password = 'demovertas';
-        this.email = 'demo@gg.com';
-        this.autofl = true;
-      }
     }
   }
 };

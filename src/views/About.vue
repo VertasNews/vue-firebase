@@ -7,7 +7,7 @@
           fake news epidemic. Thank you for visiting our site!
         </div>
         <div>
-          You are using our web app.
+          You are currently using our web app.
           <a href="https://vertasbackend.web.app">
             Click here to visit our landing page.</a
           >

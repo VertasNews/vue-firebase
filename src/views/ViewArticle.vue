@@ -90,7 +90,6 @@
 
 <script>
 import db from '../fb';
-import firebase from 'firebase';
 import RatingPopup from '../components/RatingPopup';
 
 export default {
@@ -112,23 +111,6 @@ export default {
       ratingCount: null,
       averageBiasRating: null,
       biasRatingCount: null,
-      userId: null,
-      ratingId: null,
-      hasRating: false,
-      hasBiasRating: false,
-      userRating: null,
-      oldRating: null,
-      biasRating: null,
-      oldBiasRating: null,
-      tickLabels: [
-        'Left-3',
-        'Left-2',
-        'Left-1',
-        'Neutral',
-        'Right-1',
-        'Right-2',
-        'Right-3'
-      ],
       left: false,
       neutral: false,
       right: false,
@@ -138,37 +120,6 @@ export default {
     };
   },
   created() {
-    this.articleId = this.$route.params.articleId;
-    this.userId = firebase.auth().currentUser.uid;
-    this.ratingId = this.articleId + this.userId;
-
-    db.collection('ratings')
-      .doc(this.ratingId)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          this.userRating = doc.data().value;
-          this.oldRating = doc.data().value;
-          this.hasRating = true;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No rating found!');
-        }
-      });
-
-    db.collection('biasRatings')
-      .doc(this.ratingId)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          this.biasRating = doc.data().value;
-          this.oldBiasRating = doc.data().value;
-          this.hasBiasRating = true;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No bias rating found!');
-        }
-      });
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
     else if (this.isTablet()) this.containerWidth = 700;
@@ -183,18 +134,6 @@ export default {
       else this.containerWidth = this.windowWidth;
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
     });
-  },
-  computed: {
-    color() {
-      if (this.biasRating == 1) return 'blue';
-      if (this.biasRating == 2) return 'blue lighten-2';
-      if (this.biasRating == 3) return 'blue lighten-3';
-      if (this.biasRating == 4) return 'green lighten-2';
-      if (this.biasRating == 5) return 'red lighten-3';
-      if (this.biasRating == 6) return 'red lighten-2';
-      if (this.biasRating == 7) return 'red ';
-      return 'grey';
-    }
   },
   beforeRouteEnter(to, from, next) {
     db.collection('articles')

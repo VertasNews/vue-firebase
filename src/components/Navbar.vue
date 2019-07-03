@@ -27,7 +27,7 @@
           </router-link>
         </div>
         <div id="popup" class="col s5.5">
-          <ApplyPopup applied="applied" v-if="isLoggedIn && isDesktop()" />
+          <ApplyPopup v-if="isLoggedIn && isDesktop()" />
         </div>
         <div v-if="!isLoggedIn && windowWidth > 1200" class="col s7">
           <div class="col s6">
@@ -96,7 +96,7 @@
                 {{ currentUser }}
               </div>
               <v-divider v-if="isLoggedIn && !isDesktop()"></v-divider>
-              <ApplyPopup applied="applied" v-if="isLoggedIn && !isDesktop()" />
+              <ApplyPopup v-if="isLoggedIn && !isDesktop()" />
               <v-divider></v-divider>
               <v-btn
                 flat
@@ -115,7 +115,6 @@
 </template>
 
 <script>
-import db from '../fb';
 import firebase from 'firebase';
 import ApplyPopup from './ApplyPopup';
 
@@ -126,7 +125,6 @@ export default {
     return {
       isLoggedIn: false,
       currentUser: null,
-      applied: false,
       marginL: null,
       containerWidth: null,
       windowWidth: null
@@ -138,18 +136,6 @@ export default {
       this.isLoggedIn = true;
       this.currentUser = user.email;
     }
-
-    db.collection('applied')
-      .doc(user.uid)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          this.applied = true;
-        }
-      })
-      .catch(function(error) {
-        console.log('Error getting document:', error);
-      });
 
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;

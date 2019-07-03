@@ -1,69 +1,86 @@
 <template>
-  <div id="view-article" :style="{marginLeft: marginL + 'px', width: containerWidth + 'px'}">
+  <div
+    id="view-article"
+    :style="{ marginLeft: marginL + 'px', width: containerWidth + 'px' }"
+  >
     <div class="card">
       <div class="card-content row">
-            <div class="col s12 m3">
-             <v-img v-if="urlToImage" height="250px" :src="urlToImage"></v-img>
-            </div>
-            <div class="col s12 m9">
-              <div class="title-name"> <a :href="url" target="_blank">{{ title }}</a> </div>
-              <div ><router-link
+        <div class="col s12 m3">
+          <v-img v-if="urlToImage" height="250px" :src="urlToImage"></v-img>
+        </div>
+        <div class="col s12 m9">
+          <div class="title-name">
+            <a :href="url" target="_blank">{{ title }}</a>
+          </div>
+          <div>
+            <router-link
               v-if="sourceName"
               :to="{
                 name: 'view-source',
                 params: { sourceName: sourceName }
               }"
             >
-             <span class ="source-name"> {{ sourceName }} </span>
-            </router-link> </div>
-            <div class="authorntime">
+              <span class="source-name"> {{ sourceName }} </span>
+            </router-link>
+          </div>
+          <div class="authorntime">
             <router-link
               v-if="author"
               :to="{ name: 'view-author', params: { author: author } }"
             >
-             <span class = "author-name"> {{ author.replace(/,/g, '/') }} </span>
+              <span class="author-name"> {{ author.replace(/,/g, '/') }} </span>
             </router-link>
-            <span class = "source-time">{{ publishedAt | moment('MMMM Do YYYY, h:mm a') }}</span>
-             </div>
-             <div class="article-content fade"> <a :href="url" target="_blank">{{ content }} </a> </div>
-             
-            </div>
-      </div> 
-    </div>
-    <div class = "card"> 
-      <div class = "card-content">
-        <div class="row">
-        
-       
-        <div class="col s6 m3 text-xs-center borderRight1">
-          <div class="col s12 score-title"> Critics Score  </div> 
-          <div class="col s6 accuracy-rate"> NA  </div> 
-          <div class="col s6 bias-rate red--text"> NA </div>
-          <div class="col s6 rating-num">  0 rating(s) </div> 
-          <div class="col s6 rating-num"> 0 rating(s) </div>
+            <span class="source-time">{{
+              publishedAt | moment('MMMM Do YYYY, h:mm a')
+            }}</span>
           </div>
-        <div class= "col s6 m3 text-xs-center borderRight2">
-          <div class="col s12 score-title"> Users Score  </div> 
-          <div v-if="averageRating" class="col s6 accuracy-rate"> {{averageRating}}% </div> 
-          <div v-else class="col s6 accuracy-rate"> NA </div> 
-          <div v-if="left" class="col s6 bias-rate blue--text"> {{ averageBiasRating }}%  </div>
-          <div v-if="right" class="col s6 bias-rate red--text"> {{ averageBiasRating }}%  </div>
-          <div v-if="neutral" class="col s6 bias-rate grey--text"> 0%</div>
-          <div v-if="!averageBiasRating" class="col s6 bias-rate red--text"> NA </div>
-          <div class="col s6 rating-num"> {{ratingCount}} rating(s) </div> 
-          <div class="col s6 rating-num"> {{biasRatingCount}} rating(s) </div>
-           </div>
-        <div class="col s12 m6 text-xs-center">
-          <div class="rating-instruction"> Please provide us with an objective rating of the article's accuracy and biases </div>
-          <div> <RatingPopup v-if="popup" />  </div>
-       <!--    -->
-           </div>
-  
+          <div class="article-content fade">
+            <a :href="url" target="_blank">{{ content }} </a>
+          </div>
         </div>
-
       </div>
     </div>
-   <!-- <span class="badge new blue" data-badge-caption="" v-if="left">
+    <div class="card">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s6 m3 text-xs-center borderRight1">
+            <div class="col s12 score-title">Critics Score</div>
+            <div class="col s6 accuracy-rate">NA</div>
+            <div class="col s6 bias-rate red--text">NA</div>
+            <div class="col s6 rating-num">0 rating(s)</div>
+            <div class="col s6 rating-num">0 rating(s)</div>
+          </div>
+          <div class="col s6 m3 text-xs-center borderRight2">
+            <div class="col s12 score-title">Users Score</div>
+            <div v-if="averageRating" class="col s6 accuracy-rate">
+              {{ averageRating }}%
+            </div>
+            <div v-else class="col s6 accuracy-rate">NA</div>
+            <div v-if="left" class="col s6 bias-rate blue--text">
+              {{ averageBiasRating }}%
+            </div>
+            <div v-if="right" class="col s6 bias-rate red--text">
+              {{ averageBiasRating }}%
+            </div>
+            <div v-if="neutral" class="col s6 bias-rate grey--text">0%</div>
+            <div v-if="!averageBiasRating" class="col s6 bias-rate red--text">
+              NA
+            </div>
+            <div class="col s6 rating-num">{{ ratingCount }} rating(s)</div>
+            <div class="col s6 rating-num">{{ biasRatingCount }} rating(s)</div>
+          </div>
+          <div class="col s12 m6 text-xs-center">
+            <div class="rating-instruction">
+              Please provide us with an objective rating of the article's
+              accuracy and biases
+            </div>
+            <div><RatingPopup v-if="popup" /></div>
+            <!--    -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <span class="badge new blue" data-badge-caption="" v-if="left">
               {{ averageBiasRating }}% Left
             </span>
             <span class="badge new red" data-badge-caption="" v-if="right">
@@ -98,19 +115,19 @@
               :color="color"
               @click.native="submitBiasRating"
             ></v-slider>  -->
-           
-    <router-link to="/"> 
-            <v-btn id="return-home" outline flat color="green" depressed> Home </v-btn>
-        </router-link>
-  </div>
 
+    <router-link to="/">
+      <v-btn id="return-home" outline flat color="green" depressed>
+        Home
+      </v-btn>
+    </router-link>
+  </div>
 </template>
 
 <script>
 import db from '../fb';
 import firebase from 'firebase';
 import RatingPopup from '../components/RatingPopup';
-
 
 export default {
   name: 'ViewArticle',
@@ -172,7 +189,6 @@ export default {
         } else {
           // doc.data() will be undefined in this case
           console.log('No rating found!');
-         
         }
       });
 
@@ -189,28 +205,20 @@ export default {
           console.log('No bias rating found!');
         }
       });
-    if (this.isDesktop())
-      this.containerWidth = 1050
-    else if (this.isLap())
-      this.containerWidth = 900
-    else if (this.isTablet())
-      this.containerWidth = 700
-    else 
-      this.containerWidth = this.windowWidth
-    this.marginL = (window.innerWidth - this.containerWidth) / 2
+    if (this.isDesktop()) this.containerWidth = 1050;
+    else if (this.isLap()) this.containerWidth = 900;
+    else if (this.isTablet()) this.containerWidth = 700;
+    else this.containerWidth = this.windowWidth;
+    this.marginL = (window.innerWidth - this.containerWidth) / 2;
   },
   mounted() {
     window.addEventListener('resize', () => {
-        if (this.isDesktop())
-          this.containerWidth = 1050
-        else if (this.isLap())
-          this.containerWidth = 900
-        else if (this.isTablet())
-          this.containerWidth = 700
-        else 
-          this.containerWidth = this.windowWidth
-        this.marginL = (this.windowWidth - this.containerWidth  ) / 2
-    })
+      if (this.isDesktop()) this.containerWidth = 1050;
+      else if (this.isLap()) this.containerWidth = 900;
+      else if (this.isTablet()) this.containerWidth = 700;
+      else this.containerWidth = this.windowWidth;
+      this.marginL = (this.windowWidth - this.containerWidth) / 2;
+    });
   },
   computed: {
     color() {
@@ -241,31 +249,27 @@ export default {
             vm.publishedAt = doc.data().publishedAt;
             if (doc.data().averageRating) {
               vm.averageRating = Math.trunc(doc.data().averageRating * 10);
-            vm.ratingCount = doc.data().ratingCount;
-            }
-            else {
+              vm.ratingCount = doc.data().ratingCount;
+            } else {
               vm.ratingCount = 0;
               console.log('No rating');
             }
             if (!doc.data().averageBiasRating) {
               vm.biasRatingCount = 0;
-              console.log ('No bias rating')
-            }
-            else {
+              console.log('No bias rating');
+            } else {
               vm.biasRatingCount = doc.data().biasRatingCount;
               if (doc.data().averageBiasRating < 4) {
                 vm.averageBiasRating = Math.trunc(
                   (4 - doc.data().averageBiasRating) / 0.03
                 );
                 vm.left = true;
-              } 
-              else if (doc.data().averageBiasRating > 4) {
+              } else if (doc.data().averageBiasRating > 4) {
                 vm.averageBiasRating = Math.trunc(
                   (doc.data().averageBiasRating - 4) / 0.03
                 );
                 vm.right = true;
-              } 
-              else if (doc.data().averageBiasRating == 4) {
+              } else if (doc.data().averageBiasRating == 4) {
                 vm.averageBiasRating = 4;
                 vm.neutral = true;
               }
@@ -294,10 +298,8 @@ export default {
             this.publishedAt = doc.data().publishedAt;
             if (doc.data().averageRating) {
               this.averageRating = Math.trunc(doc.data().averageRating * 10);
-            this.ratingCount = doc.data().ratingCount;
-            }
-            else 
-              this.ratingCount = 0;
+              this.ratingCount = doc.data().ratingCount;
+            } else this.ratingCount = 0;
             if (doc.data().averageBiasRating < 4) {
               this.averageBiasRating = Math.trunc(
                 (4 - doc.data().averageBiasRating) / 0.03
@@ -319,20 +321,19 @@ export default {
           }
         });
     },
-    isLap (){
-      return ( this.windowWidth <= 1100 && this.windowWidth > 800)
+    isLap() {
+      return this.windowWidth <= 1100 && this.windowWidth > 800;
     },
-    isDesktop (){
-      this.windowWidth = window.innerWidth
-      return ( this.windowWidth > 1100)
+    isDesktop() {
+      this.windowWidth = window.innerWidth;
+      return this.windowWidth > 1100;
     },
-    isTablet (){
-      return ( this.windowWidth <= 800 && this.windowWidth > 760 )
+    isTablet() {
+      return this.windowWidth <= 800 && this.windowWidth > 760;
     },
-    isMobile (){
-      return ( this.windowWidth <= 760)
+    isMobile() {
+      return this.windowWidth <= 760;
     }
-    
   }
 };
 </script>
@@ -341,7 +342,7 @@ a {
   color: black;
 }
 div {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 .container {
   width: 1032px;
@@ -352,7 +353,7 @@ div {
 }
 .source-name {
   font-weight: bold;
-  color: #0CD7E8;
+  color: #0cd7e8;
   font-size: 12px;
 }
 .author-name {
@@ -374,7 +375,7 @@ div {
 .accuracy-rate {
   font-size: 57px;
   font-weight: bold;
-  color: #4CAF50;
+  color: #4caf50;
 }
 .bias-rate {
   font-size: 57px;
@@ -400,51 +401,50 @@ div {
   margin-left: 0;
 }
 .article-content {
- position: relative;
- overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 .fade {
   position: relative;
-  height: 80px/* exactly three lines */
+  height: 80px; /* exactly three lines */
 }
 .fade:after {
-  content: "";
+  content: '';
   text-align: right;
   position: absolute;
   bottom: 0;
   right: 0;
   width: 10%;
   height: 20px;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0),#ffffff 50%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff 50%);
 }
 @media screen and (max-width: 800px) {
-.accuracy-rate {
-  font-size: 50px;
-  padding: 0px;
-}
-.bias-rate {
-  font-size: 50px;
-  padding: 0px;
-}
-.rating-num {
-  font-size: 11px;
-}
+  .accuracy-rate {
+    font-size: 50px;
+    padding: 0px;
+  }
+  .bias-rate {
+    font-size: 50px;
+    padding: 0px;
+  }
+  .rating-num {
+    font-size: 11px;
+  }
 }
 @media screen and (max-width: 600px) {
-.borderRight2 {
-  border-right: none;
-}
-.borderRight1 {
-  border-right: none;
-}
-.rating-instruction {
-  
-  border-top: 1px solid black;
-  padding-top: 10px;
-  margin-top: 10px;
-}
-.card .card-content{
-  padding: 20px 0px 20px 0px;
-}
+  .borderRight2 {
+    border-right: none;
+  }
+  .borderRight1 {
+    border-right: none;
+  }
+  .rating-instruction {
+    border-top: 1px solid black;
+    padding-top: 10px;
+    margin-top: 10px;
+  }
+  .card .card-content {
+    padding: 20px 0px 20px 0px;
+  }
 }
 </style>

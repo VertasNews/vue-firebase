@@ -57,32 +57,30 @@ export default {
             // this.$emit('applied');
           });
       }
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
 #criticApply {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: bold;
   color: black;
 }
 #criticApply:hover {
   color: #438007;
-}  
+}
 #criticApply:focus:active {
   background-color: transparent;
-}    
+}
 
 @media screen and (max-width: 1100px) {
-#criticApply {
-  font-weight: 400;
-  margin-left: 4px;
-  height: 32px;
+  #criticApply {
+    font-weight: 400;
+    margin-left: 4px;
+    height: 32px;
+  }
 }
-
-}
-
 </style>

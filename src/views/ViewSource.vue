@@ -1,76 +1,104 @@
 <template>
-  <div id="view-source" :style="{marginLeft: marginL + 'px', width: containerWidth + 'px'}">
-      <div>
-        <div class="source-title">
-          <a :href="sourceUrl" target="_blank">
-            <img v-if="sourceId" class="source-image" :src="getImgUrl(sourceId)" />
-            {{ sourceName }} 
-          </a>
-        </div>
-        <div class="source-rating">
-          <span class="big-green-circle"> </span>
-          <span class="big-rating green--text" v-if="averageRating"> {{averageRating }}% </span>
-          <span class="big-rating green--text" v-else> NA </span>
-          <span class="big-red-circle"> </span>
-          <span class="big-rating red--text "> NA </span>
-        </div> 
+  <div
+    id="view-source"
+    :style="{ marginLeft: marginL + 'px', width: containerWidth + 'px' }"
+  >
+    <div>
+      <div class="source-title">
+        <a :href="sourceUrl" target="_blank">
+          <img
+            v-if="sourceId"
+            class="source-image"
+            :src="getImgUrl(sourceId)"
+          />
+          {{ sourceName }}
+        </a>
       </div>
-      <div class="divider"> </div> 
-      <ul class="row">
-        <li v-for="article in articles" :key="article.id" class="row">
-          <div class="col m9">
-            <div class="article-image col m3 l2">
-              <router-link :to="{ name: 'view-article', params: { articleId: article.id } }">
-                <v-img v-if="article.urlToImage" height="105px" :src="article.urlToImage"></v-img>
-              </router-link>
-            </div>
-            <div class="col m9 l10">
-              <div class="title-name">
-                <router-link :to="{ name: 'view-article', params: { articleId: article.id } }">
-                  {{ article.title }}
-                </router-link>
-              </div>
-              <div>
-                <router-link v-if="article.author" :to="{ name: 'view-author', params: { author: article.author } }"> 
-                  <span class="author-name">
-                    by {{ article.author.replace(/,/g, '/') }} 
-                  </span>
-                </router-link>
-                <span class="source-time">
-                  &ensp;{{ article.publishedAt | moment('MMMM Do') }} 
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="col s12 m3">
-            <div v-if="!isMobile()" class="col m6">
-              <span class="green-circle"> </span>
-              <span class="rating green--text" v-if="article.averageRating"> 
-                {{ article.averageRating }}% 
-              </span>
-              <span class="rating green--text" v-else> NA </span>
-            </div>
-            <div v-if="!isMobile()" class="col m6">
-              <span class="red-circle"> </span>
-              <span class="rating red-rating"> NA </span>
-            </div>
-            <div v-if="isMobile()" class="col s12">
-              <span class="green-circle"> </span>
-              <span class="rating green--text" v-if="article.averageRating"> {{ article.averageRating }}% </span>
-              <span class="rating green--text" v-else> NA </span>
-              <span class="red-circle"> </span>
-              <span class="rating red-rating"> NA </span>
-            </div>
-          </div>
-        </li>
-        <li> 
-          <div id="return-home" class="col s12">
-            <router-link to="/"> 
-              <v-btn outline flat color="green" depressed> Home </v-btn>
+      <div class="source-rating">
+        <span class="big-green-circle"> </span>
+        <span class="big-rating green--text" v-if="averageRating">
+          {{ averageRating }}%
+        </span>
+        <span class="big-rating green--text" v-else> NA </span>
+        <span class="big-red-circle"> </span>
+        <span class="big-rating red--text "> NA </span>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <ul class="row">
+      <li v-for="article in articles" :key="article.id" class="row">
+        <div class="col m9">
+          <div class="article-image col m3 l2">
+            <router-link
+              :to="{ name: 'view-article', params: { articleId: article.id } }"
+            >
+              <v-img
+                v-if="article.urlToImage"
+                height="105px"
+                :src="article.urlToImage"
+              ></v-img>
             </router-link>
           </div>
-        </li>
-      </ul>
+          <div class="col m9 l10">
+            <div class="title-name">
+              <router-link
+                :to="{
+                  name: 'view-article',
+                  params: { articleId: article.id }
+                }"
+              >
+                {{ article.title }}
+              </router-link>
+            </div>
+            <div>
+              <router-link
+                v-if="article.author"
+                :to="{
+                  name: 'view-author',
+                  params: { author: article.author }
+                }"
+              >
+                <span class="author-name">
+                  by {{ article.author.replace(/,/g, '/') }}
+                </span>
+              </router-link>
+              <span class="source-time">
+                &ensp;{{ article.publishedAt | moment('MMMM Do') }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col s12 m3">
+          <div v-if="!isMobile()" class="col m6">
+            <span class="green-circle"> </span>
+            <span class="rating green--text" v-if="article.averageRating">
+              {{ article.averageRating }}%
+            </span>
+            <span class="rating green--text" v-else> NA </span>
+          </div>
+          <div v-if="!isMobile()" class="col m6">
+            <span class="red-circle"> </span>
+            <span class="rating red-rating"> NA </span>
+          </div>
+          <div v-if="isMobile()" class="col s12">
+            <span class="green-circle"> </span>
+            <span class="rating green--text" v-if="article.averageRating">
+              {{ article.averageRating }}%
+            </span>
+            <span class="rating green--text" v-else> NA </span>
+            <span class="red-circle"> </span>
+            <span class="rating red-rating"> NA </span>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div id="return-home" class="col s12">
+          <router-link to="/">
+            <v-btn outline flat color="green" depressed> Home </v-btn>
+          </router-link>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 <script>
@@ -93,28 +121,20 @@ export default {
   },
   mounted() {
     window.addEventListener('resize', () => {
-        if (this.isDesktop())
-          this.containerWidth = 1050
-        else if (this.isLap())
-          this.containerWidth = 900
-        else if (this.isTablet())
-          this.containerWidth = 700
-        else 
-          this.containerWidth = this.windowWidth
-        this.marginL = (this.windowWidth - this.containerWidth  ) / 2
-    })
+      if (this.isDesktop()) this.containerWidth = 1050;
+      else if (this.isLap()) this.containerWidth = 900;
+      else if (this.isTablet()) this.containerWidth = 700;
+      else this.containerWidth = this.windowWidth;
+      this.marginL = (this.windowWidth - this.containerWidth) / 2;
+    });
   },
   created() {
-    if (this.isDesktop())
-      this.containerWidth = 1050
-    else if (this.isLap())
-      this.containerWidth = 900
-    else if (this.isTablet())
-      this.containerWidth = 700
-    else 
-      this.containerWidth = this.windowWidth
-    this.marginL = (window.innerWidth - this.containerWidth) / 2
-    this.sourceName = this.$route.params.sourceName
+    if (this.isDesktop()) this.containerWidth = 1050;
+    else if (this.isLap()) this.containerWidth = 900;
+    else if (this.isTablet()) this.containerWidth = 700;
+    else this.containerWidth = this.windowWidth;
+    this.marginL = (window.innerWidth - this.containerWidth) / 2;
+    this.sourceName = this.$route.params.sourceName;
     db.collection('sources')
       .doc(this.sourceName)
       .get()
@@ -186,22 +206,21 @@ export default {
         });
     },
     getImgUrl(pic) {
-      if (pic) 
-        return require('../assets/images/' + pic + '.png')
-      else return null
+      if (pic) return require('../assets/images/' + pic + '.png');
+      else return null;
     },
-    isLap (){
-      return ( this.windowWidth <= 1100 && this.windowWidth > 800)
+    isLap() {
+      return this.windowWidth <= 1100 && this.windowWidth > 800;
     },
-    isDesktop (){
-      this.windowWidth = window.innerWidth
-      return ( this.windowWidth > 1100)
+    isDesktop() {
+      this.windowWidth = window.innerWidth;
+      return this.windowWidth > 1100;
     },
-    isTablet (){
-      return ( this.windowWidth <= 800 && this.windowWidth > 760 )
+    isTablet() {
+      return this.windowWidth <= 800 && this.windowWidth > 760;
     },
-    isMobile (){
-      return ( this.windowWidth <= 760)
+    isMobile() {
+      return this.windowWidth <= 760;
     }
   }
 };
@@ -215,23 +234,23 @@ a {
   margin-right: 0px;
 }
 .source-image {
-  border: 0.75px solid #B7B1B1; 
-  height: 64px; 
+  border: 0.75px solid #b7b1b1;
+  height: 64px;
   border-radius: 50%;
   position: relative;
   top: 13px;
 }
 .source-title {
-  font-size: 50px; 
-  margin-bottom: 5px; 
+  font-size: 50px;
+  margin-bottom: 5px;
   font-weight: 300;
 }
 .source-rating {
-  padding-left: 10px; 
+  padding-left: 10px;
   margin-bottom: 20px;
 }
 div {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
 }
 .title-name {
   font-weight: bold;
@@ -242,7 +261,7 @@ div {
   top: 5px;
   height: 22px;
   width: 22px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border-radius: 50%;
   display: inline-block;
 }
@@ -251,7 +270,7 @@ div {
   top: 5px;
   height: 22px;
   width: 22px;
-  background-color:#B20000;
+  background-color: #b20000;
   border-radius: 50%;
   display: inline-block;
 }
@@ -262,7 +281,7 @@ div {
   font-weight: bold;
 }
 .red-rating {
-  color: #B20000;
+  color: #b20000;
 }
 .author-name {
   font-size: 12px;
@@ -285,7 +304,7 @@ div {
   top: 5px;
   height: 25px;
   width: 25px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border-radius: 50%;
   display: inline-block;
 }
@@ -294,7 +313,7 @@ div {
   top: 5px;
   height: 25px;
   width: 25px;
-  background-color:#B20000;
+  background-color: #b20000;
   border-radius: 50%;
   display: inline-block;
 }
@@ -308,76 +327,76 @@ div {
   margin-top: 20px;
 }
 @media screen and (max-width: 800px) {
-.green-circle {
-  position: relative;
-  top: 3px;
-  height: 18px;
-  width: 18px;
-}
-.red-circle {
-  position: relative;
-  top: 3px;
-  height: 18px;
-  width: 18px;
-}
-.rating {
-  font-size: 16px;
-}
-.title-name {
-  font-size: 18px;
-}
-.source-title {
-  font-size: 46px;
-}
+  .green-circle {
+    position: relative;
+    top: 3px;
+    height: 18px;
+    width: 18px;
+  }
+  .red-circle {
+    position: relative;
+    top: 3px;
+    height: 18px;
+    width: 18px;
+  }
+  .rating {
+    font-size: 16px;
+  }
+  .title-name {
+    font-size: 18px;
+  }
+  .source-title {
+    font-size: 46px;
+  }
 }
 @media screen and (max-width: 760px) {
-.article-image {
-  display: none;
-}
-.rating {
-  margin-right: 5px;
-}
-.source-rating {
-  padding-left: 12px;
-}
-.source-title {
-  padding-left: 6px;
-}
-.divider {
-  margin-left: 12.5px;
-  margin-right: 12.5px;
-}
+  .article-image {
+    display: none;
+  }
+  .rating {
+    margin-right: 5px;
+  }
+  .source-rating {
+    padding-left: 12px;
+  }
+  .source-title {
+    padding-left: 6px;
+  }
+  .divider {
+    margin-left: 12.5px;
+    margin-right: 12.5px;
+  }
 }
 @media screen and (max-width: 600px) {
-.source-title {
-  font-size: 42px;
-}
-.source-image {
-  height: 60px;
-}
-.big-green-circle {
-  width: 22px;
-  height: 22px;
-  top: 4px;
-}
-.big-red-circle {
-  width: 22px;
-  height: 22px;
-  top: 4px;
-}
-.big-rating {
-  font-size: 20px;
-}
-.divider {
-  margin-bottom: 25px;
-}
+  .source-title {
+    font-size: 42px;
+  }
+  .source-image {
+    height: 60px;
+  }
+  .big-green-circle {
+    width: 22px;
+    height: 22px;
+    top: 4px;
+  }
+  .big-red-circle {
+    width: 22px;
+    height: 22px;
+    top: 4px;
+  }
+  .big-rating {
+    font-size: 20px;
+  }
+  .divider {
+    margin-bottom: 25px;
+  }
 }
 @media screen and (max-width: 480px) {
-.source-title {
-  font-size: 38px;
-}
-.source-image {
-  height: 58px;
-}
+  .source-title {
+    font-size: 38px;
+  }
+  .source-image {
+    height: 58px;
+  }
 }
 </style>

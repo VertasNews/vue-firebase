@@ -1,8 +1,7 @@
 <template>
-  <div id="accuracy-ranking" :style="{right: marginL + 'px'}">
-
-    <div id="chart-title"> Outlets Accuracy Rank </div>
-     <ul>
+  <div id="accuracy-ranking" :style="{ right: marginL + 'px' }">
+    <div id="chart-title">Outlets Accuracy Rank</div>
+    <ul>
       <li v-for="source in sources" :key="source.name" class="collection-item">
         <router-link
           :to="{
@@ -10,38 +9,35 @@
             params: { sourceName: source.name }
           }"
         >
-         <v-avatar size="32px" v-if="getImgUrl(source.id)">
-          <img class="img-circle mb-1" :src="getImgUrl(source.id)" />
-        </v-avatar>
-        <span class="source-name" v-if="!getImgUrl(source.id)"> {{source.name}} </span> </router-link
-        >
-        <span :style="{width: source.length + 'px'}" class="ranking-bar"> </span>
-        <span class="rating-num"
-          v-if="source.averageRating"
-          > {{ source.averageRating }}%</span
+          <v-avatar size="32px" v-if="getImgUrl(source.id)">
+            <img class="img-circle mb-1" :src="getImgUrl(source.id)" />
+          </v-avatar>
+          <span class="source-name" v-if="!getImgUrl(source.id)">
+            {{ source.name }}
+          </span>
+        </router-link>
+        <span :style="{ width: source.length + 'px' }" class="ranking-bar">
+        </span>
+        <span class="rating-num" v-if="source.averageRating">
+          {{ source.averageRating }}%</span
         >
       </li>
     </ul>
-    <div id="chart-title"> Popular Weekly</div>
+    <div id="chart-title">Popular Weekly</div>
     <ul>
-      
       <li v-for="article in articles" :key="article.id" class="row">
-        <div
-          class="green-rating col s2"
-          
-          v-if="article.averageRating"
-          > {{ article.averageRating }}%</div
-        >
+        <div class="green-rating col s2" v-if="article.averageRating">
+          {{ article.averageRating }}%
+        </div>
         <div class="article-title col s10 fade">
-        <router-link
-          :to="{ name: 'view-article', params: { articleId: article.id } }"
-          >{{ article.title }}</router-link
-        >
+          <router-link
+            :to="{ name: 'view-article', params: { articleId: article.id } }"
+            >{{ article.title }}</router-link
+          >
         </div>
       </li>
     </ul>
   </div>
-  
 </template>
 
 <script>
@@ -55,7 +51,7 @@ export default {
       articles: [],
       marginL: null,
       containerWidth: null,
-      windowWidth: null,
+      windowWidth: null
     };
   },
   created() {
@@ -66,7 +62,6 @@ export default {
       .then(querySnapshot => {
         var index = 0;
         querySnapshot.forEach(doc => {
-
           if (doc.data().averageRating) {
             var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             var rankLength = avgRatingRounded * 1.4;
@@ -79,7 +74,7 @@ export default {
             ratingCount: doc.data().ratingCount,
             length: rankLength
           };
-           this.sources.push(data);
+          this.sources.push(data);
         });
       });
     let now = new Date();
@@ -112,49 +107,39 @@ export default {
           this.articles.push(data);
         });
       });
-     if (this.isDesktop())
-      this.containerWidth = 1050
-    else if (this.isLap())
-      this.containerWidth = 900
-    else if (this.isTablet())
-      this.containerWidth = 700
-    else 
-      this.containerWidth = this.windowWidth
-    this.marginL = (window.innerWidth - this.containerWidth) / 2
+    if (this.isDesktop()) this.containerWidth = 1050;
+    else if (this.isLap()) this.containerWidth = 900;
+    else if (this.isTablet()) this.containerWidth = 700;
+    else this.containerWidth = this.windowWidth;
+    this.marginL = (window.innerWidth - this.containerWidth) / 2;
   },
-  beforeMount () {
-    
-  },
-   mounted() {
+  beforeMount() {},
+  mounted() {
     window.addEventListener('resize', () => {
-        if (this.isDesktop())
-          this.containerWidth = 1050
-        else if (this.isLap())
-          this.containerWidth = 900
-        else if (this.isTablet())
-          this.containerWidth = 700
-        else 
-          this.containerWidth = this.windowWidth
-        this.marginL = (this.windowWidth - this.containerWidth  ) / 2
-    })
+      if (this.isDesktop()) this.containerWidth = 1050;
+      else if (this.isLap()) this.containerWidth = 900;
+      else if (this.isTablet()) this.containerWidth = 700;
+      else this.containerWidth = this.windowWidth;
+      this.marginL = (this.windowWidth - this.containerWidth) / 2;
+    });
   },
   methods: {
     getImgUrl(pic) {
       if (pic) return require('../assets/images/' + pic + '.png');
       else return null;
     },
-    isLap (){
-      return ( this.windowWidth <= 1100 && this.windowWidth > 800)
+    isLap() {
+      return this.windowWidth <= 1100 && this.windowWidth > 800;
     },
-    isDesktop (){
-      this.windowWidth = window.innerWidth
-      return ( this.windowWidth > 1100)
+    isDesktop() {
+      this.windowWidth = window.innerWidth;
+      return this.windowWidth > 1100;
     },
-    isTablet (){
-      return ( this.windowWidth <= 800 && this.windowWidth > 760 )
+    isTablet() {
+      return this.windowWidth <= 800 && this.windowWidth > 760;
     },
-    isMobile (){
-      return ( this.windowWidth <= 760)
+    isMobile() {
+      return this.windowWidth <= 760;
     }
   }
 };
@@ -164,16 +149,15 @@ a {
   color: black;
 }
 #chart-title {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 .ranking-bar {
-  
   border-radius: 50px;
   height: 12px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   display: inline-block;
   margin-top: 10px;
 }
@@ -182,7 +166,7 @@ a {
   border-radius: 10px;
   width: 250px;
   height: 600px;
- /* border: 1px solid #B7B1B1; */
+  /* border: 1px solid #B7B1B1; */
   padding: 10px 10px 10px 10px;
 }
 .v-avatar {
@@ -190,10 +174,10 @@ a {
   margin-bottom: 5px;
 }
 .rating-num {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: bold;
-  color: #4CAF50;
+  color: #4caf50;
 }
 .source-name {
   font-size: 12px;
@@ -202,13 +186,13 @@ a {
   overflow: hidden;
 }
 #chart-title {
-  font-family: Helvetica,Arial,sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 .green-rating {
-  color: #4CAF50;
+  color: #4caf50;
   font-size: 18px;
   font-weight: bold;
   padding-left: 3.5px;
@@ -216,21 +200,20 @@ a {
 .article-title {
   font-weight: bold;
   overflow: hidden;
-/*  position: relative; */
+  /*  position: relative; */
 }
 .fade {
   position: relative;
-  height: 40px/* exactly three lines */
+  height: 40px; /* exactly three lines */
 }
 .fade:after {
-  content: "";
+  content: '';
   text-align: right;
   position: absolute;
   bottom: 0;
   right: 0;
   width: 10%;
   height: 20px;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0),#ffffff 50%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff 50%);
 }
 </style>
-

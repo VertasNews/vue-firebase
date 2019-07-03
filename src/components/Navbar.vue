@@ -1,18 +1,22 @@
 <template>
   <nav>
-    <div class='row' :style="{marginLeft: marginL + 'px', width: containerWidth + 'px'}">
+    <div
+      class="row"
+      :style="{ marginLeft: marginL + 'px', width: containerWidth + 'px' }"
+    >
       <div class="col m9 xl8" id="imgnSearch">
         <div id="imgSpace" class="col m2">
           <router-link to="/">
-            <img
-              class="img"
-              src="../assets/final_logo.jpg"
-              alt="Vertas News"
-            />
+            <img class="img" src="../assets/final_logo.jpg" alt="Vertas News" />
           </router-link>
         </div>
-        <div  id="search-bar" class ="col m10"> 
-          <input type="text" :placeholder="searchText" class="search-txt" name="search">
+        <div id="search-bar" class="col m10">
+          <input
+            type="text"
+            :placeholder="searchText"
+            class="search-txt"
+            name="search"
+          />
           <v-icon id="searchIcon"> fas fa-search </v-icon>
         </div>
       </div>
@@ -25,17 +29,26 @@
         <div id="popup" class="col s5.5">
           <Popup v-if="isLoggedIn && isDesktop()" />
         </div>
-        <div v-if="!isLoggedIn && (windowWidth > 1200)" class ="col s7">
-          <div class="col s6"> <button class="navbutton"> <router-link to="/login"> <span> Log In </span> </router-link> </button> </div>
-          <div class="col s6"> <button class="navbutton"> <router-link to="/register"> <span> Sign Up </span> </router-link> </button> </div>
+        <div v-if="!isLoggedIn && windowWidth > 1200" class="col s7">
+          <div class="col s6">
+            <button class="navbutton">
+              <router-link to="/login"> <span> Log In </span> </router-link>
+            </button>
+          </div>
+          <div class="col s6">
+            <button class="navbutton">
+              <router-link to="/register"> <span> Sign Up </span> </router-link>
+            </button>
+          </div>
         </div>
         <div id="hamburger" class="col s5.5">
-          <v-menu v-if="(windowWidth < 1200 && !isLoggedIn)"
-          :close-on-content-click="false"
-          offset-x
-          :nudge-bottom = "15"
-          :nudge-left = "100"
-          transition = "slide-y-transition"
+          <v-menu
+            v-if="windowWidth < 1200 && !isLoggedIn"
+            :close-on-content-click="false"
+            offset-x
+            :nudge-bottom="15"
+            :nudge-left="100"
+            transition="slide-y-transition"
           >
             <template v-slot:activator="{ on }">
               <span class="hoverab" v-on="on">
@@ -44,42 +57,60 @@
                 </v-icon>
               </span>
             </template>
-            <v-card min-width="100px" max-width="240px" height="73px" >
-              <router-link to="/login"> <v-btn class="menuButton" flat color="#438007" block>Log In</v-btn> </router-link>
+            <v-card min-width="100px" max-width="240px" height="73px">
+              <router-link to="/login">
+                <v-btn class="menuButton" flat color="#438007" block
+                  >Log In</v-btn
+                >
+              </router-link>
               <v-divider> </v-divider>
-              <router-link to="/register"> <v-btn class="menuButton" flat color="#438007" block>Sign Up</v-btn> </router-link>
+              <router-link to="/register">
+                <v-btn class="menuButton" flat color="#438007" block
+                  >Sign Up</v-btn
+                >
+              </router-link>
             </v-card>
           </v-menu>
         </div>
         <div id="user" class="col s5.5">
-          <v-menu v-if="isLoggedIn"
-          :close-on-content-click="false"
-          offset-x
-          :nudge-bottom = "15"
-          :nudge-left = "130"
-          transition = "slide-y-transition"
+          <v-menu
+            v-if="isLoggedIn"
+            :close-on-content-click="false"
+            offset-x
+            :nudge-bottom="15"
+            :nudge-left="130"
+            transition="slide-y-transition"
           >
             <template v-slot:activator="{ on }">
               <span class="hoverab" v-on="on">
-                <v-icon color="#438007" >
+                <v-icon color="#438007">
                   fas fa-user
                 </v-icon>
-                <v-icon color="#438007" small id="user-caret-down"> fas fa-caret-down</v-icon>
+                <v-icon color="#438007" small id="user-caret-down">
+                  fas fa-caret-down</v-icon
+                >
               </span>
             </template>
-            <v-card min-width="100px" max-width="240px" :height ='menuHeight' >
+            <v-card min-width="100px" max-width="240px" :height="menuHeight">
               <div id="userEmail">
-                {{currentUser}} 
+                {{ currentUser }}
               </div>
               <v-divider v-if="isLoggedIn && !isDesktop()"></v-divider>
               <Popup v-if="isLoggedIn && !isDesktop()" />
               <v-divider></v-divider>
-              <v-btn flat color="#438007" block class="menuButton" @click.native="logout">Log Out</v-btn> 
+              <v-btn
+                flat
+                color="#438007"
+                block
+                class="menuButton"
+                @click.native="logout"
+                >Log Out</v-btn
+              >
             </v-card>
           </v-menu>
         </div>
       </div>
-     </div>
+    </div>
   </nav>
 </template>
 
@@ -107,7 +138,7 @@ export default {
       this.isLoggedIn = true;
       this.currentUser = user.email;
     }
-   /* db.collection('applied')
+    /* db.collection('applied')
       .doc(user.uid)
       .get()
       .then(doc => {
@@ -119,42 +150,30 @@ export default {
       .catch(function(error) {
         console.log('Error getting document:', error);
       }); */
-    if (this.isDesktop())
-      this.containerWidth = 1050
-    else if (this.isLap())
-      this.containerWidth = 900
-    else if (this.isTablet())
-      this.containerWidth = 700
-    else 
-      this.containerWidth = this.windowWidth
-    this.marginL = (window.innerWidth - this.containerWidth) / 2
+    if (this.isDesktop()) this.containerWidth = 1050;
+    else if (this.isLap()) this.containerWidth = 900;
+    else if (this.isTablet()) this.containerWidth = 700;
+    else this.containerWidth = this.windowWidth;
+    this.marginL = (window.innerWidth - this.containerWidth) / 2;
   },
   computed: {
-    menuHeight () {
-      if (this.isDesktop())
-        return "69px"
-      else if (this.isLap())
-        return "102px"
+    menuHeight() {
+      if (this.isDesktop()) return '69px';
+      else if (this.isLap()) return '102px';
     },
-    searchText (){
-    if (this.isMobile())
-      return "Search function unavailable ..."
-    else 
-      return "Search function is still underconstruction ..."
+    searchText() {
+      if (this.isMobile()) return 'Search function unavailable ...';
+      else return 'Search function is still underconstruction ...';
     }
   },
   mounted() {
     window.addEventListener('resize', () => {
-      if (this.isDesktop())
-        this.containerWidth = 1050
-      else if (this.isLap())
-        this.containerWidth = 900
-      else if (this.isTablet())
-        this.containerWidth = 700
-      else 
-        this.containerWidth = this.windowWidth
-      this.marginL = (this.windowWidth - this.containerWidth  ) / 2
-    })
+      if (this.isDesktop()) this.containerWidth = 1050;
+      else if (this.isLap()) this.containerWidth = 900;
+      else if (this.isTablet()) this.containerWidth = 700;
+      else this.containerWidth = this.windowWidth;
+      this.marginL = (this.windowWidth - this.containerWidth) / 2;
+    });
   },
   methods: {
     logout: function() {
@@ -165,18 +184,18 @@ export default {
           this.$router.push('/login');
         });
     },
-    isLap (){
-      return ( this.windowWidth <= 1100 && this.windowWidth > 800)
+    isLap() {
+      return this.windowWidth <= 1100 && this.windowWidth > 800;
     },
-    isDesktop (){
-      this.windowWidth = window.innerWidth
-      return ( this.windowWidth > 1100)
+    isDesktop() {
+      this.windowWidth = window.innerWidth;
+      return this.windowWidth > 1100;
     },
-    isTablet (){
-      return ( this.windowWidth <= 800 && this.windowWidth > 760 )
+    isTablet() {
+      return this.windowWidth <= 800 && this.windowWidth > 760;
     },
-    isMobile (){
-      return ( this.windowWidth <= 760)
+    isMobile() {
+      return this.windowWidth <= 760;
     }
   }
 };
@@ -191,22 +210,22 @@ a {
   width: 100%;
 }
 nav {
-  background-color: #F8F5F5;
-   font-family: Helvetica,Arial,sans-serif;
+  background-color: #f8f5f5;
+  font-family: Helvetica, Arial, sans-serif;
 }
 .hoverab {
   cursor: pointer;
 }
-input[type="text"] {
+input[type='text'] {
   border-bottom: none;
   width: 93%;
 }
-input[type=text]:not(.browser-default):focus:not([readonly]) {
+input[type='text']:not(.browser-default):focus:not([readonly]) {
   border-bottom: none;
   box-shadow: none;
 }
 #searchIcon {
-  float: right; 
+  float: right;
   cursor: pointer;
 }
 .v-icon {
@@ -233,12 +252,12 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
   max-height: 80px;
 }
 #userEmail {
-  height: 32px; 
-  padding: 4px 4px 4px 4px
+  height: 32px;
+  padding: 4px 4px 4px 4px;
 }
 #search-bar {
   background: white;
-  border: 1px solid #B7B1B1;
+  border: 1px solid #b7b1b1;
   border-radius: 5px;
   height: 42px;
   margin-top: 9px;
@@ -253,14 +272,14 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
   line-height: normal;
   background: white;
   border-radius: 5px;
-  border: 1px solid  #4CAF50;
+  border: 1px solid #4caf50;
   font-size: 16px;
   margin-left: 5px;
   position: relative;
   bottom: 5px;
 }
 button a {
-  color: #4CAF50;
+  color: #4caf50;
   display: inline-block;
   width: 100%;
   height: 100%;
@@ -287,7 +306,7 @@ a > span {
 div > div.v-list__tile {
   padding: 0px;
 }
-button > div{
+button > div {
   height: 50px;
 }
 .menuButton {
@@ -296,163 +315,163 @@ button > div{
   height: 36px;
 }
 @media screen and (max-width: 1200px) and (min-width: 1100px) {
-#userSpace {
-  padding: 0px;
-  width: 29%;
-}
-#imgnSearch {
-  width: 71%;
-}
-.about {
-  margin-right: 10px;
-}
-#user {
-  padding: 0px;
-}
-#popup {
-  padding-left: 5px;
-  padding-right: 10px;
-}
+  #userSpace {
+    padding: 0px;
+    width: 29%;
+  }
+  #imgnSearch {
+    width: 71%;
+  }
+  .about {
+    margin-right: 10px;
+  }
+  #user {
+    padding: 0px;
+  }
+  #popup {
+    padding-left: 5px;
+    padding-right: 10px;
+  }
 }
 @media screen and (max-width: 800px) {
-.about {
-  margin-right: 21px;
-  padding-left: 0px;
-}
-#search-bar {
-  width: 75%;
-}
-#imgnSearch {
-  padding-right: 0px;
-}
-#imgSpace {
-  width: 23.3%;
-}
-#userSpace {
-  padding: 0px;
-}
-#hamburger {
- padding-left: 30px;
-}
+  .about {
+    margin-right: 21px;
+    padding-left: 0px;
+  }
+  #search-bar {
+    width: 75%;
+  }
+  #imgnSearch {
+    padding-right: 0px;
+  }
+  #imgSpace {
+    width: 23.3%;
+  }
+  #userSpace {
+    padding: 0px;
+  }
+  #hamburger {
+    padding-left: 30px;
+  }
 }
 @media screen and (max-width: 760px) {
-#user {
-  padding: 0px;
-  width: 100%;
-}
-#hamburger {
-  padding: 0px;
-  width: 100%;
-  top: 15px;
-}
-.about {
-  display: none;
-}
-#imgnSearch {
-  padding-right: 0px;
-  padding-left: 0px;
-  width: 92%;
-}
-#userSpace {
-  padding: 0px;
-  width: 8%;
-}
-#imgSpace {
-  width: 18.5%;
-}
+  #user {
+    padding: 0px;
+    width: 100%;
+  }
+  #hamburger {
+    padding: 0px;
+    width: 100%;
+    top: 15px;
+  }
+  .about {
+    display: none;
+  }
+  #imgnSearch {
+    padding-right: 0px;
+    padding-left: 0px;
+    width: 92%;
+  }
+  #userSpace {
+    padding: 0px;
+    width: 8%;
+  }
+  #imgSpace {
+    width: 18.5%;
+  }
 }
 @media screen and (max-width: 600px) {
-input[type="text"] {
-  width: 85%;
-}
-.img {
-  width: 75px;
-}
-#user {
-  padding-left: 20px;
-}
-#hamburger {
-  padding-left: 20px;
-}
-#search-bar {
-  width: 79%;
-}
-#imgnSearch {
-  width: 87%;
-}
-#userSpace {
-  width: 13%;
-}
-#imgSpace {
-  width: 21%;
-  padding-right: 0px;
-}
+  input[type='text'] {
+    width: 85%;
+  }
+  .img {
+    width: 75px;
+  }
+  #user {
+    padding-left: 20px;
+  }
+  #hamburger {
+    padding-left: 20px;
+  }
+  #search-bar {
+    width: 79%;
+  }
+  #imgnSearch {
+    width: 87%;
+  }
+  #userSpace {
+    width: 13%;
+  }
+  #imgSpace {
+    width: 21%;
+    padding-right: 0px;
+  }
 }
 @media screen and (max-width: 490px) {
-.img {
-  width: 73px;
-}
-#search-bar {
-  width: 78%;
-}
-#imgnSearch {
-  width: 86%;
-}
-#userSpace {
-  width: 14%;
-}
-#imgSpace {
-  width: 22%;
-  padding-left: 2px;
-}
+  .img {
+    width: 73px;
+  }
+  #search-bar {
+    width: 78%;
+  }
+  #imgnSearch {
+    width: 86%;
+  }
+  #userSpace {
+    width: 14%;
+  }
+  #imgSpace {
+    width: 22%;
+    padding-left: 2px;
+  }
 }
 @media screen and (max-width: 440px) {
-#search-bar {
-  display: none;
-}
-#user {
-  width: 22%;
-  padding: 0px;
-}
-#hamburger {
-  width: 22%;
-  padding: 0px;
-}
-#imgnSearch {
-  width: 40%;
-}
-#userSpace {
-  width: 60%;
-  padding: 0px;
-}
-#imgSpace {
-  width: 22%;
-  padding-right: 0px;
-  padding-left: 2px;
-}
-.about {
-  display: inline-block;
-  width: 78%;
-  margin-right: 0px;
-  padding-left: 30%;
-  padding-right: 0px;
-}
-.about > a {
-  font-size: 18px;
-  top: 12px;
-}
+  #search-bar {
+    display: none;
+  }
+  #user {
+    width: 22%;
+    padding: 0px;
+  }
+  #hamburger {
+    width: 22%;
+    padding: 0px;
+  }
+  #imgnSearch {
+    width: 40%;
+  }
+  #userSpace {
+    width: 60%;
+    padding: 0px;
+  }
+  #imgSpace {
+    width: 22%;
+    padding-right: 0px;
+    padding-left: 2px;
+  }
+  .about {
+    display: inline-block;
+    width: 78%;
+    margin-right: 0px;
+    padding-left: 30%;
+    padding-right: 0px;
+  }
+  .about > a {
+    font-size: 18px;
+    top: 12px;
+  }
 }
 @media screen and (max-width: 380px) {
-.about {
-  padding-left: 23%;
-}
+  .about {
+    padding-left: 23%;
+  }
 }
 @media screen and (max-width: 320px) {
-.img {
-  width: 73px;
-}
-.about > a {
-  font-size: 16px;
-}
+  .img {
+    width: 73px;
+  }
+  .about > a {
+    font-size: 16px;
+  }
 }
 </style>

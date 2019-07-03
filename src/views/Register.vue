@@ -16,11 +16,9 @@
                 <input type="password" id="password" v-model="password" />
                 <label for="password">Password</label>
               </div>
-              <v-btn color="grey"
-                ><router-link to="/" class="black--text"
-                  >Continue as guest</router-link
-                ></v-btn
-              >
+              <v-btn color="grey" @click="$router.go(-1)" class="black-text">
+                Continue as guest
+              </v-btn>
               <v-btn color="white" @click="register">Register</v-btn>
               <p>
                 Already a member?
@@ -54,7 +52,7 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(
           () => {
-            this.$router.push('/');
+            this.$router.go('-1');
           },
           err => {
             alert(err.message);

@@ -58,10 +58,7 @@ let router = new Router({
     {
       path: '/article/:articleId',
       name: 'view-article',
-      component: ViewArticle,
-      meta: {
-        requiresAuth: true
-      }
+      component: ViewArticle
     },
     {
       path: '/about',

@@ -1,6 +1,22 @@
 <template>
   <v-dialog max-width="600px" v-model="dialog">
-    <v-btn class="round-button" large slot="activator" color="success">
+    <v-btn
+      v-if="userId"
+      class="round-button"
+      large
+      slot="activator"
+      color="success"
+    >
+      Rate Now
+    </v-btn>
+    <v-btn
+      v-else
+      class="round-button"
+      large
+      slot="activator"
+      color="success"
+      to="/login"
+    >
       Rate Now
     </v-btn>
     <v-alert

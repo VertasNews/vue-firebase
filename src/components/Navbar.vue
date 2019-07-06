@@ -11,13 +11,14 @@
           </router-link>
         </div>
         <div id="search-bar" class="col m10">
-          <input
+          <Search />
+          <!-- <input
             type="text"
             :placeholder="searchText"
             class="search-txt"
             name="search"
           />
-          <v-icon id="searchIcon"> fas fa-search </v-icon>
+          <v-icon id="searchIcon"> fas fa-search </v-icon> -->
         </div>
       </div>
       <div id="userSpace" class="col m3 xl4">
@@ -118,10 +119,14 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import ApplyPopup from './ApplyPopup';
+import Search from './Search';
 
 export default {
   name: 'Navbar',
-  components: { ApplyPopup },
+  components: {
+    ApplyPopup,
+    Search
+  },
   data() {
     return {
       isLoggedIn: false,
@@ -247,7 +252,7 @@ input[type='text']:not(.browser-default):focus:not([readonly]) {
   background: white;
   border: 1px solid #b7b1b1;
   border-radius: 5px;
-  height: 42px;
+  height: 44px;
   margin-top: 9px;
 }
 .search-txt {

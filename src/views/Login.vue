@@ -8,12 +8,7 @@
             <div action="index.html">
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
-                <input
-                  type="email"
-                  id="email"
-                  @click="autofill()"
-                  v-model="email"
-                />
+                <input type="email" id="email" v-model="email" />
                 <label class="white-text" for="email">Email Address</label>
               </div>
               <div class="input-field">

@@ -13,7 +13,7 @@
             , click here to visit our landing page</a
 =======
           You are currently using our web app.
-          <a href="https://vertasbackend.web.app">
+          <a href="https://vertasbackend.web.app" target="_blank">
             Click here to visit our landing page.</a
 >>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
           >

@@ -4,6 +4,52 @@ const axios = require('axios');
 
 admin.initializeApp();
 
+const ALGOLIA_ID = functions.config().algolia.app_id;
+const ALGOLIA_ADMIN_KEY = functions.config().algolia.api_key;
+const ALGOLIA_SEARCH_KEY = functions.config().algolia.search_key;
+
+const ALGOLIA_INDEX_NAME = 'articles';
+const algoliasearch = require('algoliasearch');
+const client = algoliasearch(ALGOLIA_ID, ALGOLIA_ADMIN_KEY);
+const index = client.initIndex(ALGOLIA_INDEX_NAME);
+
+exports.firestoreToAlgolia = functions.https.onRequest((req, res) => {
+  const arr = [];
+  admin
+    .firestore()
+    .collection('articles')
+    .get()
+    .then(docs => {
+      docs.forEach(doc => {
+        const verb = doc.data();
+        verb.objectID = doc.id;
+        arr.push(verb);
+      });
+
+      return index.saveObjects(arr, (err, content) => {
+        if (err) res.status(500);
+        res.status(200).send(content);
+      });
+    })
+    .catch(error => {
+      console.log('Error getting collection:', error);
+    });
+});
+
+// Update the search index every time an articles is added.
+exports.onArticleCreated = functions.firestore
+  .document('articles/{articleId}')
+  .onCreate((snap, context) => {
+    // Get the article document
+    const article = snap.data();
+
+    // Add an 'objectID' field which Algolia requires
+    article.objectID = context.params.articleId;
+
+    // Write to the algolia index
+    return index.saveObject(article);
+  });
+
 exports.newsapi = functions.https.onRequest((request, response) => {
   const url =
     'https://newsapi.org/v2/top-headlines?country=us&apiKey=583dc1c927234dae9e0a79b2b9556dce';

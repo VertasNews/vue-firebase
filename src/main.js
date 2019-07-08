@@ -3,12 +3,15 @@ import './plugins/vuetify';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import '@/fb';
 import Vuetify from 'vuetify';
 import VueAnalytics from 'vue-analytics';
 import infiniteScroll from 'vue-infinite-scroll';
+import InstantSearch from 'vue-instantsearch';
 
+Vue.use(InstantSearch);
 Vue.use(infiniteScroll);
 Vue.use(Vuetify);
 Vue.use(require('vue-moment'));

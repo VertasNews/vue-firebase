@@ -21,11 +21,9 @@
                 <input type="password" id="password" v-model="password" />
                 <label class="white-text" for="password">Password</label>
               </div>
-              <v-btn color="grey"
-                ><router-link to="/" class="black--text"
-                  >Continue as guest</router-link
-                ></v-btn
-              >
+              <v-btn color="grey" @click="$router.go(-1)" class="black-text">
+                Continue as guest
+              </v-btn>
               <v-btn color="white" @click="login">Login</v-btn>
               <p>
                 <br />or Login with <br />
@@ -72,7 +70,7 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           () => {
-            this.$router.push('/');
+            this.$router.go('-1');
           },
           err => {
             alert(err.message);
@@ -95,9 +93,9 @@ export default {
 
       firebase
         .auth()
-        .signInWithPopup(provider)
+        .signInWithPopup(provider) // eslint-disable-next-line
         .then(result => {
-          this.$router.push('/');
+          this.$router.go('-1');
         })
         .catch(err => {
           alert('Oops. ' + err.message);

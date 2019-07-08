@@ -75,11 +75,15 @@
               accuracy and biases
             </div>
             <div><RatingPopup v-if="popup" /></div>
+<<<<<<< HEAD
             <!--    -->
+=======
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
           </div>
         </div>
       </div>
     </div>
+<<<<<<< HEAD
     <!-- <span class="badge new blue" data-badge-caption="" v-if="left">
               {{ averageBiasRating }}% Left
             </span>
@@ -115,6 +119,8 @@
               :color="color"
               @click.native="submitBiasRating"
             ></v-slider>  -->
+=======
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
 
     <router-link to="/">
       <v-btn id="return-home" outline flat color="green" depressed>
@@ -126,7 +132,6 @@
 
 <script>
 import db from '../fb';
-import firebase from 'firebase';
 import RatingPopup from '../components/RatingPopup';
 
 export default {
@@ -148,23 +153,6 @@ export default {
       ratingCount: null,
       averageBiasRating: null,
       biasRatingCount: null,
-      userId: null,
-      ratingId: null,
-      hasRating: false,
-      hasBiasRating: false,
-      userRating: null,
-      oldRating: null,
-      biasRating: null,
-      oldBiasRating: null,
-      tickLabels: [
-        'Left-3',
-        'Left-2',
-        'Left-1',
-        'Neutral',
-        'Right-1',
-        'Right-2',
-        'Right-3'
-      ],
       left: false,
       neutral: false,
       right: false,
@@ -174,6 +162,7 @@ export default {
     };
   },
   created() {
+<<<<<<< HEAD
     this.articleId = this.$route.params.articleId;
     this.userId = firebase.auth().currentUser.uid;
     this.ratingId = this.articleId + this.userId;
@@ -205,6 +194,8 @@ export default {
           console.log('No bias rating found!');
         }
       });
+=======
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
     else if (this.isTablet()) this.containerWidth = 700;
@@ -219,6 +210,7 @@ export default {
       else this.containerWidth = this.windowWidth;
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
     });
+<<<<<<< HEAD
   },
   computed: {
     color() {
@@ -231,6 +223,8 @@ export default {
       if (this.biasRating == 7) return 'red ';
       return 'grey';
     }
+=======
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
   },
   beforeRouteEnter(to, from, next) {
     db.collection('articles')

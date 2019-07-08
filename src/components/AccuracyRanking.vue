@@ -60,7 +60,6 @@ export default {
       .limit(6)
       .get()
       .then(querySnapshot => {
-        var index = 0;
         querySnapshot.forEach(doc => {
           if (doc.data().averageRating) {
             var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);

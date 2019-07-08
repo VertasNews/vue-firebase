@@ -1,6 +1,26 @@
 <template>
   <v-dialog max-width="600px" v-model="dialog">
+<<<<<<< HEAD
     <v-btn class="round-button" large slot="activator" color="success">
+=======
+    <v-btn
+      v-if="userId"
+      class="round-button"
+      large
+      slot="activator"
+      color="success"
+    >
+      Rate Now
+    </v-btn>
+    <v-btn
+      v-else
+      class="round-button"
+      large
+      slot="activator"
+      color="success"
+      to="/login"
+    >
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
       Rate Now
     </v-btn>
     <v-alert
@@ -16,6 +36,7 @@
       <div id="accuracy-page">
         <div class="rate-title">
           Accuracy Rate
+<<<<<<< HEAD
         </div>
         <div>
           <v-rating
@@ -89,6 +110,81 @@
             Vote
           </v-btn>
         </div>
+=======
+        </div>
+        <div>
+          <v-rating
+            v-model="userRating"
+            :length="10"
+            background-color="green lighten-1"
+            color="green"
+            hover
+            @click.native="changeAccuracyVote"
+            :small="isSmall"
+          >
+          </v-rating>
+        </div>
+        <div>
+          <v-btn small v-if="accuracyVoteSubmitted" color="success">
+            Voted &ensp; <v-icon dark> check_circle </v-icon>
+          </v-btn>
+          <v-btn
+            small
+            v-else
+            @click.native="submitRating"
+            color="success"
+            outline
+          >
+            Vote
+          </v-btn>
+          <span v-if="accuracyVoteSubmitted" id="next-icon">
+            <v-icon @click="switchRight" color="green"> fas fa-forward </v-icon>
+          </span>
+        </div>
+        <div class="message" v-if="accuracyVoteSubmitted">
+          You can always change your vote!
+        </div>
+      </div>
+      <div id="bias-page" class="slide" :class="slide()">
+        <div class="rate-title">
+          Bias Rate
+        </div>
+        <v-slider
+          class="slider"
+          v-model="biasRating"
+          :tick-labels="tickLabels"
+          :max="7"
+          :min="1"
+          step="1"
+          always-dirty
+          @click.native="changeBiasVote"
+          :track-color="color"
+          :color="color"
+        ></v-slider>
+        <div>
+          <span v-if="biasVoteSubmitted" id="prev-icon">
+            <v-icon @click="switchLeft" color="green"> fas fa-backward </v-icon>
+          </span>
+          <v-btn
+            small
+            class="voted-button"
+            v-if="biasVoteSubmitted"
+            color="success"
+          >
+            Voted &ensp; <v-icon dark> check_circle </v-icon>
+          </v-btn>
+          <v-btn
+            small
+            id="vote-button"
+            v-else
+            @click.native="submitBiasRating"
+            color="success"
+            outline
+          >
+            Vote
+          </v-btn>
+        </div>
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
         <div class="message" v-if="biasVoteSubmitted">
           You can always change your vote!
         </div>
@@ -118,9 +214,12 @@ export default {
       biasRating: null,
       oldBiasRating: null,
       tickLabels: ['Left', '', '', 'Neutral', '', '', 'Right'],
+<<<<<<< HEAD
       left: false,
       neutral: false,
       right: false,
+=======
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
       switchs: false,
       accuracyVoteSubmitted: false,
       biasVoteSubmitted: false,

@@ -6,9 +6,10 @@
         <h5>Verify your critic status with your work email</h5>
       </v-card-title>
       <v-card-text>
-        <p>
-          Your email address will be encrypted and protected
-        </p>
+        <v-alert :value="applied" type="warning">
+          You have already applied. Submit again if you want to apply with
+          another email
+        </v-alert>
         <v-form ref="form">
           <v-textarea
             v-model="workEmail"
@@ -30,8 +31,10 @@ import firebase from 'firebase';
 import db from '../fb';
 
 export default {
+  name: 'ApplyPopup',
   data() {
     return {
+      applied: false,
       workEmail: '',
       inputRules: [
         v => !!v || 'This field is required',
@@ -41,6 +44,20 @@ export default {
       loading: false,
       dialog: false
     };
+  },
+  created() {
+    var userId = firebase.auth().currentUser.uid;
+    db.collection('applied')
+      .doc(userId)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          this.applied = true;
+        }
+      })
+      .catch(function(error) {
+        console.log('Error getting document:', error);
+      });
   },
   methods: {
     submit() {
@@ -52,6 +69,7 @@ export default {
             workEmail: this.workEmail
           })
           .then(() => {
+            this.applied = true;
             this.loading = false;
             this.dialog = false;
             // this.$emit('applied');

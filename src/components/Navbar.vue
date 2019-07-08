@@ -27,7 +27,7 @@
           </router-link>
         </div>
         <div id="popup" class="col s5.5">
-          <Popup v-if="isLoggedIn && isDesktop()" />
+          <ApplyPopup v-if="isLoggedIn && isDesktop()" />
         </div>
         <div v-if="!isLoggedIn && windowWidth > 1200" class="col s7">
           <div class="col s6">
@@ -96,7 +96,7 @@
                 {{ currentUser }}
               </div>
               <v-divider v-if="isLoggedIn && !isDesktop()"></v-divider>
-              <Popup v-if="isLoggedIn && !isDesktop()" />
+              <ApplyPopup v-if="isLoggedIn && !isDesktop()" />
               <v-divider></v-divider>
               <v-btn
                 flat
@@ -115,18 +115,16 @@
 </template>
 
 <script>
-import db from '../fb';
 import firebase from 'firebase';
-import Popup from './Popup';
+import ApplyPopup from './ApplyPopup';
 
 export default {
   name: 'Navbar',
-  components: { Popup },
+  components: { ApplyPopup },
   data() {
     return {
       isLoggedIn: false,
       currentUser: null,
-      popup: false,
       marginL: null,
       containerWidth: null,
       windowWidth: null
@@ -138,6 +136,7 @@ export default {
       this.isLoggedIn = true;
       this.currentUser = user.email;
     }
+<<<<<<< HEAD
     /* db.collection('applied')
       .doc(user.uid)
       .get()
@@ -150,6 +149,9 @@ export default {
       .catch(function(error) {
         console.log('Error getting document:', error);
       }); */
+=======
+
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
     else if (this.isTablet()) this.containerWidth = 700;
@@ -159,7 +161,11 @@ export default {
   computed: {
     menuHeight() {
       if (this.isDesktop()) return '69px';
+<<<<<<< HEAD
       else if (this.isLap()) return '102px';
+=======
+      else return '102px';
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
     },
     searchText() {
       if (this.isMobile()) return 'Search function unavailable ...';

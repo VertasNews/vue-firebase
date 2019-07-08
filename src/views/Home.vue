@@ -190,7 +190,6 @@ export default {
       });
 
       this.lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-      console.log('last', this.lastVisible);
 
       // Construct a new query starting at this document,
       this.next = db

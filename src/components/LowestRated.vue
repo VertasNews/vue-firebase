@@ -34,8 +34,14 @@
                   height="150px"
                   :width="containerWidth + 'px'"
                   :src="article.urlToImage"
+<<<<<<< HEAD
                   :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
                 >
+=======
+                >
+                  <!-- :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
+                > -->
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
                   <template v-slot:placeholder>
                     <v-layout fill-height align-center justify-center ma-0>
                       <v-progress-circular
@@ -151,10 +157,14 @@ export default {
       else if (this.windowWidth >= 1000) return 4;
       else if (this.windowWidth >= 700) return 3;
       else if (this.windowWidth >= 500) return 2;
-      else if (this.windowWidth < 500) return 1;
+      else return 1;
     }
+<<<<<<< HEAD
   },
   methods: {}
+=======
+  }
+>>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
 };
 </script>
 <style>

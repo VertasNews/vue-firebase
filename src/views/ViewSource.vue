@@ -58,9 +58,7 @@
                   params: { author: article.author }
                 }"
               >
-                <span class="author-name">
-                  by {{ article.author.replace(/,/g, '/') }}
-                </span>
+                <span class="author-name"> by {{ article.author }} </span>
               </router-link>
               <span class="source-time">
                 &ensp;{{ article.publishedAt | moment('MMMM Do') }}

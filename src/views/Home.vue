@@ -77,7 +77,7 @@
               :to="{ name: 'view-author', params: { author: article.author } }"
             >
               <span class="author-name"
-                >&ensp; by {{ article.author.replace(/,/g, '/') }}
+                >&ensp; by {{ article.author }}
               </span>
             </router-link>
           </div>

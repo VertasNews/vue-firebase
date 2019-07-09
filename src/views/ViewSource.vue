@@ -101,8 +101,11 @@
 </template>
 <script>
 import db from '../fb';
+import checkIfLogoExists from '../mixins/checkIfLogoExists';
+
 export default {
   name: 'ViewSource',
+  mixins: [checkIfLogoExists],
   data() {
     return {
       articles: [],
@@ -203,9 +206,10 @@ export default {
           });
         });
     },
-    getImgUrl(pic) {
-      if (pic) return require('../assets/images/' + pic + '.png');
-      else return null;
+    getImgUrl(id) {
+      if (this.checkIfLogoExists(id)) {
+        return require('../assets/images/' + id + '.png');
+      } else return null;
     },
     isLap() {
       return this.windowWidth <= 1100 && this.windowWidth > 800;

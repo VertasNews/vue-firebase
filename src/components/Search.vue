@@ -3,6 +3,7 @@
     <ais-search-box class="input-field">
       <div slot="submit-icon"></div>
     </ais-search-box>
+    <ais-powered-by />
 
     <ais-state-results>
       <div slot-scope="{ query }">
@@ -46,3 +47,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.ais-PoweredBy {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.ais-InstantSearch {
+  position: relative;
+}
+</style>

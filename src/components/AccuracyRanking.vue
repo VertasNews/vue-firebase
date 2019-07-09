@@ -12,7 +12,7 @@
           <v-avatar size="32px" v-if="getImgUrl(source.id)">
             <img class="img-circle mb-1" :src="getImgUrl(source.id)" />
           </v-avatar>
-          <span class="source-name" v-if="!getImgUrl(source.id)">
+          <span class="source-name" v-else>
             {{ source.name }}
           </span>
         </router-link>
@@ -42,9 +42,11 @@
 
 <script>
 import db from '../fb';
+import checkIfLogoExists from '../mixins/checkIfLogoExists';
 
 export default {
   name: 'AccuracyRanking',
+  mixins: [checkIfLogoExists],
   data() {
     return {
       sources: [],
@@ -123,9 +125,10 @@ export default {
     });
   },
   methods: {
-    getImgUrl(pic) {
-      if (pic) return require('../assets/images/' + pic + '.png');
-      else return null;
+    getImgUrl(id) {
+      if (this.checkIfLogoExists(id)) {
+        return require('../assets/images/' + id + '.png');
+      } else return null;
     },
     isLap() {
       return this.windowWidth <= 1100 && this.windowWidth > 800;
@@ -143,6 +146,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 a {
   color: black;

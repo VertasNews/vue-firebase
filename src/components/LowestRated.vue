@@ -92,7 +92,12 @@ export default {
     };
   },
   created() {
+    let now = new Date();
+    let onejan = new Date(now.getFullYear(), 0, 1);
+    var week = Math.ceil(((now - onejan) / 86400000 + onejan.getDay() + 1) / 7);
+
     db.collection('articles')
+      .where('week', '==', week)
       .where('averageRating', '>', 0)
       .orderBy('averageRating')
       .limit(8)

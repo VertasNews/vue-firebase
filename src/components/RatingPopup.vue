@@ -157,9 +157,6 @@ export default {
           this.oldRating = doc.data().value;
           this.hasRating = true;
           this.accuracyVoteSubmitted = this.hasRating;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No rating found!');
         }
       });
     db.collection('biasRatings')
@@ -171,9 +168,6 @@ export default {
           this.oldBiasRating = doc.data().value;
           this.hasBiasRating = true;
           this.biasVoteSubmitted = this.hasBiasRating;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No bias rating found!');
         }
       });
     db.collection('articles')

@@ -40,6 +40,7 @@ import getSourceMainUrl from '../mixins/getSourceMainUrl';
 
 export default {
   name: 'NewArticle',
+  mixins: [getSourceMainUrl],
   data() {
     return {
       sourceName: null,
@@ -101,7 +102,6 @@ export default {
           console.log('Error getting document:', error);
         });
     }
-  },
-  mixins: [getSourceMainUrl]
+  }
 };
 </script>

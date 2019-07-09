@@ -62,11 +62,12 @@ exports.newsapi = functions.https.onRequest((request, response) => {
         data.articles.forEach(element => {
           if (
             element.urlToImage &&
-            !element.source.name.includes('Youtube') &&
+            !element.source.name.includes('Youtube') &&
             !element.source.name.includes('Facebook') &&
-            !element.author.includes('http')
+            (!element.author || !element.author.includes('http'))
           ) {
             if (element.author) {
+              element.author = element.author.replace(/\//g, ',');
               var authorRef = admin
                 .firestore()
                 .collection('authors')

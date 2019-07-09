@@ -2,7 +2,7 @@
   <div id="home">
     <LowestRated />
     <div
-      style="position: sticky; top: 0px; z-index: 1; margin-bottom: 10px; margin-top: 5px;"
+      style="position: -webkit-sticky; position: sticky; top: 0px; z-index: 1; margin-bottom: 0px; margin-top: 5px;"
     >
       <div
         id="header"
@@ -11,15 +11,15 @@
           width: containerWidth - 270 + 'px'
         }"
       >
-        <button id="add-article">
+        <div id="add-article">
           <router-link to="/new_article" id="add-article-router">
-            <img
+           <img
               src="../assets/plus_sign_demo.png"
               style="height: 25px; position: relative; top: 5px; "
-            />
+            /> 
             Add Article
           </router-link>
-        </button>
+        </div>
         <div id="header-icon">
           <span class="green-circle"></span>
           <span class="trl green-text right-margin "> TRUTH </span>
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!isMobile()" style=" position: sticky; top: 100px;">
+    <div v-if="!isMobile()" style=" position: sticky; top: 60px;">
       <AccuracyRanking />
     </div>
     <ul>
@@ -298,12 +298,6 @@ export default {
 }
 </style>
 <style scoped>
-.article-img {
-  float: left;
-  width: 250px;
-  height: 150px;
-  margin-right: 10px;
-}
 li p {
   margin-bottom: 10px;
 }
@@ -397,8 +391,8 @@ a {
 }
 #add-article {
   overflow: hidden;
-  position: relative;
-  top: 42px;
+  position: absolute;
+  bottom: 0px;
   width: 80px;
   height: 36px;
   background: white;
@@ -407,8 +401,12 @@ a {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
   font-size: 16px;
-  padding: 0;
+  padding: 0 0 0 7px;
   margin-bottom: 10px;
+}
+#add-article:hover {
+  transition: 0.75s;
+  width: 135px;
 }
 #add-article-router {
   display: inline-block;
@@ -416,12 +414,15 @@ a {
   height: 100%;
 }
 #header {
-  height: 90px;
+  height: 60px;
   padding: 10px 0px 10px 0px;
   background: white;
+  position: relative;
 }
 #header-icon {
-  text-align: right;
+  position: absolute;
+  right: 0px;
+  bottom: 5px;
 }
 .trl {
   font-family: Helvetica, Arial, sans-serif;
@@ -446,12 +447,6 @@ a {
   top: 50px;
   position: fixed;
 }
-/*
-#add-article:hover {
-  transition: 1s;
-  width: 135px;
-}*/
-
 .title-name {
   font-weight: bold;
   font-size: 18px;

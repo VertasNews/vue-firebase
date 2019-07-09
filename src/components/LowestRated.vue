@@ -195,6 +195,7 @@ div {
 }
 .rating {
   position: absolute;
+  padding-top: 1px;
   top: 5px;
   left: 5px;
   width: 30px;
@@ -204,6 +205,7 @@ div {
   font-size: 20px;
   background-color: #4caf50;
   border-radius: 50%;
+  -webkit-font-smoothing: antialiased;
 }
 .article-title {
   overflow: hidden;

@@ -142,7 +142,6 @@ export default {
       this.isLoggedIn = true;
       this.currentUser = user.email;
     }
-
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
     else if (this.isTablet()) this.containerWidth = 700;

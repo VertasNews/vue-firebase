@@ -1,5 +1,5 @@
 <template>
-  <div id="accuracy-ranking" :style="{ right: marginL + 'px' }">
+  <div id="accuracy-ranking" :style="{ right: marginL - 7 + 'px' }">
     <div id="chart-title">Outlets Accuracy Rank</div>
     <ul>
       <li v-for="source in sources" :key="source.name" class="collection-item">

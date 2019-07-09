@@ -4,12 +4,7 @@
     :style="{ marginLeft: marginL + 'px', width: containerWidth + 'px' }"
   >
     <div class="author-title">
-      <div v-if="author.includes('http')">
-        <a :href="author.replace(/,/g, '/')" target="_blank">
-          {{ author.replace(/,/g, '/') }}</a
-        >
-      </div>
-      <div v-else>{{ author.replace(/,/g, '/') }}</div>
+      {{ author }}
     </div>
     <div class="author-rating">
       <span class="big-green-circle"> </span>

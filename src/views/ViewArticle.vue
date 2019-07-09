@@ -28,7 +28,7 @@
               v-if="author"
               :to="{ name: 'view-author', params: { author: author } }"
             >
-              <span class="author-name"> {{ author.replace(/,/g, '/') }} </span>
+              <span class="author-name"> {{ author }} </span>
             </router-link>
             <span class="source-time">{{
               publishedAt | moment('MMMM Do YYYY, h:mm a')

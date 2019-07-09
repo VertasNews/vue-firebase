@@ -76,9 +76,7 @@
               v-if="article.author"
               :to="{ name: 'view-author', params: { author: article.author } }"
             >
-              <span class="author-name"
-                >&ensp; by {{ article.author.replace(/,/g, '/') }}
-              </span>
+              <span class="author-name">&ensp; by {{ article.author }} </span>
             </router-link>
           </div>
           <div class="description fade">{{ article.description }}</div>

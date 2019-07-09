@@ -142,22 +142,6 @@ export default {
       this.isLoggedIn = true;
       this.currentUser = user.email;
     }
-<<<<<<< HEAD
-    /* db.collection('applied')
-      .doc(user.uid)
-      .get()
-      .then(doc => {
-        if (!doc.exists) {
-          this.popup = true;
-          console.log(this.popup)
-        }
-      })
-      .catch(function(error) {
-        console.log('Error getting document:', error);
-      }); */
-=======
-
->>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
     else if (this.isTablet()) this.containerWidth = 700;
@@ -167,11 +151,7 @@ export default {
   computed: {
     menuHeight() {
       if (this.isDesktop()) return '69px';
-<<<<<<< HEAD
-      else if (this.isLap()) return '102px';
-=======
       else return '102px';
->>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
     },
     searchText() {
       if (this.isMobile()) return 'Search function unavailable ...';

@@ -75,52 +75,10 @@
               accuracy and biases
             </div>
             <div><RatingPopup v-if="popup" /></div>
-<<<<<<< HEAD
-            <!--    -->
-=======
->>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
           </div>
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-    <!-- <span class="badge new blue" data-badge-caption="" v-if="left">
-              {{ averageBiasRating }}% Left
-            </span>
-            <span class="badge new red" data-badge-caption="" v-if="right">
-              {{ averageBiasRating }}% Right
-            </span>
-            <span class="badge" data-badge-caption="" v-if="neutral">
-              Neutral, no bias
-            </span>
-            <v-card-actions>
-              Accuracy:
-              <v-rating
-                v-model="userRating"
-                :length="10"
-                background-color="green lighten-3"
-                color="green"
-                @click.native="submitRating"
-              >
-              </v-rating>
-              {{ userRating }}0%
-            </v-card-actions>
-             
-            <v-slider
-              v-model="biasRating"
-              :tick-labels="tickLabels"
-              :max="7"
-              :min="1"
-              step="1"
-              always-dirty
-              
-      
-         :track-color="color"
-              :color="color"
-              @click.native="submitBiasRating"
-            ></v-slider>  -->
-=======
->>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
 
     <router-link to="/">
       <v-btn id="return-home" outline flat color="green" depressed>
@@ -162,40 +120,6 @@ export default {
     };
   },
   created() {
-<<<<<<< HEAD
-    this.articleId = this.$route.params.articleId;
-    this.userId = firebase.auth().currentUser.uid;
-    this.ratingId = this.articleId + this.userId;
-
-    db.collection('ratings')
-      .doc(this.ratingId)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          this.userRating = doc.data().value;
-          this.oldRating = doc.data().value;
-          this.hasRating = true;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No rating found!');
-        }
-      });
-
-    db.collection('biasRatings')
-      .doc(this.ratingId)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          this.biasRating = doc.data().value;
-          this.oldBiasRating = doc.data().value;
-          this.hasBiasRating = true;
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No bias rating found!');
-        }
-      });
-=======
->>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
     else if (this.isTablet()) this.containerWidth = 700;
@@ -210,21 +134,6 @@ export default {
       else this.containerWidth = this.windowWidth;
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
     });
-<<<<<<< HEAD
-  },
-  computed: {
-    color() {
-      if (this.biasRating == 1) return 'blue';
-      if (this.biasRating == 2) return 'blue lighten-2';
-      if (this.biasRating == 3) return 'blue lighten-3';
-      if (this.biasRating == 4) return 'green lighten-2';
-      if (this.biasRating == 5) return 'red lighten-3';
-      if (this.biasRating == 6) return 'red lighten-2';
-      if (this.biasRating == 7) return 'red ';
-      return 'grey';
-    }
-=======
->>>>>>> 3b2bbe62e250cd0fef60386086cbca91501476ce
   },
   beforeRouteEnter(to, from, next) {
     db.collection('articles')

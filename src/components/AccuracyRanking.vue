@@ -19,7 +19,7 @@
         <span :style="{ width: source.length + 'px' }" class="ranking-bar">
         </span>
         <span class="rating-num" v-if="source.averageRating">
-          {{ source.averageRating }}%</span
+          {{ source.averageRating }}&#65130;</span
         >
       </li>
     </ul>
@@ -27,7 +27,7 @@
     <ul>
       <li v-for="article in articles" :key="article.id" class="row">
         <div class="green-rating col s2" v-if="article.averageRating">
-          {{ article.averageRating }}%
+          {{ article.averageRating }}&#65130;
         </div>
         <div class="article-title col s10 fade">
           <router-link
@@ -128,7 +128,8 @@ export default {
     getImgUrl(id) {
       if (this.checkIfLogoExists(id)) {
         return require('../assets/images/' + id + '.png');
-      } else return null;
+      } else console.log("deo thay gi")
+      return null;
     },
     isLap() {
       return this.windowWidth <= 1100 && this.windowWidth > 800;

@@ -9,16 +9,26 @@
     <div class="author-rating">
       <span class="big-green-circle"> </span>
       <span class="big-rating green--text" v-if="averageRating">
-        {{ averageRating }}%
+        {{ averageRating }}&#65130;
       </span>
       <span class="big-rating green--text" v-else> NA </span>
-      <span class="big-red-circle"> </span>
-      <span class="big-rating red--text"> NA </span>
+      <span v-if="!averageBiasRating">
+        <span class="big-red-circle"> </span>
+        <span class="big-rating red--text text--darken-3"> NA </span>
+        </span>
+        <span v-if="right">
+        <span class="big-red-circle"> </span>
+        <span class="big-rating red--text text--darken-3"> {{averageBiasRating}}&#65130; </span>
+        </span>
+        <span v-if="left">
+        <span class="big-blue-circle"> </span>
+        <span class="big-rating blue--text text--darken-2"> {{averageBiasRating}}&#65130; </span>
+        </span>
     </div>
     <div class="divider"></div>
     <ul class="row">
       <li v-for="article in articles" :key="article.id" class="collection-item">
-        <div class="col m9">
+        <div class="col m8 l9">
           <div class="article-image col m3 l2">
             <router-link
               :to="{ name: 'view-article', params: { articleId: article.id } }"
@@ -48,26 +58,47 @@
             </div>
           </div>
         </div>
-        <div class="col s12 m3">
+        <div class="col s12 m4 l3">
           <div v-if="!isMobile()" class="col m6">
             <span class="green-circle"> </span>
             <span class="rating green--text" v-if="article.averageRating">
-              {{ article.averageRating }}%
+              {{ article.averageRating }}&#65130;
             </span>
             <span class="rating green--text" v-else> NA </span>
           </div>
           <div v-if="!isMobile()" class="col m6">
-            <span class="red-circle"> </span>
-            <span class="rating red-rating"> NA </span>
+            <span v-if="!article.averageBiasRating">
+            <span class="red-circle"></span>
+            <span class="rating red--text text--darken-3" > NA  </span>
+            </span>
+            <span v-if="article.right">
+            <span class="red-circle"></span>
+            <span class="rating red--text text--darken-3" > {{ article.averageBiasRating }}&#65130;</span>
+            </span>
+            <span v-if="article.left">
+            <span class="blue-circle"></span>
+            <span class="rating blue--text text--darken-2"> {{ article.averageBiasRating }}&#65130; </span>
+            </span>
+       
           </div>
           <div v-if="isMobile()" class="col s12">
             <span class="green-circle"> </span>
             <span class="rating green--text" v-if="article.averageRating">
-              {{ article.averageRating }}%
+              {{ article.averageRating }}&#65130;
             </span>
             <span class="rating green--text" v-else> NA </span>
-            <span class="red-circle"> </span>
-            <span class="rating red-rating"> NA </span>
+           <span v-if="!article.averageBiasRating">
+            <span class="red-circle"></span>
+            <span class="rating red--text text--darken-3"> NA  </span>
+            </span>
+            <span v-if="article.right">
+            <span class="red-circle"></span>
+            <span class="rating red--text text--darken-3" > {{ article.averageBiasRating }}&#65130;  </span>
+            </span>
+            <span v-if="article.left">
+            <span class="blue-circle"></span>
+            <span class="rating blue--text text--darken-2" > {{ article.averageBiasRating }}&#65130; </span>
+            </span>
           </div>
         </div>
       </li>
@@ -92,11 +123,14 @@ export default {
       articles: [],
       author: null,
       averageRating: null,
-      ratingCount: null,
       urlToImage: null,
       marginL: null,
       containerWidth: null,
-      windowWidth: null
+      windowWidth: null,
+      averageBiasRating: null,
+      left: null,
+      right: null,
+      neutral: null
     };
   },
   mounted() {
@@ -122,7 +156,17 @@ export default {
         if (doc.exists) {
           if (doc.data().averageRating)
             this.averageRating = Math.trunc(doc.data().averageRating * 10);
-          this.ratingCount = doc.data().ratingCount;
+            this.averageBiasRating = doc.data().averageBiasRating;
+            if (this.averageBiasRating < 4) {
+                this.averageBiasRating = Math.trunc((4 - this.averageBiasRating) / 0.03);
+                this.left = true;
+              } else if (this.averageBiasRating > 4) {
+                this.averageBiasRating = Math.trunc((this.averageBiasRating - 4) / 0.03);
+                this.right = true;
+              } else if (this.averageBiasRating == 4) {
+                this.averageBiasRating = 4;
+                this.neutral = true;
+              }
         } else {
           // doc.data() will be undefined in this case
           console.log('No such author!');
@@ -140,15 +184,29 @@ export default {
             if (doc.data().averageRating) {
               var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
+             var averageBiasRating = doc.data().averageBiasRating;
+            if (averageBiasRating < 4) {
+              averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
+              var left = true;
+            } else if (averageBiasRating > 4) {
+              averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
+              var right = true;
+            } else if (averageBiasRating == 4) {
+              averageBiasRating = 4;
+              var neutral = true;
+            }
             const data = {
               id: doc.id,
               sourceName: doc.data().source.name,
               title: doc.data().title,
               url: doc.data().url,
               averageRating: avgRatingRounded,
-              ratingCount: doc.data().ratingCount,
               urlToImage: doc.data().urlToImage,
-              publishedAt: doc.data().publishedAt
+              publishedAt: doc.data().publishedAt,
+              averageBiasRating: averageBiasRating,
+              left: left,
+              neutral: neutral,
+              right: right
             };
             vm.articles.push(data);
           });
@@ -175,7 +233,6 @@ export default {
               title: doc.data().title,
               url: doc.data().url,
               averageRating: avgRatingRounded,
-              ratingCount: doc.data().ratingCount,
               urlToImage: doc.data().urlToImage,
               publishedAt: doc.data().publishedAt
             };
@@ -235,7 +292,16 @@ a {
   top: 5px;
   height: 25px;
   width: 25px;
-  background-color: #b20000;
+  background-color: #C62828;
+  border-radius: 50%;
+  display: inline-block;
+}
+.big-blue-circle {
+  position: relative;
+  top: 5px;
+  height: 25px;
+  width: 25px;
+  background-color: #1E88E5;
   border-radius: 50%;
   display: inline-block;
 }
@@ -270,7 +336,16 @@ a {
   top: 5px;
   height: 22px;
   width: 22px;
-  background-color: #b20000;
+  background-color: #C62828;
+  border-radius: 50%;
+  display: inline-block;
+}
+.blue-circle {
+  position: relative;
+  top: 5px;
+  height: 22px;
+  width: 22px;
+  background-color: #1E88E5;
   border-radius: 50%;
   display: inline-block;
 }
@@ -281,7 +356,7 @@ a {
   font-weight: bold;
 }
 .red-rating {
-  color: #b20000;
+  color: #C62828;
 }
 #return-home {
   margin-top: 20px;
@@ -294,6 +369,12 @@ a {
     width: 18px;
   }
   .red-circle {
+    position: relative;
+    top: 3px;
+    height: 18px;
+    width: 18px;
+  }
+  .blue-circle {
     position: relative;
     top: 3px;
     height: 18px;

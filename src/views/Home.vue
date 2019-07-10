@@ -13,9 +13,8 @@
       >
         <div id="add-article">
           <router-link to="/new_article" id="add-article-router">
-           <img
+           <img id="plusSign"
               src="../assets/plus_demo.png"
-              style="height: 25px; position: relative; top: 5px; "
             /> 
             Add Article
           </router-link>
@@ -84,19 +83,19 @@
             <span class="green-circle"></span>
             <span class="green-rating" v-if="!article.averageRating"> NA </span>
             <span class="green-rating" v-if="article.averageRating">
-              {{ article.averageRating }}%
+              {{ article.averageRating }}&#65130;
             </span>
             <span v-if="!article.averageBiasRating">
             <span class="red-circle"></span>
-            <span class="red-rating" data-badge-caption="%"> NA  </span>
+            <span class="red-rating"> NA  </span>
             </span>
             <span v-if="article.right">
             <span class="red-circle"></span>
-            <span class="red-rating" data-badge-caption="%"> {{ article.averageBiasRating }}%  </span>
+            <span class="red-rating"> {{ article.averageBiasRating }}&#65130;  </span>
             </span>
             <span v-if="article.left">
             <span class="blue-circle"></span>
-            <span class="blue-rating" data-badge-caption="%"> {{ article.averageBiasRating }}% </span>
+            <span class="blue-rating"> {{ article.averageBiasRating }}&#65130; </span>
             </span>
             <span style="float: right;">
               <router-link
@@ -105,7 +104,7 @@
                 <span class="rate">
                   <img
                     src="../assets/rating.png"
-                    style="height: 18px; opacity: 0.81; position: relative; top: 4px;"
+                    class="readnRate"
                   />
                   RATE
                 </span>
@@ -114,7 +113,7 @@
                   <a :href="article.url" target="_blank">
                     <img
                       src="../assets/read-book-icon-12.jpg"
-                      style="height: 18px; opacity: 0.81; position: relative; top: 4px; "
+                      class="readnRate"
                     />
                     READ
                   </a>
@@ -539,6 +538,17 @@ a {
   position: -o-sticky;
   position: sticky;
   top: 60px;
+}
+#plusSign {
+  height: 25px; 
+  position: relative; 
+  top: 5px;
+}
+.readnRate {
+  height: 18px; 
+  opacity: 0.81; 
+  position: relative; 
+  top: 4px;
 }
 @media screen and (max-width: 600px) {
 .rate-row {

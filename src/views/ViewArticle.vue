@@ -127,42 +127,42 @@ export default {
     this.marginL = (window.innerWidth - this.containerWidth) / 2;
 
     db.collection('articles')
-    .doc(this.$route.params.articleId)
-    .get()
-    .then(doc => {
-      if (doc.exists) {
-        this.author = doc.data().author;
-        this.sourceName = doc.data().source.name;
-        this.title = doc.data().title;
-        this.url = doc.data().url;
-        this.description = doc.data().description;
-        this.content = doc.data().content;
-        this.urlToImage = doc.data().urlToImage;
-        this.publishedAt = doc.data().publishedAt;
-        if (doc.data().averageRating) {
-          this.averageRating = Math.trunc(doc.data().averageRating * 10);
-          this.ratingCount = doc.data().ratingCount;
-        } else this.ratingCount = 0;
-        if (doc.data().averageBiasRating < 4) {
-          this.averageBiasRating = Math.trunc(
-            (4 - doc.data().averageBiasRating) / 0.03
-          );
-          this.left = true;
-        } else if (doc.data().averageBiasRating > 4) {
-          this.averageBiasRating = Math.trunc(
-            (doc.data().averageBiasRating - 4) / 0.03
-          );
-          this.right = true;
-        } else if (doc.data().averageBiasRating == 4) {
-          this.averageBiasRating = 4;
-          this.neutral = true;
+      .doc(this.$route.params.articleId)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          this.author = doc.data().author;
+          this.sourceName = doc.data().source.name;
+          this.title = doc.data().title;
+          this.url = doc.data().url;
+          this.description = doc.data().description;
+          this.content = doc.data().content;
+          this.urlToImage = doc.data().urlToImage;
+          this.publishedAt = doc.data().publishedAt;
+          if (doc.data().averageRating) {
+            this.averageRating = Math.trunc(doc.data().averageRating * 10);
+            this.ratingCount = doc.data().ratingCount;
+          } else this.ratingCount = 0;
+          if (doc.data().averageBiasRating < 4) {
+            this.averageBiasRating = Math.trunc(
+              (4 - doc.data().averageBiasRating) / 0.03
+            );
+            this.left = true;
+          } else if (doc.data().averageBiasRating > 4) {
+            this.averageBiasRating = Math.trunc(
+              (doc.data().averageBiasRating - 4) / 0.03
+            );
+            this.right = true;
+          } else if (doc.data().averageBiasRating == 4) {
+            this.averageBiasRating = 4;
+            this.neutral = true;
+          }
+          this.biasRatingCount = doc.data().biasRatingCount;
+        } else if (!doc.data().averageBiasRating) {
+          console.log('dkmmemay2');
+          this.biasRatingCount = 0;
         }
-        this.biasRatingCount = doc.data().biasRatingCount;
-      } else if (!doc.data().averageBiasRating) {
-        console.log('dkmmemay2');
-        this.biasRatingCount = 0;
-      }
-    });
+      });
   },
   mounted() {
     window.addEventListener('resize', () => {

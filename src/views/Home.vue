@@ -13,10 +13,10 @@
       >
         <div id="add-article">
           <router-link to="/new_article" id="add-article-router">
-           <img
+            <img
               src="../assets/plus_sign_demo.png"
               style="height: 25px; position: relative; top: 5px; "
-            /> 
+            />
             Add Article
           </router-link>
         </div>

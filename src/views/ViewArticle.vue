@@ -155,11 +155,9 @@ export default {
               vm.ratingCount = doc.data().ratingCount;
             } else {
               vm.ratingCount = 0;
-              console.log('No rating');
             }
             if (!doc.data().averageBiasRating) {
               vm.biasRatingCount = 0;
-              console.log('No bias rating');
             } else {
               vm.biasRatingCount = doc.data().biasRatingCount;
               if (doc.data().averageBiasRating < 4) {
@@ -240,6 +238,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 a {
   color: black;

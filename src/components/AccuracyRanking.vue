@@ -1,6 +1,6 @@
 <template>
   <div id="accuracy-ranking" :style="{ right: marginL - 7 + 'px' }">
-    <div id="chart-title">Outlets Accuracy Rank</div>
+    <div class="chart-title">Outlets Accuracy Rank</div>
     <ul>
       <li v-for="source in sources" :key="source.name" class="collection-item">
         <router-link
@@ -23,7 +23,7 @@
         >
       </li>
     </ul>
-    <div id="chart-title">Popular Weekly</div>
+    <div id="popWeekly" class="chart-title">Popular Weekly</div>
     <ul>
       <li v-for="article in articles" :key="article.id" class="row">
         <div class="green-rating col s2" v-if="article.averageRating">
@@ -147,7 +147,7 @@ export default {
 a {
   color: black;
 }
-#chart-title {
+.chart-title {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 20px;
   font-weight: bold;
@@ -214,5 +214,8 @@ a {
   width: 10%;
   height: 20px;
   background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff 50%);
+}
+#popWeekly {
+  margin-top: 10px;
 }
 </style>

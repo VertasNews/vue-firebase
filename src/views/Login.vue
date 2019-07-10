@@ -2,39 +2,39 @@
   <div id="login">
     <div class="container">
       <div class="row">
-        <div class="col s12 m8 offset-m2">
-          <div class="login card-panel grey white-text center">
-            <h3>Login</h3>
+        <div class="col s12 m8 xl6 offset-m2 offset-xl3">
+          <div class="login card-panel black-text center">
+            <h3>Log In</h3>
             <div action="index.html">
               <div class="input-field">
                 <i class="material-icons prefix">email</i>
                 <input type="email" id="email" v-model="email" />
-                <label class="white-text" for="email">Email Address</label>
+                <label for="email">Email Address</label>
               </div>
               <div class="input-field">
                 <i class="material-icons prefix">lock</i>
                 <input type="password" id="password" v-model="password" />
-                <label class="white-text" for="password">Password</label>
+                <label for="password">Password</label>
               </div>
-              <v-btn color="grey" @click="$router.go(-1)" class="black-text">
+              <v-btn color="success" outline @click="$router.go(-1)">
                 Continue as guest
               </v-btn>
               <v-btn color="white" @click="login">Login</v-btn>
               <p>
                 <br />or Login with <br />
                 <button @click="socialLogin('g')">
-                  Google <i class="fab fa-google"></i>
+                  Google <v-icon small> fab fa-google </v-icon>
                 </button>
                 <br />
                 <button @click="socialLogin('f')">
-                  Facebook <i class="fab fa-facebook"></i>
+                  Facebook <v-icon small> fab fa-facebook </v-icon>
                 </button>
               </p>
               <p>
                 New to Vertas?
                 <router-link
                   to="/register"
-                  class="black--text font-weight-medium"
+                  class="green--text font-weight-bold"
                   >Register</router-link
                 >
               </p>
@@ -140,3 +140,32 @@ export default {
   }
 };
 </script>
+
+<style>
+.input-field .prefix.active {
+  color: #4caf50;
+}
+.login {
+  border: 1px solid green;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  box-shadow: 0 0 0 1000px white inset !important;
+}
+input[type='email']:not(.browser-default):focus:not([readonly]){
+  border-bottom: 1px solid #4caf50;
+  -webkit-box-shadow: 0 1px 0 0 #4caf50;
+  box-shadow: 0 1px 0 0 #4caf50;
+}
+input[type='email']:not(.browser-default):focus:not([readonly])+label {
+  color: #4caf50;
+}
+input[type='password']:not(.browser-default):focus:not([readonly]){
+  border-bottom: 1px solid #4caf50;
+  -webkit-box-shadow: 0 1px 0 0 #4caf50;
+  box-shadow: 0 1px 0 0 #4caf50;
+}
+input[type='password']:not(.browser-default):focus:not([readonly])+label {
+  color: #4caf50;
+}
+</style>

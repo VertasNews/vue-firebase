@@ -2,7 +2,7 @@
   <div id="home">
     <LowestRated />
     <div
-      style="position: -webkit-sticky; position: sticky; top: 0px; z-index: 1; margin-bottom: 0px; margin-top: 5px;"
+      id="header-wrapper"
     >
       <div
         id="header"
@@ -14,7 +14,7 @@
         <div id="add-article">
           <router-link to="/new_article" id="add-article-router">
            <img
-              src="../assets/plus_sign_demo.png"
+              src="../assets/plus_demo.png"
               style="height: 25px; position: relative; top: 5px; "
             /> 
             Add Article
@@ -22,15 +22,15 @@
         </div>
         <div id="header-icon">
           <span class="green-circle"></span>
-          <span class="trl green-text right-margin "> TRUTH </span>
+          <span class="trl green--text right-margin "> TRUTH </span>
           <span class="red-circle"></span>
-          <span class="trl red-text right-margin"> RIGHT </span>
+          <span class="trl red--text text--darken-3 right-margin"> RIGHT </span>
           <span class="blue-circle"></span>
-          <span class="trl blue-text"> LEFT </span>
+          <span class="trl blue--text text--darken-2"> LEFT </span>
         </div>
       </div>
     </div>
-    <div v-if="!isMobile()" style=" position: sticky; top: 60px;">
+    <div v-if="!isMobile()" id="accuracyRank">
       <AccuracyRanking />
     </div>
     <ul>
@@ -86,27 +86,39 @@
             <span class="green-rating" v-if="article.averageRating">
               {{ article.averageRating }}%
             </span>
+            <span v-if="!article.averageBiasRating">
             <span class="red-circle"></span>
-            <span class="red-rating" data-badge-caption="%"> NA </span>
-            <router-link
-              :to="{ name: 'view-article', params: { articleId: article.id } }"
-            >
-              <span class="rate">
-                <img
-                  src="../assets/rating.png"
-                  style="height: 18px; opacity: 0.81; position: relative; top: 4px;"
-                />
-                RATE
-              </span>
-            </router-link>
-            <span class="read">
-              <a :href="article.url" target="_blank">
-                <img
-                  src="../assets/read-book-icon-12.jpg"
-                  style="height: 18px; opacity: 0.81; position: relative; top: 4px; "
-                />
-                READ
-              </a>
+            <span class="red-rating" data-badge-caption="%"> NA  </span>
+            </span>
+            <span v-if="article.right">
+            <span class="red-circle"></span>
+            <span class="red-rating" data-badge-caption="%"> {{ article.averageBiasRating }}%  </span>
+            </span>
+            <span v-if="article.left">
+            <span class="blue-circle"></span>
+            <span class="blue-rating" data-badge-caption="%"> {{ article.averageBiasRating }}% </span>
+            </span>
+            <span style="float: right;">
+              <router-link
+                :to="{ name: 'view-article', params: { articleId: article.id } }"
+              >
+                <span class="rate">
+                  <img
+                    src="../assets/rating.png"
+                    style="height: 18px; opacity: 0.81; position: relative; top: 4px;"
+                  />
+                  RATE
+                </span>
+              </router-link>
+                <span class="read">
+                  <a :href="article.url" target="_blank">
+                    <img
+                      src="../assets/read-book-icon-12.jpg"
+                      style="height: 18px; opacity: 0.81; position: relative; top: 4px; "
+                    />
+                    READ
+                  </a>
+                </span>
             </span>
           </div>
         </div>
@@ -298,8 +310,8 @@ export default {
 }
 </style>
 <style scoped>
-li p {
-  margin-bottom: 10px;
+li {
+  position: relative;
 }
 .article-title {
   color: black;
@@ -347,16 +359,24 @@ li {
 .red-circle {
   height: 22px;
   width: 22px;
-  background-color: #b20000;
+  background-color: #C62828;
   border-radius: 50%;
   display: inline-block;
 }
 .blue-circle {
   height: 22px;
   width: 22px;
-  background-color: #075b80;
+  /*background-color: #075b80; */
+  background-color: #1E88E5;
   border-radius: 50%;
   display: inline-block;
+}
+.blue-rating {
+  color: #1E88E5;
+  position: relative;
+  bottom: 5px;
+  font-size: 18px;
+  font-weight: bold;
 }
 .green-rating {
   color: #4caf50;
@@ -366,7 +386,7 @@ li {
   font-weight: bold;
 }
 .red-rating {
-  color: #b20000;
+  color: #C62828;
   position: relative;
   bottom: 5px;
   font-size: 18px;
@@ -405,13 +425,24 @@ a {
   margin-bottom: 10px;
 }
 #add-article:hover {
-  transition: 0.75s;
+  transition: 0.5s;
   width: 135px;
 }
 #add-article-router {
   display: inline-block;
   width: 100%;
   height: 100%;
+}
+#header-wrapper {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  top: 0px; 
+  z-index: 1; 
+  margin-bottom: 0px; 
+  margin-top: 5px;
 }
 #header {
   height: 60px;
@@ -430,15 +461,6 @@ a {
   font-weight: bold;
   position: relative;
   bottom: 5px;
-}
-.red-text {
-  color: #b20000;
-}
-.green-text {
-  color: #4caf50;
-}
-.blue-text {
-  color: #075b80;
 }
 .right-margin {
   margin-right: 20px;
@@ -484,7 +506,7 @@ a {
 }
 .bigFade {
   position: relative;
-  height: 50px;
+  max-height: 50px;
 }
 .bigFade:after {
   content: '';
@@ -505,6 +527,23 @@ a {
   padding: 5px;
 }
 .rate-row {
+  width: 75%;
   padding-right: 20px;
+  position: absolute;
+  bottom: 0px;
+}
+#accuracyRank {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  top: 60px;
+}
+@media screen and (max-width: 600px) {
+.rate-row {
+  position: static;
+  width: auto;
+}
 }
 </style>

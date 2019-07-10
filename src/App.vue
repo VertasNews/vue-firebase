@@ -23,4 +23,7 @@ export default {
   margin: 0;
   padding-top: 50px;
 }
+#app {
+  background: white;
+}
 </style>

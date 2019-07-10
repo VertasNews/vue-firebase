@@ -46,7 +46,7 @@
           <div class="col s6 m3 text-xs-center borderRight1">
             <div class="col s12 score-title">Critics Score</div>
             <div class="col s6 accuracy-rate">NA</div>
-            <div class="col s6 bias-rate red--text">NA</div>
+            <div class="col s6 bias-rate red--text text--darken-3">NA</div>
             <div class="col s6 rating-num">0 rating(s)</div>
             <div class="col s6 rating-num">0 rating(s)</div>
           </div>
@@ -59,11 +59,11 @@
             <div v-if="left" class="col s6 bias-rate blue--text">
               {{ averageBiasRating }}%
             </div>
-            <div v-if="right" class="col s6 bias-rate red--text">
+            <div v-if="right" class="col s6 bias-rate red--text text--darken-2">
               {{ averageBiasRating }}%
             </div>
             <div v-if="neutral" class="col s6 bias-rate grey--text">0%</div>
-            <div v-if="!averageBiasRating" class="col s6 bias-rate red--text">
+            <div v-if="!averageBiasRating" class="col s6 bias-rate red--text text--darken-2">
               NA
             </div>
             <div class="col s6 rating-num">{{ ratingCount }} rating(s)</div>

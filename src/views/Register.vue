@@ -2,8 +2,8 @@
   <div id="register">
     <div class="container">
       <div class="row">
-        <div class="col s12 m8 offset-m2">
-          <div class="login card-panel grey lighten-4 black-text center">
+        <div class="col s12 m8 xl6 offset-m2 offset-xl3">
+          <div class="register card-panel black-text center">
             <h3>Register</h3>
             <div action="index.html">
               <div class="input-field">
@@ -16,13 +16,13 @@
                 <input type="password" id="password" v-model="password" />
                 <label for="password">Password</label>
               </div>
-              <v-btn color="grey" @click="$router.go(-1)" class="black-text">
+              <v-btn outline color="success" @click="$router.go(-1)">
                 Continue as guest
               </v-btn>
               <v-btn color="white" @click="register">Register</v-btn>
               <p>
                 Already a member?
-                <router-link to="/login" class="blue--text font-weight-medium"
+                <router-link to="/login" class="green--text font-weight-medium"
                   >Login</router-link
                 >
               </p>
@@ -64,3 +64,32 @@ export default {
   }
 };
 </script>
+
+<style>
+.input-field .prefix.active {
+  color: #4caf50;
+}
+.register {
+  border: 1px solid green;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  box-shadow: 0 0 0 1000px white inset !important;
+}
+input[type='email']:not(.browser-default):focus:not([readonly]){
+  border-bottom: 1px solid #4caf50;
+  -webkit-box-shadow: 0 1px 0 0 #4caf50;
+  box-shadow: 0 1px 0 0 #4caf50;
+}
+input[type='email']:not(.browser-default):focus:not([readonly])+label {
+  color: #4caf50;
+}
+input[type='password']:not(.browser-default):focus:not([readonly]){
+  border-bottom: 1px solid #4caf50;
+  -webkit-box-shadow: 0 1px 0 0 #4caf50;
+  box-shadow: 0 1px 0 0 #4caf50;
+}
+input[type='password']:not(.browser-default):focus:not([readonly])+label {
+  color: #4caf50;
+}
+</style>

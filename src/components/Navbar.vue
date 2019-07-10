@@ -11,7 +11,7 @@
           </router-link>
         </div>
         <div id="search-bar" class="col m10">
-          <Search />
+       <!--   <Search /> -->
           <!-- <input
             type="text"
             :placeholder="searchText"
@@ -49,7 +49,7 @@
             offset-x
             :nudge-bottom="15"
             :nudge-left="100"
-            transition="slide-y-transition"
+            transition="fade-transition"
           >
             <template v-slot:activator="{ on }">
               <span class="hoverab" v-on="on">
@@ -80,7 +80,7 @@
             offset-x
             :nudge-bottom="15"
             :nudge-left="130"
-            transition="slide-y-transition"
+            transition="fade-transition"
           >
             <template v-slot:activator="{ on }">
               <span class="hoverab" v-on="on">

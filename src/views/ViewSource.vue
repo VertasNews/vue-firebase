@@ -21,7 +21,7 @@
         </span>
         <span class="big-rating green--text" v-else> NA </span>
         <span class="big-red-circle"> </span>
-        <span class="big-rating red--text "> NA </span>
+        <span class="big-rating red--text text--darken-3 "> NA </span>
       </div>
     </div>
     <div class="divider"></div>
@@ -84,8 +84,18 @@
               {{ article.averageRating }}%
             </span>
             <span class="rating green--text" v-else> NA </span>
-            <span class="red-circle"> </span>
-            <span class="rating red-rating"> NA </span>
+            <span v-if="!article.averageBiasRating">
+            <span class="red-circle"></span>
+            <span class="red-rating" data-badge-caption="%"> NA  </span>
+            </span>
+            <span v-if="article.right">
+            <span class="red-circle"></span>
+            <span class="red-rating" data-badge-caption="%"> {{ article.averageBiasRating }}%  </span>
+            </span>
+            <span v-if="article.left">
+            <span class="blue-circle"></span>
+            <span class="blue-rating" data-badge-caption="%"> {{ article.averageBiasRating }}% </span>
+            </span>
           </div>
         </div>
       </li>
@@ -114,7 +124,8 @@ export default {
       urlToImage: null,
       marginL: null,
       containerWidth: null,
-      windowWidth: null
+      windowWidth: null,
+      averageBiasRating: null
     };
   },
   mounted() {
@@ -143,6 +154,8 @@ export default {
           this.ratingCount = doc.data().ratingCount;
           this.sourceUrl = doc.data().sourceUrl;
           this.sourceId = doc.data().id;
+          this.averageBiasRating = Math.trunc(doc.data().averageBiasRating * 10);
+
         } else {
           // doc.data() will be undefined in this case
           console.log('No such what!');
@@ -160,6 +173,18 @@ export default {
             if (doc.data().averageRating) {
               var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
+            var averageBiasRating = doc.data().averageBiasRating;
+            if (averageBiasRating < 4) {
+              averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
+              var left = true;
+            } else if (averageBiasRating > 4) {
+              averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
+              var right = true;
+            } else if (averageBiasRating == 4) {
+              averageBiasRating = 4;
+              var neutral = true;
+            }
+            console.log(averageBiasRating)
             const data = {
               id: doc.id,
               author: doc.data().author,
@@ -168,7 +193,11 @@ export default {
               averageRating: avgRatingRounded,
               publishedAt: doc.data().publishedAt,
               ratingCount: doc.data().ratingCount,
-              urlToImage: doc.data().urlToImage
+              urlToImage: doc.data().urlToImage,
+              averageBiasRating: averageBiasRating,
+              left: left,
+              neutral: neutral,
+              right: right
             };
             vm.articles.push(data);
           });
@@ -189,6 +218,17 @@ export default {
             if (doc.data().averageRating) {
               var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
+            var averageBiasRating = doc.data().averageBiasRating;
+            if (averageBiasRating < 4) {
+              averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
+              var left = true;
+            } else if (averageBiasRating > 4) {
+              averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
+              var right = true;
+            } else if (averageBiasRating == 4) {
+              averageBiasRating = 4;
+              var neutral = true;
+            }
             const data = {
               id: doc.id,
               author: doc.data().author,
@@ -197,7 +237,11 @@ export default {
               averageRating: avgRatingRounded,
               publishedAt: doc.data().publishedAt,
               ratingCount: doc.data().ratingCount,
-              urlToImage: doc.data().urlToImage
+              averageBiasRating: averageBiasRating,
+              urlToImage: doc.data().urlToImage,
+              left: left,
+              neutral: neutral,
+              right: right
             };
             this.articles.push(data);
           });
@@ -268,7 +312,7 @@ div {
   top: 5px;
   height: 22px;
   width: 22px;
-  background-color: #b20000;
+  background-color: #C62828;
   border-radius: 50%;
   display: inline-block;
 }
@@ -279,7 +323,7 @@ div {
   font-weight: bold;
 }
 .red-rating {
-  color: #b20000;
+  color: #C62828;
 }
 .author-name {
   font-size: 12px;
@@ -311,7 +355,7 @@ div {
   top: 5px;
   height: 25px;
   width: 25px;
-  background-color: #b20000;
+  background-color: #C62828;
   border-radius: 50%;
   display: inline-block;
 }

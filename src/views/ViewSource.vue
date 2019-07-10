@@ -151,61 +151,30 @@ export default {
           console.log('No such what!');
         }
       });
-  },
-  beforeRouteEnter(to, from, next) {
     db.collection('articles')
-      .where('source.name', '==', to.params.sourceName)
+      .where('source.name', '==', this.$route.params.sourceName)
       .orderBy('publishedAt', 'desc')
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          next(vm => {
-            if (doc.data().averageRating) {
-              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
-            }
-            const data = {
-              id: doc.id,
-              author: doc.data().author,
-              title: doc.data().title,
-              url: doc.data().url,
-              averageRating: avgRatingRounded,
-              publishedAt: doc.data().publishedAt,
-              ratingCount: doc.data().ratingCount,
-              urlToImage: doc.data().urlToImage
-            };
-            vm.articles.push(data);
-          });
+          if (doc.data().averageRating) {
+            var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
+          }
+          const data = {
+            id: doc.id,
+            author: doc.data().author,
+            title: doc.data().title,
+            url: doc.data().url,
+            averageRating: avgRatingRounded,
+            publishedAt: doc.data().publishedAt,
+            ratingCount: doc.data().ratingCount,
+            urlToImage: doc.data().urlToImage
+          };
+          this.articles.push(data);
         });
       });
   },
-  watch: {
-    $route: 'fetchData'
-  },
   methods: {
-    fetchData() {
-      db.collection('articles')
-        .where('source.name', '==', this.$route.params.sourceName)
-        .orderBy('publishedAt', 'desc')
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            if (doc.data().averageRating) {
-              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
-            }
-            const data = {
-              id: doc.id,
-              author: doc.data().author,
-              title: doc.data().title,
-              url: doc.data().url,
-              averageRating: avgRatingRounded,
-              publishedAt: doc.data().publishedAt,
-              ratingCount: doc.data().ratingCount,
-              urlToImage: doc.data().urlToImage
-            };
-            this.articles.push(data);
-          });
-        });
-    },
     getImgUrl(id) {
       if (this.checkIfLogoExists(id)) {
         return require('../assets/images/' + id + '.png');
@@ -227,6 +196,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 a {
   color: black;

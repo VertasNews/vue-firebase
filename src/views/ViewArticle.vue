@@ -125,6 +125,44 @@ export default {
     else if (this.isTablet()) this.containerWidth = 700;
     else this.containerWidth = this.windowWidth;
     this.marginL = (window.innerWidth - this.containerWidth) / 2;
+
+    db.collection('articles')
+    .doc(this.$route.params.articleId)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        this.author = doc.data().author;
+        this.sourceName = doc.data().source.name;
+        this.title = doc.data().title;
+        this.url = doc.data().url;
+        this.description = doc.data().description;
+        this.content = doc.data().content;
+        this.urlToImage = doc.data().urlToImage;
+        this.publishedAt = doc.data().publishedAt;
+        if (doc.data().averageRating) {
+          this.averageRating = Math.trunc(doc.data().averageRating * 10);
+          this.ratingCount = doc.data().ratingCount;
+        } else this.ratingCount = 0;
+        if (doc.data().averageBiasRating < 4) {
+          this.averageBiasRating = Math.trunc(
+            (4 - doc.data().averageBiasRating) / 0.03
+          );
+          this.left = true;
+        } else if (doc.data().averageBiasRating > 4) {
+          this.averageBiasRating = Math.trunc(
+            (doc.data().averageBiasRating - 4) / 0.03
+          );
+          this.right = true;
+        } else if (doc.data().averageBiasRating == 4) {
+          this.averageBiasRating = 4;
+          this.neutral = true;
+        }
+        this.biasRatingCount = doc.data().biasRatingCount;
+      } else if (!doc.data().averageBiasRating) {
+        console.log('dkmmemay2');
+        this.biasRatingCount = 0;
+      }
+    });
   },
   mounted() {
     window.addEventListener('resize', () => {
@@ -135,93 +173,7 @@ export default {
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
     });
   },
-  beforeRouteEnter(to, from, next) {
-    db.collection('articles')
-      .doc(to.params.articleId)
-      .get()
-      .then(doc => {
-        next(vm => {
-          if (doc.exists) {
-            vm.author = doc.data().author;
-            vm.sourceName = doc.data().source.name;
-            vm.title = doc.data().title;
-            vm.url = doc.data().url;
-            vm.description = doc.data().description;
-            vm.content = doc.data().content;
-            vm.urlToImage = doc.data().urlToImage;
-            vm.publishedAt = doc.data().publishedAt;
-            if (doc.data().averageRating) {
-              vm.averageRating = Math.trunc(doc.data().averageRating * 10);
-              vm.ratingCount = doc.data().ratingCount;
-            } else {
-              vm.ratingCount = 0;
-            }
-            if (!doc.data().averageBiasRating) {
-              vm.biasRatingCount = 0;
-            } else {
-              vm.biasRatingCount = doc.data().biasRatingCount;
-              if (doc.data().averageBiasRating < 4) {
-                vm.averageBiasRating = Math.trunc(
-                  (4 - doc.data().averageBiasRating) / 0.03
-                );
-                vm.left = true;
-              } else if (doc.data().averageBiasRating > 4) {
-                vm.averageBiasRating = Math.trunc(
-                  (doc.data().averageBiasRating - 4) / 0.03
-                );
-                vm.right = true;
-              } else if (doc.data().averageBiasRating == 4) {
-                vm.averageBiasRating = 4;
-                vm.neutral = true;
-              }
-            }
-          }
-        });
-      });
-  },
-  watch: {
-    $route: 'fetchData'
-  },
   methods: {
-    fetchData() {
-      db.collection('articles')
-        .doc(this.$route.params.articleId)
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            this.author = doc.data().author;
-            this.sourceName = doc.data().source.name;
-            this.title = doc.data().title;
-            this.url = doc.data().url;
-            this.description = doc.data().description;
-            this.content = doc.data().content;
-            this.urlToImage = doc.data().urlToImage;
-            this.publishedAt = doc.data().publishedAt;
-            if (doc.data().averageRating) {
-              this.averageRating = Math.trunc(doc.data().averageRating * 10);
-              this.ratingCount = doc.data().ratingCount;
-            } else this.ratingCount = 0;
-            if (doc.data().averageBiasRating < 4) {
-              this.averageBiasRating = Math.trunc(
-                (4 - doc.data().averageBiasRating) / 0.03
-              );
-              this.left = true;
-            } else if (doc.data().averageBiasRating > 4) {
-              this.averageBiasRating = Math.trunc(
-                (doc.data().averageBiasRating - 4) / 0.03
-              );
-              this.right = true;
-            } else if (doc.data().averageBiasRating == 4) {
-              this.averageBiasRating = 4;
-              this.neutral = true;
-            }
-            this.biasRatingCount = doc.data().biasRatingCount;
-          } else if (!doc.data().averageBiasRating) {
-            console.log('dkmmemay2');
-            this.biasRatingCount = 0;
-          }
-        });
-    },
     isLap() {
       return this.windowWidth <= 1100 && this.windowWidth > 800;
     },

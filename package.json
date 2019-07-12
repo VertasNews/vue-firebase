@@ -9,11 +9,7 @@
   },
   "dependencies": {
     "algoliasearch": "^3.33.0",
-<<<<<<< HEAD
     "firebase": "^6.3.0",
-=======
-    "firebase": "^6.2.4",
->>>>>>> 6f1c19b5983075d7c9c17d6651d0f8e952465696
     "instantsearch.css": "^7.3.1",
     "vue": "^2.6.10",
     "vue-analytics": "^5.17.0",

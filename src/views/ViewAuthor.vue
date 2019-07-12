@@ -201,10 +201,8 @@ export default {
           console.log('No such author!');
         }
       });
-  },
-  beforeRouteEnter(to, from, next) {
     db.collection('articles')
-      .where('author', '==', to.params.author)
+      .where('author', '==', this.$route.params.author)
       .orderBy('publishedAt', 'desc')
       .get()
       .then(querySnapshot => {
@@ -242,33 +240,7 @@ export default {
         });
       });
   },
-  watch: {
-    $route: 'fetchData'
-  },
   methods: {
-    fetchData() {
-      db.collection('articles')
-        .where('author', '==', this.$route.params.author)
-        .orderBy('publishedAt', 'desc')
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            if (doc.data().averageRating) {
-              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
-            }
-            const data = {
-              id: doc.id,
-              sourceName: doc.data().source.name,
-              title: doc.data().title,
-              url: doc.data().url,
-              averageRating: avgRatingRounded,
-              urlToImage: doc.data().urlToImage,
-              publishedAt: doc.data().publishedAt
-            };
-            this.articles.push(data);
-          });
-        });
-    },
     isLap() {
       return this.windowWidth <= 1100 && this.windowWidth > 900;
     },
@@ -288,6 +260,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 div {
   font-family: Helvetica, Arial, sans-serif;

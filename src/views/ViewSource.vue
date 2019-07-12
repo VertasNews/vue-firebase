@@ -224,10 +224,8 @@ export default {
           console.log('No such what!');
         }
       });
-  },
-  beforeRouteEnter(to, from, next) {
     db.collection('articles')
-      .where('source.name', '==', to.params.sourceName)
+      .where('source.name', '==', this.$route.params.sourceName)
       .orderBy('publishedAt', 'desc')
       .get()
       .then(querySnapshot => {
@@ -265,48 +263,7 @@ export default {
         });
       });
   },
-  watch: {
-    $route: 'fetchData'
-  },
   methods: {
-    fetchData() {
-      db.collection('articles')
-        .where('source.name', '==', this.$route.params.sourceName)
-        .orderBy('publishedAt', 'desc')
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            if (doc.data().averageRating) {
-              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
-            }
-            var averageBiasRating = doc.data().averageBiasRating;
-            if (averageBiasRating < 4) {
-              averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
-              var left = true;
-            } else if (averageBiasRating > 4) {
-              averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
-              var right = true;
-            } else if (averageBiasRating == 4) {
-              averageBiasRating = 4;
-              var neutral = true;
-            }
-            const data = {
-              id: doc.id,
-              author: doc.data().author,
-              title: doc.data().title,
-              url: doc.data().url,
-              averageRating: avgRatingRounded,
-              publishedAt: doc.data().publishedAt,
-              averageBiasRating: averageBiasRating,
-              urlToImage: doc.data().urlToImage,
-              left: left,
-              neutral: neutral,
-              right: right
-            };
-            this.articles.push(data);
-          });
-        });
-    },
     getImgUrl(id) {
       if (this.checkIfLogoExists(id)) {
         return require('../assets/images/' + id + '.png');
@@ -331,6 +288,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 a {
   color: black;

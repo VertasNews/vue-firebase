@@ -1,42 +1,114 @@
 <template>
-  <div id="accuracy-ranking" :style="{ right: marginL - 7 + 'px' }">
-    <div class="chart-title">Outlets Accuracy Rank</div>
-    <ul>
-      <li v-for="source in sources" :key="source.name" class="collection-item">
-        <router-link
-          :to="{
-            name: 'view-source',
-            params: { sourceName: source.name }
-          }"
+  <div id="accuracy-ranking">
+    <div
+      v-if="!isMobile()"
+      id="accuracyRanking"
+      :style="{ right: marginL - 7 + 'px' }"
+    >
+      <div class="chart-title">Outlets Accuracy Rank</div>
+      <ul>
+        <li
+          v-for="source in sources"
+          :key="source.name"
+          class="collection-item"
         >
-          <v-avatar size="32px" v-if="getImgUrl(source.id)">
-            <img class="img-circle mb-1" :src="getImgUrl(source.id)" />
-          </v-avatar>
-          <span class="source-name" v-else>
-            {{ source.name }}
-          </span>
-        </router-link>
-        <span :style="{ width: source.length + 'px' }" class="ranking-bar">
-        </span>
-        <span class="rating-num" v-if="source.averageRating">
-          {{ source.averageRating }}&#65130;</span
-        >
-      </li>
-    </ul>
-    <div id="popWeekly" class="chart-title">Popular Weekly</div>
-    <ul>
-      <li v-for="article in articles" :key="article.id" class="row">
-        <div class="green-rating col s2" v-if="article.averageRating">
-          {{ article.averageRating }}&#65130;
-        </div>
-        <div class="article-title col s10 fade">
           <router-link
-            :to="{ name: 'view-article', params: { articleId: article.id } }"
-            >{{ article.title }}</router-link
+            :to="{
+              name: 'view-source',
+              params: { sourceName: source.name }
+            }"
           >
-        </div>
-      </li>
-    </ul>
+            <v-avatar size="32px" v-if="getImgUrl(source.id)">
+              <img class="img-circle mb-1" :src="getImgUrl(source.id)" />
+            </v-avatar>
+            <span class="source-name" v-else>
+              {{ source.name }}
+            </span>
+          </router-link>
+          <span :style="{ width: source.length + 'px' }" class="ranking-bar">
+          </span>
+          <span class="rating-num" v-if="source.averageRating">
+            {{ source.averageRating }}&#65130;</span
+          >
+        </li>
+      </ul>
+      <div id="popWeekly" class="chart-title">Popular Weekly</div>
+      <ul>
+        <li v-for="article in articles" :key="article.id" class="row">
+          <div class="green-rating col s2" v-if="article.averageRating">
+            {{ article.averageRating }}&#65130;
+          </div>
+          <div class="article-title col s10 fade">
+            <router-link
+              :to="{ name: 'view-article', params: { articleId: article.id } }"
+              >{{ article.title }}</router-link
+            >
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div v-if="isMobile()" class="row">
+      <div id="popWeek" class="col s6 m7">
+        <div id="popWeekly" class="chart-title">Popular Weekly</div>
+        <ul>
+          <li v-for="article in articles" :key="article.id" class="row">
+            <div class="green-rating col s2" v-if="article.averageRating">
+              {{ article.averageRating }}&#65130;
+            </div>
+            <div class="article-title col s10 fade">
+              <router-link
+                :to="{
+                  name: 'view-article',
+                  params: { articleId: article.id }
+                }"
+                >{{ article.title }}</router-link
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div id="outlet-wrapper" class="col s6 m5">
+        <div id="outletRank" class="chart-title">Outlets Accuracy Rank</div>
+        <ul>
+          <li
+            v-for="source in sources"
+            :key="source.name"
+            class="collection-item"
+          >
+            <router-link
+              :to="{
+                name: 'view-source',
+                params: { sourceName: source.name }
+              }"
+            >
+              <v-avatar size="32px" v-if="getImgUrl(source.id)">
+                <img class="img-circle mb-1" :src="getImgUrl(source.id)" />
+              </v-avatar>
+              <span class="source-name" v-else>
+                {{ source.name }}
+              </span>
+            </router-link>
+            <span
+              v-if="isSmallMobile()"
+              :style="{
+                width: source.averageRating * 0.006 * windowWidth + 'px'
+              }"
+              class="ranking-bar"
+            >
+            </span>
+            <span
+              v-else
+              :style="{ width: source.length + 'px' }"
+              class="ranking-bar"
+            >
+            </span>
+            <span class="rating-num" v-if="source.averageRating">
+              {{ source.averageRating }}&#65130;</span
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -110,15 +182,16 @@ export default {
       });
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
+    else if (this.isLandScape()) this.containerWidth = 810;
     else if (this.isTablet()) this.containerWidth = 700;
     else this.containerWidth = this.windowWidth;
     this.marginL = (window.innerWidth - this.containerWidth) / 2;
   },
-  beforeMount() {},
   mounted() {
     window.addEventListener('resize', () => {
       if (this.isDesktop()) this.containerWidth = 1050;
       else if (this.isLap()) this.containerWidth = 900;
+      else if (this.isLandScape()) this.containerWidth = 810;
       else if (this.isTablet()) this.containerWidth = 700;
       else this.containerWidth = this.windowWidth;
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
@@ -128,11 +201,14 @@ export default {
     getImgUrl(id) {
       if (this.checkIfLogoExists(id)) {
         return require('../assets/images/' + id + '.png');
-      } else console.log("deo thay gi")
+      } else console.log('deo thay gi');
       return null;
     },
     isLap() {
-      return this.windowWidth <= 1100 && this.windowWidth > 800;
+      return this.windowWidth <= 1100 && this.windowWidth > 900;
+    },
+    isLandScape() {
+      return this.windowWidth <= 900 && this.windowWidth > 800;
     },
     isDesktop() {
       this.windowWidth = window.innerWidth;
@@ -143,6 +219,9 @@ export default {
     },
     isMobile() {
       return this.windowWidth <= 760;
+    },
+    isSmallMobile() {
+      return this.windowWidth <= 500;
     }
   }
 };
@@ -165,7 +244,7 @@ a {
   display: inline-block;
   margin-top: 10px;
 }
-#accuracy-ranking {
+#accuracyRanking {
   position: absolute;
   border-radius: 10px;
   width: 250px;
@@ -222,5 +301,32 @@ a {
 }
 #popWeekly {
   margin-top: 10px;
+}
+@media screen and (max-width: 900px) {
+  #accuracyRanking {
+    width: 230px;
+  }
+}
+@media screen and (max-width: 760px) {
+  #chart-title {
+    margin-top: 10px;
+  }
+  .col {
+    padding-left: 15px;
+  }
+  #outletRank {
+    margin-top: 10px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .col {
+    width: 100%;
+  }
+  #popWeek {
+    width: 100%;
+  }
+  #outlet-wrapper {
+    width: 100%;
+  }
 }
 </style>

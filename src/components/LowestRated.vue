@@ -35,8 +35,6 @@
                   :width="containerWidth + 'px'"
                   :src="article.urlToImage"
                 >
-                  <!-- :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
-                > -->
                   <template v-slot:placeholder>
                     <v-layout fill-height align-center justify-center ma-0>
                       <v-progress-circular

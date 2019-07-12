@@ -10,6 +10,7 @@ import ViewAuthor from '@/views/ViewAuthor';
 import ViewSource from '@/views/ViewSource';
 import NewArticle from '@/views/NewArticle';
 import ViewArticle from '@/views/ViewArticle';
+import MobileSearch from '@/views/MobileSearch';
 import About from '@/views/About';
 
 Vue.use(Router);
@@ -65,6 +66,11 @@ let router = new Router({
       path: '/about',
       name: 'about',
       component: About
+    },
+    {
+      path: '/search',
+      name: 'mobile-search',
+      component: MobileSearch
     }
   ]
 });

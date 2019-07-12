@@ -11,17 +11,24 @@
           </router-link>
         </div>
         <div id="search-bar" class="col m10">
-       <!--   <Search /> -->
+          <!-- <v-icon id="searchIcon"> fas fa-search </v-icon> -->
+
+          <Search />
+
           <!-- <input
             type="text"
             :placeholder="searchText"
             class="search-txt"
             name="search"
-          />
-          <v-icon id="searchIcon"> fas fa-search </v-icon> -->
+          /> -->
         </div>
       </div>
       <div id="userSpace" class="col m3 xl4">
+        <div class="col" id="searchLink" v-if="windowWidth <= 440">
+          <router-link to="/search">
+            <v-icon> fas fa-search </v-icon>
+          </router-link>
+        </div>
         <div class="about col s5.5">
           <router-link to="/about">
             About Vertas
@@ -144,6 +151,7 @@ export default {
     }
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
+    else if (this.isLandScape()) this.containerWidth = 750;
     else if (this.isTablet()) this.containerWidth = 700;
     else this.containerWidth = this.windowWidth;
     this.marginL = (window.innerWidth - this.containerWidth) / 2;
@@ -162,6 +170,7 @@ export default {
     window.addEventListener('resize', () => {
       if (this.isDesktop()) this.containerWidth = 1050;
       else if (this.isLap()) this.containerWidth = 900;
+      else if (this.isLandScape()) this.containerWidth = 750;
       else if (this.isTablet()) this.containerWidth = 700;
       else this.containerWidth = this.windowWidth;
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
@@ -177,17 +186,23 @@ export default {
         });
     },
     isLap() {
-      return this.windowWidth <= 1100 && this.windowWidth > 800;
+      return this.windowWidth <= 1100 && this.windowWidth > 900;
     },
     isDesktop() {
       this.windowWidth = window.innerWidth;
       return this.windowWidth > 1100;
+    },
+    isLandScape() {
+      return this.windowWidth <= 900 && this.windowWidth > 800;
     },
     isTablet() {
       return this.windowWidth <= 800 && this.windowWidth > 760;
     },
     isMobile() {
       return this.windowWidth <= 760;
+    },
+    isSmallMobile() {
+      return this.windowWidth <= 600;
     }
   }
 };
@@ -197,13 +212,11 @@ export default {
 nav {
   height: 60px;
   z-index: 3;
+  background-color: #f8f5f5;
+  font-family: Helvetica, Arial, sans-serif;
 }
 a {
   width: 100%;
-}
-nav {
-  background-color: #f8f5f5;
-  font-family: Helvetica, Arial, sans-serif;
 }
 .hoverab {
   cursor: pointer;
@@ -217,8 +230,7 @@ input[type='text']:not(.browser-default):focus:not([readonly]) {
   box-shadow: none;
 }
 #searchIcon {
-  float: right;
-  cursor: pointer;
+  float: left;
 }
 .v-icon {
   height: 42px;
@@ -253,6 +265,7 @@ input[type='text']:not(.browser-default):focus:not([readonly]) {
   border-radius: 5px;
   height: 44px;
   margin-top: 9px;
+  padding: 0px;
 }
 .search-txt {
   color: black;
@@ -325,7 +338,7 @@ button > div {
     padding-right: 10px;
   }
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
   .about {
     margin-right: 21px;
     padding-left: 0px;
@@ -422,11 +435,11 @@ button > div {
     display: none;
   }
   #user {
-    width: 22%;
+    width: 18%;
     padding: 0px;
   }
   #hamburger {
-    width: 22%;
+    width: 18%;
     padding: 0px;
   }
   #imgnSearch {
@@ -443,22 +456,39 @@ button > div {
   }
   .about {
     display: inline-block;
-    width: 78%;
+    width: 52%;
     margin-right: 0px;
-    padding-left: 30%;
     padding-right: 0px;
+    padding-left: 5%;
   }
   .about > a {
     font-size: 18px;
     top: 12px;
   }
-}
-@media screen and (max-width: 380px) {
-  .about {
-    padding-left: 23%;
+  #searchLink {
+    /*  padding-left: 30%;*/
+    padding-top: 15px;
+    width: 30%;
+    padding-left: 20%;
   }
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 380px) {
+  #searchLink {
+    padding-left: 11%;
+    width: 19%;
+  }
+  .about {
+    padding-left: 8%;
+    width: 62%;
+  }
+  #user {
+    width: 19%;
+  }
+  #hamburger {
+    width: 19%;
+  }
+}
+@media screen and (max-width: 350px) {
   .img {
     width: 73px;
   }

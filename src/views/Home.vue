@@ -2,8 +2,15 @@
   <div id="home">
     <LowestRated />
     <div
-      id="header-wrapper"
+      v-if="isMobile()"
+      :style="{
+        marginLeft: marginL + 3 + 'px',
+        width: containerWidth - 270 + 'px'
+      }"
     >
+      <AccuracyRanking />
+    </div>
+    <div id="header-wrapper">
       <div
         id="header"
         :style="{
@@ -13,13 +20,11 @@
       >
         <div id="add-article">
           <router-link to="/new_article" id="add-article-router">
-           <img id="plusSign"
-              src="../assets/plus_demo.png"
-            /> 
+            <img id="plusSign" src="../assets/plus_demo.png" />
             Add Article
           </router-link>
         </div>
-        <div id="header-icon">
+        <div v-if="!isOldMobile()" id="header-icon">
           <span class="green-circle"></span>
           <span class="trl green--text right-margin "> TRUTH </span>
           <span class="red-circle"></span>
@@ -50,6 +55,14 @@
               v-if="article.urlToImage"
               height="150px"
               :src="article.urlToImage"
+            >
+              <template v-slot:placeholder>
+                <v-layout fill-height align-center justify-center ma-0>
+                  <v-progress-circular
+                    indeterminate
+                    color="grey lighten-5"
+                  ></v-progress-circular>
+                </v-layout> </template
             ></v-img>
           </router-link>
         </div>
@@ -86,38 +99,46 @@
               {{ article.averageRating }}&#65130;
             </span>
             <span v-if="!article.averageBiasRating">
-            <span class="red-circle"></span>
-            <span class="red-rating"> NA  </span>
+              <span class="red-circle"></span>
+              <span class="red-rating"> NA </span>
             </span>
             <span v-if="article.right">
-            <span class="red-circle"></span>
-            <span class="red-rating"> {{ article.averageBiasRating }}&#65130;  </span>
+              <span class="red-circle"></span>
+              <span class="red-rating">
+                {{ article.averageBiasRating }}&#65130;
+              </span>
             </span>
             <span v-if="article.left">
-            <span class="blue-circle"></span>
-            <span class="blue-rating"> {{ article.averageBiasRating }}&#65130; </span>
+              <span class="blue-circle"></span>
+              <span class="blue-rating">
+                {{ article.averageBiasRating }}&#65130;
+              </span>
+            </span>
+            <span v-if="article.neutral">
+              <span class="red-circle"> </span>
+              <span class="red-rating"> 0&#65130; </span>
             </span>
             <span style="float: right;">
               <router-link
-                :to="{ name: 'view-article', params: { articleId: article.id } }"
+                :to="{
+                  name: 'view-article',
+                  params: { articleId: article.id }
+                }"
               >
                 <span class="rate">
-                  <img
-                    src="../assets/rating.png"
-                    class="readnRate"
-                  />
+                  <img src="../assets/rating.png" class="readnRate" />
                   RATE
                 </span>
               </router-link>
-                <span class="read">
-                  <a :href="article.url" target="_blank">
-                    <img
-                      src="../assets/read-book-icon-12.jpg"
-                      class="readnRate"
-                    />
-                    READ
-                  </a>
-                </span>
+              <span class="read">
+                <a :href="article.url" target="_blank">
+                  <img
+                    src="../assets/read-book-icon-12.jpg"
+                    class="readnRate"
+                  />
+                  READ
+                </a>
+              </span>
             </span>
           </div>
         </div>
@@ -209,6 +230,7 @@ export default {
     });
     if (this.isDesktop()) this.containerWidth = 1050;
     else if (this.isLap()) this.containerWidth = 900;
+    else if (this.isLandScape()) this.containerWidth = 850;
     else if (this.isTablet()) this.containerWidth = 700;
     this.marginL = (this.windowWidth - this.containerWidth) / 2 + 20;
     if (this.isMobile()) {
@@ -220,6 +242,7 @@ export default {
     window.addEventListener('resize', () => {
       if (this.isDesktop()) this.containerWidth = 1050;
       else if (this.isLap()) this.containerWidth = 900;
+      else if (this.isLandScape()) this.containerWidth = 850;
       else if (this.isTablet()) this.containerWidth = 700;
       this.marginL = (this.windowWidth - this.containerWidth) / 2 + 20;
       if (this.isMobile()) {
@@ -288,7 +311,10 @@ export default {
       }, 1000);
     },
     isLap() {
-      return this.windowWidth <= 1100 && this.windowWidth > 800;
+      return this.windowWidth <= 1100 && this.windowWidth > 900;
+    },
+    isLandScape() {
+      return this.windowWidth <= 900 && this.windowWidth > 800;
     },
     isDesktop() {
       this.windowWidth = window.innerWidth;
@@ -299,6 +325,9 @@ export default {
     },
     isMobile() {
       return this.windowWidth <= 760;
+    },
+    isOldMobile() {
+      return this.windowWidth <= 360;
     }
   }
 };
@@ -358,7 +387,7 @@ li {
 .red-circle {
   height: 22px;
   width: 22px;
-  background-color: #C62828;
+  background-color: #c62828;
   border-radius: 50%;
   display: inline-block;
 }
@@ -366,12 +395,12 @@ li {
   height: 22px;
   width: 22px;
   /*background-color: #075b80; */
-  background-color: #1E88E5;
+  background-color: #1e88e5;
   border-radius: 50%;
   display: inline-block;
 }
 .blue-rating {
-  color: #1E88E5;
+  color: #1e88e5;
   position: relative;
   bottom: 5px;
   font-size: 18px;
@@ -385,7 +414,7 @@ li {
   font-weight: bold;
 }
 .red-rating {
-  color: #C62828;
+  color: #c62828;
   position: relative;
   bottom: 5px;
   font-size: 18px;
@@ -438,9 +467,9 @@ a {
   position: -ms-sticky;
   position: -o-sticky;
   position: sticky;
-  top: 0px; 
-  z-index: 1; 
-  margin-bottom: 0px; 
+  top: 0px;
+  z-index: 1;
+  margin-bottom: 0px;
   margin-top: 5px;
 }
 #header {
@@ -540,20 +569,20 @@ a {
   top: 60px;
 }
 #plusSign {
-  height: 25px; 
-  position: relative; 
+  height: 25px;
+  position: relative;
   top: 5px;
 }
 .readnRate {
-  height: 18px; 
-  opacity: 0.81; 
-  position: relative; 
+  height: 18px;
+  opacity: 0.81;
+  position: relative;
   top: 4px;
 }
 @media screen and (max-width: 600px) {
-.rate-row {
-  position: static;
-  width: auto;
-}
+  .rate-row {
+    position: static;
+    width: auto;
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="new-article" class="container row">
-    <div class="col s12 m8 xl6 offset-m2 offset-xl3 card-panel" style="padding-left: 25px; padding-right: 25px;" >
+    <div id="na-content" class="col s12 m8 xl6 offset-m2 offset-xl3 card-panel">
       <h3>New Article</h3>
       <div class="row">
         <form @submit.prevent="saveArticle" class="col s12">
@@ -109,6 +109,10 @@ export default {
 </script>
 
 <style scoped>
+#na-content {
+  padding-left: 25px;
+  padding-right: 25px;
+}
 .row > #na {
   padding: 20x;
 }

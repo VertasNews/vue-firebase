@@ -21,16 +21,24 @@
         </span>
         <span class="big-rating green--text" v-else> NA </span>
         <span v-if="!averageBiasRating">
-        <span class="big-red-circle"> </span>
-        <span class="big-rating red--text text--darken-3"> NA </span>
+          <span class="big-red-circle"> </span>
+          <span class="big-rating red--text text--darken-3"> NA </span>
         </span>
         <span v-if="right">
-        <span class="big-red-circle"> </span>
-        <span class="big-rating red--text text--darken-3"> {{averageBiasRating}}&#65130; </span>
+          <span class="big-red-circle"> </span>
+          <span class="big-rating red--text text--darken-3">
+            {{ averageBiasRating }}&#65130;
+          </span>
         </span>
         <span v-if="left">
-        <span class="big-blue-circle"> </span>
-        <span class="big-rating blue--text text--darken-2"> {{averageBiasRating}}&#65130; </span>
+          <span class="big-blue-circle"> </span>
+          <span class="big-rating blue--text text--darken-2">
+            {{ averageBiasRating }}&#65130;
+          </span>
+        </span>
+        <span v-if="neutral">
+          <span class="big-red-circle"> </span>
+          <span class="big-rating red--text text--darken-3"> 0&#65130; </span>
         </span>
       </div>
     </div>
@@ -86,18 +94,25 @@
           </div>
           <div v-if="!isMobile()" class="col m6">
             <span v-if="!article.averageBiasRating">
-            <span class="red-circle"></span>
-            <span class="rating red--text text--darken-3" > NA  </span>
+              <span class="red-circle"></span>
+              <span class="rating red--text text--darken-3"> NA </span>
             </span>
             <span v-if="article.right">
-            <span class="red-circle"></span>
-            <span class="rating red--text text--darken-3" > {{ article.averageBiasRating }}&#65130;</span>
+              <span class="red-circle"></span>
+              <span class="rating red--text text--darken-3">
+                {{ article.averageBiasRating }}&#65130;</span
+              >
             </span>
             <span v-if="article.left">
-            <span class="blue-circle"></span>
-            <span class="rating blue--text text--darken-2"> {{ article.averageBiasRating }}&#65130; </span>
+              <span class="blue-circle"></span>
+              <span class="rating blue--text text--darken-2">
+                {{ article.averageBiasRating }}&#65130;
+              </span>
             </span>
-       
+            <span v-if="article.neutral">
+              <span class="red-circle"></span>
+              <span class="rating red--text text--darken-3"> 0&#65130; </span>
+            </span>
           </div>
           <div v-if="isMobile()" class="col s12">
             <span class="green-circle"> </span>
@@ -105,17 +120,25 @@
               {{ article.averageRating }}&#65130;
             </span>
             <span class="rating green--text" v-else> NA </span>
-           <span v-if="!article.averageBiasRating">
-            <span class="red-circle"></span>
-            <span class="rating red--text text--darken-3"> NA  </span>
+            <span v-if="!article.averageBiasRating">
+              <span class="red-circle"></span>
+              <span class="rating red--text text--darken-3"> NA </span>
             </span>
             <span v-if="article.right">
-            <span class="red-circle"></span>
-            <span class="rating red--text text--darken-3" > {{ article.averageBiasRating }}&#65130;  </span>
+              <span class="red-circle"></span>
+              <span class="rating red--text text--darken-3">
+                {{ article.averageBiasRating }}&#65130;
+              </span>
             </span>
             <span v-if="article.left">
-            <span class="blue-circle"></span>
-            <span class="rating blue--text text--darken-2" > {{ article.averageBiasRating }}&#65130; </span>
+              <span class="blue-circle"></span>
+              <span class="rating blue--text text--darken-2">
+                {{ article.averageBiasRating }}&#65130;
+              </span>
+            </span>
+            <span v-if="article.neutral">
+              <span class="red-circle"></span>
+              <span class="rating red--text text--darken-3"> 0&#65130; </span>
             </span>
           </div>
         </div>
@@ -156,17 +179,19 @@ export default {
   },
   mounted() {
     window.addEventListener('resize', () => {
-      if (this.isDesktop()) this.containerWidth = 1050;
-      else if (this.isLap()) this.containerWidth = 900;
-      else if (this.isTablet()) this.containerWidth = 700;
+      if (this.isDesktop()) this.containerWidth = 1010;
+      else if (this.isLap()) this.containerWidth = 860;
+      else if (this.isLandScape()) this.containerWidth = 710;
+      else if (this.isTablet()) this.containerWidth = 660;
       else this.containerWidth = this.windowWidth;
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
     });
   },
   created() {
-    if (this.isDesktop()) this.containerWidth = 1050;
-    else if (this.isLap()) this.containerWidth = 900;
-    else if (this.isTablet()) this.containerWidth = 700;
+    if (this.isDesktop()) this.containerWidth = 1010;
+    else if (this.isLap()) this.containerWidth = 860;
+    else if (this.isLandScape()) this.containerWidth = 710;
+    else if (this.isTablet()) this.containerWidth = 660;
     else this.containerWidth = this.windowWidth;
     this.marginL = (window.innerWidth - this.containerWidth) / 2;
     this.sourceName = this.$route.params.sourceName;
@@ -176,20 +201,24 @@ export default {
       .then(doc => {
         if (doc.exists) {
           if (doc.data().averageRating)
-          this.averageRating = Math.trunc(doc.data().averageRating * 10);
+            this.averageRating = Math.trunc(doc.data().averageRating * 10);
           this.sourceUrl = doc.data().sourceUrl;
           this.sourceId = doc.data().id;
           this.averageBiasRating = doc.data().averageBiasRating;
           if (this.averageBiasRating < 4) {
-              this.averageBiasRating = Math.trunc((4 - this.averageBiasRating) / 0.03);
-              this.left = true;
-            } else if (this.averageBiasRating > 4) {
-              this.averageBiasRating = Math.trunc((this.averageBiasRating - 4) / 0.03);
-              this.right = true;
-            } else if (this.averageBiasRating == 4) {
-              this.averageBiasRating = 4;
-              this.neutral = true;
-            }
+            this.averageBiasRating = Math.trunc(
+              (4 - this.averageBiasRating) / 0.03
+            );
+            this.left = true;
+          } else if (this.averageBiasRating > 4) {
+            this.averageBiasRating = Math.trunc(
+              (this.averageBiasRating - 4) / 0.03
+            );
+            this.right = true;
+          } else if (this.averageBiasRating == 4) {
+            this.averageBiasRating = 4;
+            this.neutral = true;
+          }
         } else {
           // doc.data() will be undefined in this case
           console.log('No such what!');
@@ -224,7 +253,7 @@ export default {
               title: doc.data().title,
               url: doc.data().url,
               averageRating: avgRatingRounded,
-              publishedAt: doc.data().publishedAt,    
+              publishedAt: doc.data().publishedAt,
               urlToImage: doc.data().urlToImage,
               averageBiasRating: averageBiasRating,
               left: left,
@@ -284,11 +313,14 @@ export default {
       } else return null;
     },
     isLap() {
-      return this.windowWidth <= 1100 && this.windowWidth > 800;
+      return this.windowWidth <= 1100 && this.windowWidth > 900;
     },
     isDesktop() {
       this.windowWidth = window.innerWidth;
       return this.windowWidth > 1100;
+    },
+    isLandScape() {
+      return this.windowWidth <= 900 && this.windowWidth > 800;
     },
     isTablet() {
       return this.windowWidth <= 800 && this.windowWidth > 760;
@@ -344,7 +376,7 @@ div {
   top: 5px;
   height: 22px;
   width: 22px;
-  background-color: #C62828;
+  background-color: #c62828;
   border-radius: 50%;
   display: inline-block;
 }
@@ -353,7 +385,7 @@ div {
   top: 5px;
   height: 22px;
   width: 22px;
-  background-color: #1E88E5;
+  background-color: #1e88e5;
   border-radius: 50%;
   display: inline-block;
 }
@@ -393,7 +425,7 @@ div {
   top: 5px;
   height: 25px;
   width: 25px;
-  background-color: #C62828;
+  background-color: #c62828;
   border-radius: 50%;
   display: inline-block;
 }
@@ -402,7 +434,7 @@ div {
   top: 5px;
   height: 25px;
   width: 25px;
-  background-color: #1E88E5;
+  background-color: #1e88e5;
   border-radius: 50%;
   display: inline-block;
 }

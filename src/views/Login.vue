@@ -32,9 +32,7 @@
               </p>
               <p>
                 New to Vertas?
-                <router-link
-                  to="/register"
-                  class="green--text font-weight-bold"
+                <router-link to="/register" class="green--text font-weight-bold"
                   >Register</router-link
                 >
               </p>
@@ -147,25 +145,26 @@ export default {
 }
 .login {
   border: 1px solid green;
+  background: #fffff9;
 }
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px white inset !important;
-  box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #fffff9 inset !important;
+  box-shadow: 0 0 0 1000px #fffff9 inset !important;
 }
-input[type='email']:not(.browser-default):focus:not([readonly]){
+input[type='email']:not(.browser-default):focus:not([readonly]) {
   border-bottom: 1px solid #4caf50;
   -webkit-box-shadow: 0 1px 0 0 #4caf50;
   box-shadow: 0 1px 0 0 #4caf50;
 }
-input[type='email']:not(.browser-default):focus:not([readonly])+label {
+input[type='email']:not(.browser-default):focus:not([readonly]) + label {
   color: #4caf50;
 }
-input[type='password']:not(.browser-default):focus:not([readonly]){
+input[type='password']:not(.browser-default):focus:not([readonly]) {
   border-bottom: 1px solid #4caf50;
   -webkit-box-shadow: 0 1px 0 0 #4caf50;
   box-shadow: 0 1px 0 0 #4caf50;
 }
-input[type='password']:not(.browser-default):focus:not([readonly])+label {
+input[type='password']:not(.browser-default):focus:not([readonly]) + label {
   color: #4caf50;
 }
 </style>

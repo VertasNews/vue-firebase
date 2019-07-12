@@ -3,7 +3,7 @@
     <v-btn
       v-if="userId"
       class="round-button"
-      large
+      :large="!isMedium"
       slot="activator"
       color="success"
     >
@@ -12,7 +12,7 @@
     <v-btn
       v-else
       class="round-button"
-      large
+      :large="!isMedium"
       slot="activator"
       color="success"
       to="/login"
@@ -201,6 +201,9 @@ export default {
     },
     isSmall() {
       return this.windowWidth < 480;
+    },
+    isMedium() {
+      return this.windowWidth < 760;
     }
   },
   methods: {

@@ -6,7 +6,16 @@
     <div class="card">
       <div class="card-content row">
         <div class="col s12 m3">
-          <v-img v-if="urlToImage" height="250px" :src="urlToImage"></v-img>
+          <v-img v-if="urlToImage" :height="imgHeight()" :src="urlToImage">
+            <template v-slot:placeholder>
+              <v-layout fill-height align-center justify-center ma-0>
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-layout>
+            </template>
+          </v-img>
         </div>
         <div class="col s12 m9">
           <div class="title-name">
@@ -34,7 +43,7 @@
               publishedAt | moment('MMMM Do YYYY, h:mm a')
             }}</span>
           </div>
-          <div class="article-content fade">
+          <div v-if="!isSmallMobile()" class="article-content fade">
             <a :href="url" target="_blank">{{ content }} </a>
           </div>
         </div>
@@ -44,26 +53,34 @@
       <div class="card-content">
         <div class="row">
           <div class="col s6 m3 text-xs-center borderRight1">
-            <div class="col s12 score-title">Critics Score</div>
+            <div class="col s12 score-title">Critics Rate</div>
             <div class="col s6 accuracy-rate">NA</div>
             <div class="col s6 bias-rate red--text text--darken-3">NA</div>
             <div class="col s6 rating-num">0 rating(s)</div>
             <div class="col s6 rating-num">0 rating(s)</div>
           </div>
           <div class="col s6 m3 text-xs-center borderRight2">
-            <div class="col s12 score-title">Users Score</div>
+            <div class="col s12 score-title">Users Rate</div>
             <div v-if="averageRating" class="col s6 accuracy-rate">
-              {{ averageRating }}%
+              {{ averageRating }}
             </div>
             <div v-else class="col s6 accuracy-rate">NA</div>
             <div v-if="left" class="col s6 bias-rate blue--text">
-              {{ averageBiasRating }}%
+              {{ averageBiasRating }}
             </div>
             <div v-if="right" class="col s6 bias-rate red--text text--darken-2">
-              {{ averageBiasRating }}%
+              {{ averageBiasRating }}
             </div>
-            <div v-if="neutral" class="col s6 bias-rate grey--text">0%</div>
-            <div v-if="!averageBiasRating" class="col s6 bias-rate red--text text--darken-2">
+            <div
+              v-if="neutral"
+              class="col s6 bias-rate red--text text--darken-2"
+            >
+              0%
+            </div>
+            <div
+              v-if="!averageBiasRating"
+              class="col s6 bias-rate red--text text--darken-2"
+            >
               NA
             </div>
             <div class="col s6 rating-num">{{ ratingCount }} rating(s)</div>
@@ -74,7 +91,7 @@
               Please provide us with an objective rating of the article's
               accuracy and biases
             </div>
-            <div><RatingPopup v-if="popup" /></div>
+            <div id="rate-button"><RatingPopup v-if="popup" /></div>
           </div>
         </div>
       </div>
@@ -120,17 +137,19 @@ export default {
     };
   },
   created() {
-    if (this.isDesktop()) this.containerWidth = 1050;
-    else if (this.isLap()) this.containerWidth = 900;
-    else if (this.isTablet()) this.containerWidth = 700;
+    if (this.isDesktop()) this.containerWidth = 1010;
+    else if (this.isLap()) this.containerWidth = 860;
+    else if (this.isLandScape()) this.containerWidth = 710;
+    else if (this.isTablet()) this.containerWidth = 660;
     else this.containerWidth = this.windowWidth;
     this.marginL = (window.innerWidth - this.containerWidth) / 2;
   },
   mounted() {
     window.addEventListener('resize', () => {
-      if (this.isDesktop()) this.containerWidth = 1050;
-      else if (this.isLap()) this.containerWidth = 900;
-      else if (this.isTablet()) this.containerWidth = 700;
+      if (this.isDesktop()) this.containerWidth = 1010;
+      else if (this.isLap()) this.containerWidth = 860;
+      else if (this.isLandScape()) this.containerWidth = 710;
+      else if (this.isTablet()) this.containerWidth = 660;
       else this.containerWidth = this.windowWidth;
       this.marginL = (this.windowWidth - this.containerWidth) / 2;
     });
@@ -225,17 +244,27 @@ export default {
         });
     },
     isLap() {
-      return this.windowWidth <= 1100 && this.windowWidth > 800;
+      return this.windowWidth <= 1100 && this.windowWidth > 900;
     },
     isDesktop() {
       this.windowWidth = window.innerWidth;
       return this.windowWidth > 1100;
+    },
+    isLandScape() {
+      return this.windowWidth <= 900 && this.windowWidth > 800;
     },
     isTablet() {
       return this.windowWidth <= 800 && this.windowWidth > 760;
     },
     isMobile() {
       return this.windowWidth <= 760;
+    },
+    isSmallMobile() {
+      return this.windowWidth <= 600;
+    },
+    imgHeight() {
+      if (this.isSmallMobile()) return '180px';
+      else return '250px';
     }
   }
 };
@@ -309,7 +338,7 @@ div {
 }
 .fade {
   position: relative;
-  height: 80px; /* exactly three lines */
+  max-height: 80px;
 }
 .fade:after {
   content: '';
@@ -321,18 +350,42 @@ div {
   height: 20px;
   background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff 50%);
 }
-@media screen and (max-width: 800px) {
+#rate-button {
+  position: relative;
+  top: 7px;
+}
+@media screen and (max-width: 900px) {
   .accuracy-rate {
-    font-size: 50px;
+    font-size: 46px;
     padding: 0px;
   }
   .bias-rate {
-    font-size: 50px;
+    font-size: 46px;
     padding: 0px;
   }
   .rating-num {
     font-size: 11px;
+    padding: 0px;
   }
+}
+@media screen and (max-width: 760px) {
+  #return-home {
+    margin-left: 5px;
+  }
+  .card .card-content {
+    padding: 20px 0px 10px 0px;
+  }
+  .accuracy-rate {
+    font-size: 40px;
+  }
+  .bias-rate {
+    font-size: 40px;
+  }
+  .score-title {
+    font-size: 19px;
+  }
+}
+@media screen and (max-width: 640px) {
 }
 @media screen and (max-width: 600px) {
   .borderRight2 {
@@ -346,8 +399,27 @@ div {
     padding-top: 10px;
     margin-top: 10px;
   }
-  .card .card-content {
-    padding: 20px 0px 20px 0px;
+  .accuracy-rate {
+    font-size: 50px;
+  }
+  .bias-rate {
+    font-size: 50px;
+  }
+  #rate-button {
+    top: 8px;
+  }
+}
+@media screen and (max-width: 410px) {
+  .accuracy-rate {
+    font-size: 45px;
+  }
+  .bias-rate {
+    font-size: 45px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .rating-num {
+    padding: 0px;
   }
 }
 </style>

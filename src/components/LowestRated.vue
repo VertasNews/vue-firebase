@@ -187,6 +187,9 @@ a {
 div {
   font-family: Helvetica, Arial, sans-serif;
 }
+.vueperslides {
+  touch-action: none;
+}
 #lowestRateTitle {
   font-size: 25px;
   padding-top: 5px;

@@ -207,36 +207,20 @@ export default {
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          next(vm => {
-            if (doc.data().averageRating) {
-              var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
-            }
-            var averageBiasRating = doc.data().averageBiasRating;
-            if (averageBiasRating < 4) {
-              averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);
-              var left = true;
-            } else if (averageBiasRating > 4) {
-              averageBiasRating = Math.trunc((averageBiasRating - 4) / 0.03);
-              var right = true;
-            } else if (averageBiasRating == 4) {
-              averageBiasRating = 4;
-              var neutral = true;
-            }
-            const data = {
-              id: doc.id,
-              sourceName: doc.data().source.name,
-              title: doc.data().title,
-              url: doc.data().url,
-              averageRating: avgRatingRounded,
-              urlToImage: doc.data().urlToImage,
-              publishedAt: doc.data().publishedAt,
-              averageBiasRating: averageBiasRating,
-              left: left,
-              neutral: neutral,
-              right: right
-            };
-            vm.articles.push(data);
-          });
+          if (doc.data().averageRating) {
+            var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
+          }
+          const data = {
+            id: doc.id,
+            sourceName: doc.data().source.name,
+            title: doc.data().title,
+            url: doc.data().url,
+            averageRating: avgRatingRounded,
+            ratingCount: doc.data().ratingCount,
+            urlToImage: doc.data().urlToImage,
+            publishedAt: doc.data().publishedAt
+          };
+          this.articles.push(data);
         });
       });
   },

@@ -16,12 +16,12 @@
                 <input type="password" id="password" v-model="password" />
                 <label for="password">Password</label>
               </div>
-              <v-btn color="success" outline @click="$router.go(-1)">
+              <v-btn color="success" outline @click="$router.push('/')">
                 Continue as guest
               </v-btn>
-              <v-btn color="white" @click="login">Login</v-btn>
+              <v-btn color="white" @click="login">LOG IN</v-btn>
               <p>
-                <br />or Login with <br />
+                <br />or Log in with <br />
                 <button @click="socialLogin('g')">
                   Google <v-icon small> fab fa-google </v-icon>
                 </button>
@@ -33,7 +33,7 @@
               <p>
                 New to Vertas?
                 <router-link to="/register" class="green--text font-weight-bold"
-                  >Register</router-link
+                  >Sign Up</router-link
                 >
               </p>
             </div>
@@ -86,8 +86,8 @@ export default {
 
       firebase
         .auth()
-        .signInWithPopup(provider) // eslint-disable-next-line
-        .then(result => {
+        .signInWithPopup(provider)
+        .then(() => {
           this.$router.go('-1');
         })
         .catch(error => {
@@ -110,7 +110,10 @@ export default {
                   );
                   return firebase
                     .auth()
-                    .signInWithEmailAndPassword(existingEmail, password);
+                    .signInWithEmailAndPassword(existingEmail, password)
+                    .then(() => {
+                      this.$router.go('-1');
+                    });
                 } else if (providers.indexOf('google.com') != -1) {
                   console.log(existingEmail);
                   var googProvider = new firebase.auth.GoogleAuthProvider();

@@ -6,6 +6,18 @@
         <form @submit.prevent="saveArticle" class="col s12">
           <div class="row">
             <div class="input-field col s11">
+              <input type="text" v-model="title" required />
+              <label class="active">Title</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s11">
+              <input type="text" v-model="url" required />
+              <label class="active">URL</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s11">
               <input type="text" v-model="sourceName" required />
               <label class="active">Source Name</label>
             </div>
@@ -18,14 +30,14 @@
           </div>
           <div class="row">
             <div class="input-field col s11">
-              <input type="text" v-model="title" required />
-              <label class="active">Title</label>
+              <input type="text" v-model="description" />
+              <label class="active">Description</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s11">
-              <input type="text" v-model="url" required />
-              <label class="active">URL</label>
+              <input type="text" v-model="content" />
+              <label class="active">Content</label>
             </div>
           </div>
           <button type="submit" class="btn green">Submit</button>
@@ -37,6 +49,8 @@
 </template>
 
 <script>
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import db from '../fb';
 import getSourceMainUrl from '../mixins/getSourceMainUrl';
 
@@ -48,7 +62,9 @@ export default {
       sourceName: null,
       author: null,
       title: null,
-      url: null
+      url: null,
+      description: null,
+      content: null
     };
   },
   methods: {
@@ -61,7 +77,10 @@ export default {
           },
           author: this.author,
           title: this.title,
-          url: this.url
+          url: this.url,
+          description: this.description,
+          content: this.content,
+          submitBy: firebase.auth().currentUser.uid
         })
         .catch(error => console.log(error));
 

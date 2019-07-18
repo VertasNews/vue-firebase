@@ -1,6 +1,8 @@
 <template>
   <div id="home">
-    <LowestRated />
+    <div id="lowestRate">
+      <LowestRated />
+    </div>
     <div
       v-if="isMobile()"
       :style="{
@@ -197,7 +199,6 @@ export default {
           averageBiasRating = 4;
           var neutral = true;
         }
-
         const data = {
           id: doc.id,
           author: doc.data().author,
@@ -218,9 +219,7 @@ export default {
         };
         this.articles.push(data);
       });
-
       this.lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-
       // Construct a new query starting at this document,
       this.next = db
         .collection('articles')
@@ -250,6 +249,9 @@ export default {
         this.marginL = 10;
       }
     });
+    document
+      .getElementById('lowestRate')
+      .addEventListener('touchmove', e => e.preventDefault());
   },
   methods: {
     loadMore: function() {
@@ -261,7 +263,6 @@ export default {
             if (doc.data().averageRating) {
               var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
             }
-
             var averageBiasRating = doc.data().averageBiasRating;
             if (averageBiasRating < 4) {
               averageBiasRating = Math.trunc((4 - averageBiasRating) / 0.03);

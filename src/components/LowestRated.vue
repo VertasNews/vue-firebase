@@ -53,7 +53,12 @@
                 {{ article.title }}
               </div>
             </router-link>
-            <span class="rating"> {{ article.averageRating }} </span>
+            <span v-if="article.averageRating != 100" class="rating">
+              {{ article.averageRating }}
+            </span>
+            <span v-else class="small-rating">
+              {{ article.averageRating }}
+            </span>
           </div>
         </vueper-slide>
       </vueper-slides>
@@ -187,9 +192,10 @@ a {
 div {
   font-family: Helvetica, Arial, sans-serif;
 }
+/*
 .vueperslides {
   touch-action: none;
-}
+} */
 #lowestRateTitle {
   font-size: 25px;
   padding-top: 5px;
@@ -204,6 +210,20 @@ div {
   font-weight: 800;
   color: white;
   font-size: 20px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  -webkit-font-smoothing: antialiased;
+}
+.small-rating {
+  position: absolute;
+  padding-top: 1px;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  font-weight: 800;
+  color: white;
+  font-size: 18px;
   background-color: #4caf50;
   border-radius: 50%;
   -webkit-font-smoothing: antialiased;

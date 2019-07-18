@@ -49,6 +49,7 @@ export default {
         'cbs-news',
         'npr',
         'nrk',
+        'nypost',
         'cnbc',
         'cbssport',
         'nydaily',

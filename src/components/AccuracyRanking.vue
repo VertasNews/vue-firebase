@@ -276,7 +276,7 @@ a {
 }
 .green-rating {
   color: #4caf50;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   padding-left: 3.5px;
 }

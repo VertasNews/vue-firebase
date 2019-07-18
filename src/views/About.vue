@@ -33,8 +33,12 @@
             way, but with left-wing bias.
           </li>
           <li>
-            If an article is rated to be neutral/unbiased, a symbol is simply
-            displayed.
+            If an article is rated to be neutral/unbiased, a symbol
+            <span class="red-circle"> </span>
+            <span class="font-weight-bold red--text text--darken-3">
+              0&#65130;
+            </span>
+            is simply displayed.
           </li>
         </ul>
 

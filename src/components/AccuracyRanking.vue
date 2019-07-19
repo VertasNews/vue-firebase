@@ -28,7 +28,7 @@
           <span :style="{ width: source.length + 'px' }" class="ranking-bar">
           </span>
           <span class="rating-num" v-if="source.averageRating">
-            {{ source.averageRating }}&#65130;</span
+            {{ source.averageRating }}<span class="percent">%</span></span
           >
         </li>
       </ul>
@@ -36,7 +36,7 @@
       <ul>
         <li v-for="article in articles" :key="article.id" class="row">
           <div class="green-rating col s2" v-if="article.averageRating">
-            {{ article.averageRating }}&#65130;
+            {{ article.averageRating }}<span class="percent">%</span>
           </div>
           <div class="article-title col s10 fade">
             <router-link
@@ -53,7 +53,7 @@
         <ul>
           <li v-for="article in articles" :key="article.id" class="row">
             <div class="green-rating col s2" v-if="article.averageRating">
-              {{ article.averageRating }}&#65130;
+              {{ article.averageRating }}<span class="percent">%</span>
             </div>
             <div class="article-title col s10 fade">
               <router-link
@@ -103,7 +103,7 @@
             >
             </span>
             <span class="rating-num" v-if="source.averageRating">
-              {{ source.averageRating }}&#65130;</span
+              {{ source.averageRating }}<span class="percent">%</span></span
             >
           </li>
         </ul>
@@ -137,7 +137,7 @@ export default {
         querySnapshot.forEach(doc => {
           if (doc.data().averageRating) {
             var avgRatingRounded = Math.trunc(doc.data().averageRating * 10);
-            var rankLength = avgRatingRounded * 1.4;
+            var rankLength = avgRatingRounded * 1.34;
           }
           const data = {
             name: doc.id,
@@ -302,9 +302,15 @@ a {
 #popWeekly {
   margin-top: 10px;
 }
+.percent {
+  font-size: 14px;
+  position: relative;
+  bottom: 1px;
+  left: 1px;
+}
 @media screen and (max-width: 900px) {
   #accuracyRanking {
-    width: 230px;
+    width: 240px;
   }
 }
 @media screen and (max-width: 760px) {

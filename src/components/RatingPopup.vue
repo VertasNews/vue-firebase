@@ -28,7 +28,7 @@
     >
       Please choose a rating before making a vote
     </v-alert>
-    <v-card class="text-xs-center" height="170px" light>
+    <v-card class="text-xs-center scrollLock" height="170px" light>
       <div id="accuracy-page">
         <div class="rate-title">
           Accuracy Rate
@@ -470,6 +470,10 @@ div {
 #vote-button {
   position: relative;
   top: 7px;
+}
+.scrollLock {
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 @media screen and (max-width: 370px) {
   .rate-title {

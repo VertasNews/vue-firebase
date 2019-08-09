@@ -17,7 +17,7 @@
       <div class="source-rating">
         <span class="big-green-circle"> </span>
         <span class="big-rating green--text" v-if="averageRating">
-          {{ averageRating }}&#65130;
+          {{ averageRating }}<span class="big-percent">%</span>
         </span>
         <span class="big-rating green--text" v-else> NA </span>
         <span v-if="!averageBiasRating">
@@ -27,18 +27,20 @@
         <span v-if="right">
           <span class="big-red-circle"> </span>
           <span class="big-rating red--text text--darken-3">
-            {{ averageBiasRating }}&#65130;
+            {{ averageBiasRating }}<span class="big-percent">%</span>
           </span>
         </span>
         <span v-if="left">
           <span class="big-blue-circle"> </span>
           <span class="big-rating blue--text text--darken-2">
-            {{ averageBiasRating }}&#65130;
+            {{ averageBiasRating }}<span class="big-percent">%</span>
           </span>
         </span>
         <span v-if="neutral">
           <span class="big-red-circle"> </span>
-          <span class="big-rating red--text text--darken-3"> 0&#65130; </span>
+          <span class="big-rating red--text text--darken-3">
+            0<span class="big-percent">%</span>
+          </span>
         </span>
       </div>
     </div>
@@ -88,7 +90,7 @@
           <div v-if="!isMobile()" class="col m6">
             <span class="green-circle"> </span>
             <span class="rating green--text" v-if="article.averageRating">
-              {{ article.averageRating }}&#65130;
+              {{ article.averageRating }}<span class="percent">%</span>
             </span>
             <span class="rating green--text" v-else> NA </span>
           </div>
@@ -100,24 +102,27 @@
             <span v-if="article.right">
               <span class="red-circle"></span>
               <span class="rating red--text text--darken-3">
-                {{ article.averageBiasRating }}&#65130;</span
+                {{ article.averageBiasRating
+                }}<span class="percent">%</span></span
               >
             </span>
             <span v-if="article.left">
               <span class="blue-circle"></span>
               <span class="rating blue--text text--darken-2">
-                {{ article.averageBiasRating }}&#65130;
+                {{ article.averageBiasRating }}<span class="percent">%</span>
               </span>
             </span>
             <span v-if="article.neutral">
               <span class="red-circle"></span>
-              <span class="rating red--text text--darken-3"> 0&#65130; </span>
+              <span class="rating red--text text--darken-3">
+                0<span class="percent">%</span>
+              </span>
             </span>
           </div>
           <div v-if="isMobile()" class="col s12">
             <span class="green-circle"> </span>
             <span class="rating green--text" v-if="article.averageRating">
-              {{ article.averageRating }}&#65130;
+              {{ article.averageRating }}<span class="percent">%</span>
             </span>
             <span class="rating green--text" v-else> NA </span>
             <span v-if="!article.averageBiasRating">
@@ -127,18 +132,20 @@
             <span v-if="article.right">
               <span class="red-circle"></span>
               <span class="rating red--text text--darken-3">
-                {{ article.averageBiasRating }}&#65130;
+                {{ article.averageBiasRating }}<span class="percent">%</span>
               </span>
             </span>
             <span v-if="article.left">
               <span class="blue-circle"></span>
               <span class="rating blue--text text--darken-2">
-                {{ article.averageBiasRating }}&#65130;
+                {{ article.averageBiasRating }}<span class="percent">%</span>
               </span>
             </span>
             <span v-if="article.neutral">
               <span class="red-circle"></span>
-              <span class="rating red--text text--darken-3"> 0&#65130; </span>
+              <span class="rating red--text text--darken-3">
+                0<span class="percent">%</span>
+              </span>
             </span>
           </div>
         </div>
@@ -388,6 +395,19 @@ div {
 }
 #return-home {
   margin-top: 20px;
+}
+.big-percent {
+  font-size: 17px;
+  position: relative;
+  bottom: 2px;
+  left: 1px;
+  margin-right: 6px;
+}
+.percent {
+  font-size: 14px;
+  position: relative;
+  bottom: 1px;
+  left: 1px;
 }
 @media screen and (max-width: 800px) {
   .green-circle {

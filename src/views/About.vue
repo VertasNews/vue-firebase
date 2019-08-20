@@ -6,11 +6,21 @@
         <div id="greeting">
           Thank you for visiting our site!!
         </div>
-        <div>
-          We are a group of passionate students who want to fight against the
-          fake news epidemic, by providing a platform for the users to rate and
-          give scores to online news and articles from numerous outlets.
-        </div>
+        <p>
+          Grew up in a vulnerable democracy, all three members of the VERTAS
+          team understand and appreciate the freedom enjoyed here in the US,
+          especially the freedom of speech. Seeing this sacred idea being abused
+          by falsehoods and misinformation makes us believe that it is our duty
+          to protect it, hence the idea for VERTAS.
+        </p>
+        <p>
+          VERTAS was created as platform for everyone to read and discuss news
+          articles. In light of the Fake News Epidemic, we enable readers to
+          read with confidence by allowing everyone to rate what they read for
+          its level of TRUTH and BIAS demonstrated. We wholeheartedly believe
+          that by democratizing information, we shall restore the public’s TRUST
+          and DEPENDABILITY on the media.
+        </p>
         <h4>The Rating</h4>
         We let the users rate the articles based on two criteria: accuracy and
         bias. All ratings are then converted into percentage scores for display.

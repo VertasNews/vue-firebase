@@ -1,6 +1,6 @@
 <template>
   <div id="lowest-rated">
-    <v-card color="grey lighten-2">
+    <div>
       <div id="lowestRateTitle" class="text-xs-center">
         LOWEST RATED ARTICLES
       </div>
@@ -14,10 +14,10 @@
         disable-arrows-on-edges
         :breakpoints="breakpoints"
       >
-        <v-icon id="arrow-left" slot="arrowLeft" color="black" large>
+        <v-icon id="arrow-left" slot="arrowLeft" color="black" medium>
           fas fa-angle-left</v-icon
         >
-        <v-icon id="arrow-right" slot="arrowRight" color="black" large>
+        <v-icon id="arrow-right" slot="arrowRight" color="black" medium>
           fas fa-angle-right</v-icon
         >
         <vueper-slide v-for="article in articles" :key="article.id">
@@ -62,7 +62,7 @@
           </div>
         </vueper-slide>
       </vueper-slides>
-    </v-card>
+    </div>
   </div>
 </template>
 
@@ -125,9 +125,9 @@ export default {
         });
       });
     this.windowWidth = window.innerWidth;
-    if (this.windowWidth >= 1650) this.containerWidth = 0.18 * this.windowWidth;
+    if (this.windowWidth >= 1650) this.containerWidth = 0.13 * this.windowWidth;
     else if (this.windowWidth >= 1250)
-      this.containerWidth = 0.18 * this.windowWidth;
+      this.containerWidth = 0.13 * this.windowWidth;
     else if (this.windowWidth >= 1000)
       this.containerWidth = 0.22 * this.windowWidth;
     else if (this.windowWidth >= 700)
@@ -144,26 +144,30 @@ export default {
   mounted() {
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth;
-      if (this.windowWidth >= 1650)
-        this.containerWidth = 0.18 * this.windowWidth;
-      else if (this.windowWidth >= 1250)
-        this.containerWidth = 0.18 * this.windowWidth;
-      else if (this.windowWidth >= 1000)
-        this.containerWidth = 0.22 * this.windowWidth;
-      else if (this.windowWidth >= 700)
-        this.containerWidth = 0.3 * this.windowWidth;
-      else if (this.windowWidth >= 500)
-        this.containerWidth = 0.45 * this.windowWidth;
-      else if (this.windowWidth < 500)
-        this.containerWidth = 0.9 * this.windowWidth;
+      if (this.windowWidth >= 1650) this.containerWidth = 255;
+      else if (this.windowWidth >= 1250) this.containerWidth = 250;
+      else if (this.windowWidth > 1100) this.containerWidth = 340;
+      else if (this.windowWidth > 900) this.containerWidth = 290;
+      else if (this.windowWidth > 800) this.containerWidth = 275;
+      else if (this.windowWidth > 760) this.containerWidth = 220;
+      else if (this.windowWidth > 740) this.containerWidth = 230;
+      else if (this.windowWidth > 500)
+        this.containerWidth = 0.47 * this.windowWidth;
+      else this.containerWidth = this.windowWidth - 20;
     });
   },
   computed: {
     slideNum() {
-      if (this.windowWidth >= 1650) return 5;
+      /*  if (this.windowWidth >= 1650) return 5;
       else if (this.windowWidth >= 1250) return 5;
       else if (this.windowWidth >= 1000) return 4;
       else if (this.windowWidth >= 700) return 3;
+      else if (this.windowWidth >= 500) return 2;
+      else return 1; */
+      if (this.windowWidth >= 1650) return 4;
+      else if (this.windowWidth >= 1250) return 4;
+      else if (this.windowWidth >= 1000) return 3;
+      else if (this.windowWidth >= 740) return 3;
       else if (this.windowWidth >= 500) return 2;
       else return 1;
     }
@@ -212,8 +216,10 @@ div {
   touch-action: none;
 } */
 #lowestRateTitle {
-  font-size: 25px;
-  padding-top: 5px;
+  font-size: 20px;
+  position: relative;
+  top: 20px;
+  font-weight: 550;
 }
 .rating {
   position: absolute;
@@ -288,18 +294,18 @@ div {
   right: 0;
   width: 10%;
   height: 20px;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), #e0e0e0 50%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff 50%);
 }
 #arrow-left {
   position: relative;
   left: 35px;
-  bottom: 156px;
+  bottom: 131px;
   background-color: transparent;
 }
 #arrow-right {
   position: relative;
   right: 35px;
-  bottom: 156px;
+  bottom: 131px;
 }
 @media screen and (max-width: 500px) {
   #arrow-left {
@@ -307,11 +313,6 @@ div {
   }
   #arrow-right {
     right: 0px;
-  }
-}
-@media screen and (max-width: 380px) {
-  #lowestRateTitle {
-    font-size: 22px;
   }
 }
 </style>

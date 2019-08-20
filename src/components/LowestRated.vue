@@ -220,6 +220,7 @@ div {
   position: relative;
   top: 20px;
   font-weight: 550;
+  font-family: 'Roboto', sans-serif;
 }
 .rating {
   position: absolute;

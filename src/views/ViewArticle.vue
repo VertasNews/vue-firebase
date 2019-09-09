@@ -44,7 +44,14 @@
             }}</span>
           </div>
           <div v-if="!isSmallMobile()" class="article-content fade">
-            <a :href="url" target="_blank">{{ content }} </a>
+            <a v-if="content" :href="url" target="_blank"
+              >{{ content.split('[+')[0] }}
+              <p class="blue--text">Continue reading</p>
+            </a>
+            <a v-else :href="url" target="_blank">
+              {{ description }}
+              <p class="blue--text">Continue reading</p>
+            </a>
           </div>
         </div>
       </div>

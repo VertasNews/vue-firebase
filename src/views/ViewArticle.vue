@@ -91,7 +91,10 @@
               NA
             </div>
             <div class="col s6 rating-num">{{ ratingCount }} rating(s)</div>
-            <div class="col s6 rating-num">{{ biasRatingCount }} rating(s)</div>
+            <div v-if="biasRatingCount" class="col s6 rating-num">
+              {{ biasRatingCount }} rating(s)
+            </div>
+            <div v-else class="col s6 rating-num">0 rating(s)</div>
           </div>
           <div class="col s12 m6 text-xs-center">
             <div class="rating-instruction">

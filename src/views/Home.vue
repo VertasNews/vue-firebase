@@ -1,6 +1,12 @@
 <template>
   <div id="home">
-    <div id="lowestRate">
+    <div
+      id="lowestRate"
+      :style="{
+        marginLeft: marginL + 'px',
+        width: lowestRateWidth + 'px'
+      }"
+    >
       <LowestRated />
     </div>
     <div
@@ -28,7 +34,7 @@
         </div>
         <div v-if="!isOldMobile()" id="header-icon">
           <span class="green-circle"></span>
-          <span class="trl green--text right-margin "> TRUTH </span>
+          <span class="trl green--text right-margin"> TRUTH </span>
           <span class="red-circle"></span>
           <span class="trl red--text text--darken-3 right-margin"> RIGHT </span>
           <span class="blue-circle"></span>
@@ -175,6 +181,7 @@ export default {
       windowWidth: null,
       marginL: null,
       containerWidth: null,
+      lowestRateWidth: null,
       isWindow: false
     };
   },
@@ -232,13 +239,18 @@ export default {
     else if (this.isLap()) this.containerWidth = 900;
     else if (this.isLandScape()) this.containerWidth = 850;
     else if (this.isTablet()) this.containerWidth = 700;
-    this.marginL = (this.windowWidth - this.containerWidth) / 2 + 20;
+    if (this.isDesktop())
+      this.marginL = (this.windowWidth - this.containerWidth) / 2 + 20;
+    else if (!this.isMobile())
+      this.marginL = (this.windowWidth - this.containerWidth) / 2;
+    this.lowestRateWidth = this.containerWidth;
     var platform = window.navigator.platform,
       windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
     if (windowsPlatforms.indexOf(platform) != -1) this.isWindow = true;
     if (this.isWindow) this.marginL -= 13;
     if (this.isMobile()) {
       this.containerWidth = this.windowWidth + 250;
+      this.lowestRateWidth = this.containerWidth - 270;
       this.marginL = 10;
     }
   },
@@ -248,10 +260,16 @@ export default {
       else if (this.isLap()) this.containerWidth = 900;
       else if (this.isLandScape()) this.containerWidth = 850;
       else if (this.isTablet()) this.containerWidth = 700;
-      this.marginL = (this.windowWidth - this.containerWidth) / 2 + 20;
+      if (this.isDesktop())
+        this.marginL = (this.windowWidth - this.containerWidth) / 2 + 20;
+      else if (!this.isMobile()) {
+        this.marginL = (this.windowWidth - this.containerWidth) / 2;
+      }
+      this.lowestRateWidth = this.containerWidth;
       if (this.isWindow) this.marginL -= 13;
       if (this.isMobile()) {
         this.containerWidth = this.windowWidth + 250;
+        this.lowestRateWidth = this.containerWidth - 270;
         this.marginL = 10;
       }
     });

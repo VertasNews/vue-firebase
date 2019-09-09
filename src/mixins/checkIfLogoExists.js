@@ -140,6 +140,7 @@ export default {
         'la-gaceta',
         'wired',
         'la-nacion',
+        'latimes',
         'wirtschafts-woche',
         'la-repubblica',
         'xinhua-net',

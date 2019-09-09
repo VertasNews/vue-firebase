@@ -201,7 +201,7 @@ export default {
     getImgUrl(id) {
       if (this.checkIfLogoExists(id)) {
         return require('../assets/images/' + id + '.png');
-      } else console.log('deo thay gi');
+      }
       return null;
     },
     isLap() {

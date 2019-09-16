@@ -1,68 +1,66 @@
 <template>
-  <div id="lowest-rated">
-    <div>
-      <div id="lowestRateTitle" class="text-xs-center">
-        LOWEST RATED ARTICLES
-      </div>
-      <vueper-slides
-        class="no-shadow"
-        :visible-slides="slideNum"
-        :slide-ratio="1 / 5"
-        :dragging-distance="70"
-        :slide-multiple="true"
-        fixed-height="260px"
-        disable-arrows-on-edges
-        :breakpoints="breakpoints"
-      >
-        <v-icon id="arrow-left" slot="arrowLeft" color="black" medium>
-          fas fa-angle-left</v-icon
-        >
-        <v-icon id="arrow-right" slot="arrowRight" color="black" medium>
-          fas fa-angle-right</v-icon
-        >
-        <vueper-slide v-for="article in articles" :key="article.id">
-          <div slot="slideContent">
-            <div>
-              <router-link
-                :to="{
-                  name: 'view-article',
-                  params: { articleId: article.id }
-                }"
-              >
-                <v-img
-                  v-if="article.urlToImage"
-                  height="150px"
-                  :width="containerWidth + 'px'"
-                  :src="article.urlToImage"
-                >
-                  <template v-slot:placeholder>
-                    <v-layout fill-height align-center justify-center ma-0>
-                      <v-progress-circular
-                        indeterminate
-                        color="grey lighten-5"
-                      ></v-progress-circular>
-                    </v-layout>
-                  </template>
-                </v-img>
-              </router-link>
-            </div>
-            <router-link
-              :to="{ name: 'view-article', params: { articleId: article.id } }"
-            >
-              <div class="text-xs-left article-title fade">
-                {{ article.title }}
-              </div>
-            </router-link>
-            <span v-if="article.averageRating != 100" :class="rating()">
-              {{ article.averageRating }}
-            </span>
-            <span v-else :class="smallrating()">
-              {{ article.averageRating }}
-            </span>
-          </div>
-        </vueper-slide>
-      </vueper-slides>
+  <div id="lowest-rated" v-if="articles.length">
+    <div id="lowestRateTitle" class="text-xs-center">
+      LOWEST RATED ARTICLES
     </div>
+    <vueper-slides
+      class="no-shadow"
+      :visible-slides="slideNum"
+      :slide-ratio="1 / 5"
+      :dragging-distance="70"
+      :slide-multiple="true"
+      fixed-height="260px"
+      disable-arrows-on-edges
+      :breakpoints="breakpoints"
+    >
+      <v-icon id="arrow-left" slot="arrowLeft" color="black" medium>
+        fas fa-angle-left</v-icon
+      >
+      <v-icon id="arrow-right" slot="arrowRight" color="black" medium>
+        fas fa-angle-right</v-icon
+      >
+      <vueper-slide v-for="article in articles" :key="article.id">
+        <div slot="slideContent">
+          <div>
+            <router-link
+              :to="{
+                name: 'view-article',
+                params: { articleId: article.id }
+              }"
+            >
+              <v-img
+                v-if="article.urlToImage"
+                height="150px"
+                :width="containerWidth + 'px'"
+                :src="article.urlToImage"
+              >
+                <template v-slot:placeholder>
+                  <v-layout fill-height align-center justify-center ma-0>
+                    <v-progress-circular
+                      indeterminate
+                      color="grey lighten-5"
+                    ></v-progress-circular>
+                  </v-layout>
+                </template>
+              </v-img>
+            </router-link>
+          </div>
+          <router-link
+            :to="{ name: 'view-article', params: { articleId: article.id } }"
+          >
+            <div class="text-xs-left article-title fade">
+              {{ article.title }}
+            </div>
+          </router-link>
+          <span v-if="article.averageRating != 100" :class="rating()">
+            {{ article.averageRating }}
+          </span>
+          <span v-else :class="smallrating()">
+            {{ article.averageRating }}
+          </span>
+        </div>
+      </vueper-slide>
+    </vueper-slides>
   </div>
 </template>
 

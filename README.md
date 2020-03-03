@@ -1,7 +1,27 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/737174b8-cdce-4c1a-bdcb-77a3bd64686b/deploy-status)](https://app.netlify.com/sites/vertas/deploys)
 [![Known Vulnerabilities](https://snyk.io/test/github/lannvu/vue-firebase/badge.svg?targetFile=package.json&style=flat-square)](https://snyk.io/test/github/lannvu/vue-firebase?targetFile=package.json)
 [![HitCount](http://hits.dwyl.io/lannvu/vue-firebase.svg)](http://hits.dwyl.io/lannvu/vue-firebase)
-# vue-firebase
+### Vertas News
+A website to rate news articles and authors based on bias and accuracy.
+
+### Motivation
+Grew up in a vulnerable democracy, all three members of the VERTAS team understand and appreciate the freedom enjoyed here in the US, especially the freedom of speech. Seeing this sacred idea being abused by falsehoods and misinformation makes us believe that it is our duty to protect it, hence the idea for VERTAS.
+
+VERTAS was created as platform for everyone to read and discuss news articles. In light of the Fake News Epidemic, we enable readers to read with confidence by allowing everyone to rate what they read for its level of TRUTH and BIAS demonstrated. We wholeheartedly believe that by democratizing information, we shall restore the public’s TRUST and DEPENDABILITY on the media.
+
+### The Rating
+We let the users rate the articles based on two criteria: accuracy and bias. All ratings are then converted into percentage scores for display.
+* The green color epresents the accuracy/truth rating.
+* The red color represents.
+* The blue color  works the same way, but with left-wing bias.
+
+## Tech/framework used
+
+- [Vuejs](https://vuejs.org/)
+- [Firebase](https://firebase.google.com/)
+- [Google Cloud](https://cloud.google.com/)
+- [Vuetify](https://vuetifyjs.com/en/)
+- [Algolia](https://www.algolia.com/)
 
 ## Project setup
 ```

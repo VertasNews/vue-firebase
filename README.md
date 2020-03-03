@@ -15,13 +15,25 @@ We let the users rate the articles based on two criteria: accuracy and bias. All
 * The red color represents.
 * The blue color  works the same way, but with left-wing bias.
 
+### Features
+* Registered users can give an article an accuracy rating and a bias rating. They will be calculated into users' score.
+* Verified critics (journalists, influencers, etc) can rate as well. Their ratings will be calculated into critics' score.
+* Users can view the aggregated ratings of authors and outlets. Ranking between outlets based on accuracy ratings is also shown.
+
+### Preview
+<img src="https://user-images.githubusercontent.com/32660699/75737840-5c4c3680-5cc6-11ea-9e0b-307d51bcbbba.png"/>
+<img src="https://user-images.githubusercontent.com/32660699/75737844-5d7d6380-5cc6-11ea-8c5a-f1c7ae318341.png"/>
+<img src="https://user-images.githubusercontent.com/32660699/75737849-5fdfbd80-5cc6-11ea-8e1d-be9ec5326e9e.png"/>
+<img src="https://user-images.githubusercontent.com/32660699/75737877-6ff79d00-5cc6-11ea-8d4b-69180349c696.png"/>
+
 ## Tech/framework used
 
-- [Vuejs](https://vuejs.org/)
+- [Vue.js](https://vuejs.org/)
 - [Firebase](https://firebase.google.com/)
 - [Google Cloud](https://cloud.google.com/)
 - [Vuetify](https://vuetifyjs.com/en/)
 - [Algolia](https://www.algolia.com/)
+- [Materialize](https://materializecss.com/)
 
 ## Project setup
 ```

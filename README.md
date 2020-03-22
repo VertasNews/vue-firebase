@@ -11,9 +11,9 @@ VERTAS was created as platform for everyone to read and discuss news articles. I
 
 ### The Rating
 We let the users rate the articles based on two criteria: accuracy and bias. All ratings are then converted into percentage scores for display.
-* The green color epresents the accuracy/truth rating.
-* The red color represents.
-* The blue color  works the same way, but with left-wing bias.
+* The green color represents the accuracy/truth rating.
+* The red color represents right-wing bias.
+* The blue color works the same way, but with left-wing bias.
 
 ### Features
 * Registered users can give an article an accuracy rating and a bias rating. They will be calculated into users' score.

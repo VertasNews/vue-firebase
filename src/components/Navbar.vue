@@ -123,8 +123,8 @@
 </template>
 
 <script>
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 import ApplyPopup from './ApplyPopup';
 import Search from './Search';
 
